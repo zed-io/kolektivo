@@ -39,6 +39,11 @@ export default function CodeInput({
   const showCheckmark = status === CodeInputStatus.Accepted
   const showError = status === CodeInputStatus.Error
   const showStatus = showCheckmark || showSpinner || showError
+  const keyboardType = shortVerificationCodesEnabled
+    ? 'number-pad'
+    : Platform.OS === 'android'
+      ? 'visible-password'
+      : undefined
 
   const textColorForStatus = {
     [CodeInputStatus.Inputting]: colors.black,
@@ -47,30 +52,109 @@ export default function CodeInput({
     [CodeInputStatus.Accepted]: colors.successDark,
   }
   return (
-    <Card rounded={true} shadow={null} style={[styles.container, style]}>
-      {showStatus && <View style={styles.statusContainer} />}
-      <View style={styles.innerContent}>
-        {showInput ? (
-          <TextInput
-            textContentType={'oneTimeCode'}
-            showClearButton={false}
-            value={inputValue}
-            placeholder={inputPlaceholder}
-            onChangeText={onInputChange}
-            // This disables keyboard suggestions on iOS, but unfortunately NOT on Android
-            // Though `InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS` is correctly set on the native input,
-            // most Android keyboards ignore it :/
-            autoCorrect={false}
-            keyboardType={'number-pad'}
-            inputStyle={{
-              ...typeScale.bodyLarge,
-              textAlign: 'center',
-              minHeight: undefined,
-              color: textColorForStatus[status],
-            }}
-            autoCapitalize="none"
-            autoFocus={autoFocus}
-            testID={testID}
+    <Card
+      rounded={true}
+      shadow={showInput ? Shadow.SoftLight : null}
+      style={[showInput ? styles.containerActive : styles.container, style]}
+    >
+      {/* These views cannot be combined as it will cause the shadow to be clipped on iOS */}
+      <View style={styles.containRadius}>
+        <View
+          style={[
+            showInput
+              ? shortVerificationCodesEnabled
+                ? styles.contentActive
+                : styles.contentActiveLong
+              : shortVerificationCodesEnabled
+                ? styles.content
+                : styles.contentLong,
+            showInput && shortVerificationCodesEnabled && label ? { paddingBottom: 4 } : undefined,
+          ]}
+        >
+          {showStatus && shortVerificationCodesEnabled && <View style={styles.statusContainer} />}
+          <View style={styles.innerContent}>
+            {label && (
+              <Text
+                style={
+                  showInput
+                    ? shortVerificationCodesEnabled
+                      ? styles.labelActive
+                      : styles.labelActiveLong
+                    : shortVerificationCodesEnabled
+                      ? styles.label
+                      : styles.labelLong
+                }
+              >
+                {label}
+              </Text>
+            )}
+
+            {showInput ? (
+              <TextInput
+                textContentType={shortVerificationCodesEnabled ? 'oneTimeCode' : undefined}
+                showClearButton={false}
+                value={inputValue}
+                placeholder={
+                  inputPlaceholderWithClipboardContent && shouldShowClipboardInternal()
+                    ? inputPlaceholderWithClipboardContent
+                    : inputPlaceholder
+                }
+                onChangeText={onInputChange}
+                multiline={multiline}
+                // This disables keyboard suggestions on iOS, but unfortunately NOT on Android
+                // Though `InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS` is correctly set on the native input,
+                // most Android keyboards ignore it :/
+                autoCorrect={false}
+                // On Android, the only known hack for now to disable keyboard suggestions
+                // is to set the keyboard type to 'visible-password' which sets `InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD`
+                // on the native input. Though it doesn't work in all cases (see https://stackoverflow.com/a/33227237/158525)
+                // and has the unfortunate drawback of breaking multiline autosize.
+                // We use numberOfLines to workaround this last problem.
+                keyboardType={keyboardType}
+                // numberOfLines is currently Android only on TextInput
+                // workaround is to set the minHeight on iOS :/
+                numberOfLines={Platform.OS === 'ios' ? undefined : numberOfLines}
+                inputStyle={{
+                  ...(shortVerificationCodesEnabled && {
+                    ...fontStyles.large,
+                    textAlign: 'center',
+                  }),
+                  minHeight:
+                    Platform.OS === 'ios' && numberOfLines
+                      ? LINE_HEIGHT * numberOfLines
+                      : undefined,
+                }}
+                autoCapitalize="none"
+                autoFocus={autoFocus}
+                testID={testID}
+              />
+            ) : (
+              <Text
+                style={shortVerificationCodesEnabled ? styles.codeValue : styles.codeValueLong}
+                numberOfLines={1}
+              >
+                {inputValue || ' '}
+              </Text>
+            )}
+          </View>
+          {showStatus && (
+            <View style={styles.statusContainer}>
+              {showSpinner && <ActivityIndicator size="small" color={colors.primary} />}
+              {showCheckmark && <Checkmark testID={testID ? `${testID}/CheckIcon` : undefined} />}
+              {showError && (
+                <InfoIcon
+                  color={colors.error}
+                  testID={testID ? `${testID}/ErrorIcon` : undefined}
+                />
+              )}
+            </View>
+          )}
+        </View>
+        {showInput && (
+          <ClipboardAwarePasteButton
+            getClipboardContent={getFreshClipboardContent}
+            shouldShow={shouldShowClipboardInternal()}
+            onPress={onInputChange}
           />
         ) : (
           <Text style={[styles.codeValue, { color: textColorForStatus[status] }]} numberOfLines={1}>
