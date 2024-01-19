@@ -25,8 +25,9 @@ import TokenBottomSheet, {
 } from 'src/components/TokenBottomSheet'
 import CustomHeader from 'src/components/header/CustomHeader'
 import { SWAP_LEARN_MORE } from 'src/config'
+import { FiatExchangeFlow } from 'src/fiatExchanges/utils'
 import { getLocalCurrencyCode } from 'src/localCurrency/selectors'
-import { navigate } from 'src/navigator/NavigationService'
+import { navigate, navigateToFiatCurrencySelection } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
 import useSelector from 'src/redux/useSelector'
@@ -828,6 +829,24 @@ export function SwapScreen({ route }: Props) {
         ctaLabel={t('swapScreen.noUsdPriceWarning.ctaDismiss')}
         onPressCta={handleDismissSelectTokenNoUsdPrice}
       />
+      <BottomSheet
+        forwardedRef={fundYourWalletBottomSheetRef}
+        title={t('swapScreen.fundYourWalletBottomSheet.title')}
+        titleStyle={styles.bottomSheetTitle}
+        description={t('swapScreen.fundYourWalletBottomSheet.description')}
+        testId="FundYourWalletBottomSheet"
+      >
+        <Button
+          type={BtnTypes.PRIMARY}
+          size={BtnSizes.FULL}
+          style={styles.bottomSheetButton}
+          onPress={() => {
+            ValoraAnalytics.track(SwapEvents.swap_add_funds)
+            navigateToFiatCurrencySelection(FiatExchangeFlow.CashIn)
+          }}
+          text={t('swapScreen.fundYourWalletBottomSheet.addFundsButton')}
+        />
+      </BottomSheet>
     </SafeAreaView>
   )
 }
