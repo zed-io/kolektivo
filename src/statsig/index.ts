@@ -45,7 +45,7 @@ export function getExperimentParams<T extends Record<string, StatsigParameter>>(
   try {
     const experiment = Statsig.getExperiment(experimentName)
     if (experiment.getEvaluationDetails().reason === EvaluationReason.Uninitialized) {
-      Logger.warn(
+      Logger.debug(
         TAG,
         'getExperimentParams: SDK is uninitialized when getting experiment',
         experiment
@@ -53,7 +53,7 @@ export function getExperimentParams<T extends Record<string, StatsigParameter>>(
     }
     return getParams({ config: experiment, defaultValues })
   } catch (error) {
-    Logger.warn(
+    Logger.debug(
       TAG,
       `getExperimentParams: Error getting params for experiment: ${experimentName}`,
       error
@@ -80,7 +80,7 @@ export function getDynamicConfigParams<T extends Record<string, StatsigParameter
     }
     return getParams({ config, defaultValues })
   } catch (error) {
-    Logger.warn(TAG, `Error getting params for dynamic config: ${configName}`, error)
+    Logger.debug(TAG, `Error getting params for dynamic config: ${configName}`, error)
     return defaultValues
   }
 }
@@ -89,7 +89,7 @@ export function getFeatureGate(featureGateName: StatsigFeatureGates) {
   try {
     return Statsig.checkGate(featureGateName)
   } catch (error) {
-    Logger.warn(TAG, `Error getting feature gate: ${featureGateName}`, error)
+    Logger.debug(TAG, `Error getting feature gate: ${featureGateName}`, error)
     return FeatureGates[featureGateName]
   }
 }
