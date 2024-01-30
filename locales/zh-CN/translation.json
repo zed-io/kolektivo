@@ -4,7 +4,7 @@
   "languageSettings": "语言",
   "localCurrencySetting": "货币",
   "licenses": "许可",
-  "removeAccountTitle": "重置 Valora",
+  "removeAccountTitle": "重置 Kolektivo",
   "removeAccountDetails": "如果重置，则您的账户将从此设备上删除。您的资金仍保留在账户中，但将只能借助恢复短语才能访问",
   "legal": "法律条款",
   "appPreferences": "应用程序首选项",
@@ -44,11 +44,11 @@
   },
   "accountKeyModal": {
     "header": "没有恢复短语，您将永久失去对您资金的访问权限",
-    "body1": "为了重置 Valora，您需要确认已经写了恢复短语。",
-    "body2": "没有恢复短语，任何人都无法恢复您的账户，包括 Valora。"
+    "body1": "为了重置 Kolektivo，您需要确认已经写了恢复短语。",
+    "body2": "没有恢复短语，任何人都无法恢复您的账户，包括 Kolektivo。"
   },
   "promptConfirmRemovalModal": {
-    "header": "您确定要重置 Valora 吗？",
+    "header": "您确定要重置 Kolektivo 吗？",
     "body": "您将无法再从此设备上访问您的资金或恢复短语。如果您没有写下恢复短语，则无法恢复它。",
     "resetNow": "立即重置"
   },
@@ -75,7 +75,7 @@
   },
   "walletSecurityPrimer": {
     "title": "确保钱包安全",
-    "description": "只有您自己才能访问您的钱包。如果您的手机丢失或被盗，Valora 无法协助找回钱包。\n\n您需要设置适当方法来保护钱包及资金的安全。"
+    "description": "只有您自己才能访问您的钱包。如果您的手机丢失或被盗，Kolektivo 无法协助找回钱包。\n\n您需要设置适当方法来保护钱包及资金的安全。"
   },
   "setUpKeylessBackup": {
     "title": "设置钱包备份。",
@@ -173,7 +173,7 @@
   "backupKeyNotification2": "保障您的资金安全。马上备份恢复短语。",
   "backupKeyCTA": "立即完成备份",
   "backupKeySummary": "找一个私密地方写下您的恢复短语。请将它存放在另一处安全地点。切勿保存在您的手机上。",
-  "backupKeyWarning": "如果丢失恢复短语，您将无法访问您在 Valora 持有的所有资金。",
+  "backupKeyWarning": "如果丢失恢复短语，您将无法访问您在 Kolektivo 持有的所有资金。",
   "copied": "短语已复制到剪贴板",
   "moreInfo": "更多信息",
   "savedConfirmation": "是的，我已写下了我的短语。",
@@ -243,7 +243,7 @@
     "dismiss": "忽略"
   },
   "superchargingTitle": "必须更新应用",
-  "superchargingDescription": "更新 Valora 应用以继续领取您每周的 Supercharge 奖励.",
+  "superchargingDescription": "更新 Kolektivo 应用以继续领取您每周的 Supercharge 奖励.",
   "superchargingTitleV1_54": "您的 {{token}} 正在进行 Supercharge",
   "superchargingDescriptionV1_54": "您将获得年度 {{apy}}% 的奖励。每周当您的奖励准备就绪时，您将获得通知，请记得返回此处领取奖励。",
   "superchargeRewardsAvailable": "您有 {{amount}} {{token}} 可领取！",
@@ -333,7 +333,7 @@
   "tokenBalance": "{{token}} 余额",
   "addFunds": "添加资金",
   "addFundsHeaderWithCurrency": "添加 {{token}}",
-  "addFundsSubtitle": "为您的 Valora 账户添加资金",
+  "addFundsSubtitle": "为您的 Kolektivo 账户添加资金",
   "exchanges": "交易所",
   "noExchanges": "您所在的地区没有可用的 {{digitalAsset}} 交易所。",
   "buySellOnExchanges": "在交易所买入/卖出",
@@ -387,11 +387,11 @@
   },
   "providerFeeDiscountDialog": {
     "title": "费用折扣",
-    "body": "为了庆祝 Valora 的面世，推广期内费用将暂时享受折扣补贴。"
+    "body": "为了庆祝 Kolektivo 的面世，推广期内费用将暂时享受折扣补贴。"
   },
   "pleaseSelectProvider": "请在下方选择一个提供商。这些链接连接到第三方服务。",
   "otherFundingOptions": "有关更多添加和提取资金的方式，请访问<0>如何为您的账户添加资金</0>",
-  "youCanTransferIn": "您可以使用第三方交易所将 {{digitalAsset}} 发送到您的 Valora 账户。这将需要您的账户地址。",
+  "youCanTransferIn": "您可以使用第三方交易所将 {{digitalAsset}} 发送到您的 Kolektivo 账户。这将需要您的账户地址。",
   "youCanTransferOut": "您可以通过将您的资金发送到支持 {{digitalAsset}} 的第三方交易所来提取资金。",
   "useBalanceWithMerchants": "在支持的商家使用您的余额",
   "findMerchants": "查找您附近的本地商家",
@@ -649,7 +649,7 @@
       "body": "邀请您的朋友和家人下载 {{appName}} ，你们每个人都将获得一个独家的 NFT"
     },
     "rewardsActiveCUSD": {
-      "title": "时间有限，先到先得。邀请朋友注册 Valora，赚取免费 cUSD！",
+      "title": "时间有限，先到先得。邀请朋友注册 Kolektivo，赚取免费 cUSD！",
       "body": "推荐奖励又回来了，而且比以前更简单。每邀请一位朋友注册 {{appName}}，即可赚取 0.50 cUSD。朋友添加资金，并持有达 7 天后，你们都将获得 0.50 cUSD 奖励。资金有限，先到先得！（仅限 25 位朋友）。"
     }
   },
@@ -663,8 +663,8 @@
     "heading1": "数据和隐私",
     "heading2": "资产和 {{appName}} 账户",
     "info": "要使用我们的服务，请阅读我们的<0>用户协议和条款</0>并点击下面的接受按钮接受。",
-    "privacy": "加入此网络，即表示您允许我们收集有关您使用该应用程序的匿名信息。此外，如果您关联您的电话号码，将存储它的哈希副本。如果您授予 Valora 访问您的联系人列表的权限，Valora 将导入每个联系人的姓名、电话号码和个人资料照片，以允许用户通过 Valora 应用程序进行关联。要了解我们如何收集和使用这些信息，请查看我们的<0>隐私政策</0>。",
-    "goldDisclaimer": "当您使用 Valora 创建一个“账户”时，您创建的是一个只有您拥有密钥的数字钱包。包括 Valora 在内的任何其他个人或实体都无法恢复您的密钥、更改或撤消交易或者追回丢失的资金。请注意，加密货币是新资产类别的一部分，存在财务损失风险。在购买任何资产之前，请仔细考虑您的财务状况和对财务风险的承受能力。"
+    "privacy": "加入此网络，即表示您允许我们收集有关您使用该应用程序的匿名信息。此外，如果您关联您的电话号码，将存储它的哈希副本。如果您授予 Kolektivo 访问您的联系人列表的权限，Kolektivo 将导入每个联系人的姓名、电话号码和个人资料照片，以允许用户通过 Kolektivo 应用程序进行关联。要了解我们如何收集和使用这些信息，请查看我们的<0>隐私政策</0>。",
+    "goldDisclaimer": "当您使用 Kolektivo 创建一个“账户”时，您创建的是一个只有您拥有密钥的数字钱包。包括 Kolektivo 在内的任何其他个人或实体都无法恢复您的密钥、更改或撤消交易或者追回丢失的资金。请注意，加密货币是新资产类别的一部分，存在财务损失风险。在购买任何资产之前，请仔细考虑您的财务状况和对财务风险的承受能力。"
   },
   "fullNameOrPsuedonym": "全名或化名",
   "namePlaceholder": "例如：姓名",
@@ -777,7 +777,7 @@
   "accessContacts": {
     "disclosure": {
       "title": "导入联系人",
-      "body": "Valora 想要导入您的联系人。点按下方按钮，即表示允许访问我的联系人的手机号码、姓名和照片，以便通过 Valora 与他们关联。"
+      "body": "Kolektivo 想要导入您的联系人。点按下方按钮，即表示允许访问我的联系人的手机号码、姓名和照片，以便通过 Kolektivo 与他们关联。"
     }
   },
   "createAccount": "创建账户",
@@ -827,12 +827,12 @@
   "verificationPrematureRevealMessage": "请稍等一分钟后再重新发送",
   "verificationLearnMoreDialog": {
     "title": "手机号码和 {{appName}}",
-    "body": "关联将允许您使用您的手机号码发送和接收资金。\n\n<0>我可以稍后再操作吗？</0>\n\n可以，但未关联的钱包将只能使用二维码和账户地址发送付款。\n\n<1>安全与隐私</1>\n\nValora 使用先进的加密算法为您的手机号码保密。",
+    "body": "关联将允许您使用您的手机号码发送和接收资金。\n\n<0>我可以稍后再操作吗？</0>\n\n可以，但未关联的钱包将只能使用二维码和账户地址发送付款。\n\n<1>安全与隐私</1>\n\nKolektivo 使用先进的加密算法为您的手机号码保密。",
     "dismiss": "忽略"
   },
   "phoneVerificationScreen": {
     "screenTitle": "手机号码",
-    "title": "将您的手机号码关联至 Valora",
+    "title": "将您的手机号码关联至 Kolektivo",
     "description": "这样可将您的钱包地址与手机号码关联起来，便于发送加密货币",
     "startButtonLabel": "关联",
     "learnMore": {
@@ -964,7 +964,7 @@
   "inviteWithoutPayment": "嗨！我一直在使用 {{appName}} 作为我的加密货币钱包。它使用简便，我想邀请您访问此链接试用： {{link}}",
   "inviteWithEscrowedPayment": "嗨！我一直在使用 {{appName}} 将加密货币发送到世界各地。我刚刚向您发送了 {{amount}} {{token}}。请使用此链接下载 {{appName}} 应用程序并兑换您的 {{token}}：{{link}}",
   "inviteWithRewards": "嗨！👋 我正在使用 {{appName}} 作为加密货币钱包。您可以快速下载此应用程序并关联手机号码，之后我们都可以获得一个特别版的 NFT 作为奖励。💫 \n\n请使用此链接下载: {{link}}",
-  "inviteWithRewardsCUSD": "嘿！如果你现在注册 Valora 钱包并存入资金，我们就都能免费获得 $0.50 奖励。我正在用它来增加我的美元和加密货币储蓄，只需一个电话号码，几秒钟就能完成注册。请确保使用我的推荐链接注册：\n\n{{link}}\n\n心动不如行动，推荐活动马上就要结束了。",
+  "inviteWithRewardsCUSD": "嘿！如果你现在注册 Kolektivo 钱包并存入资金，我们就都能免费获得 $0.50 奖励。我正在用它来增加我的美元和加密货币储蓄，只需一个电话号码，几秒钟就能完成注册。请确保使用我的推荐链接注册：\n\n{{link}}\n\n心动不如行动，推荐活动马上就要结束了。",
   "loadingContacts": "查找您的联系人",
   "myCode": "我的代码",
   "scanCode": "扫描",
@@ -1264,10 +1264,10 @@
   "transactionHeaderNftSent": "NFT 已发送",
   "feedSectionHeaderRecent": "最近",
   "cashInBottomSheet": {
-    "title": "添加资金开始使用 Valora！",
+    "title": "添加资金开始使用 Kolektivo！",
     "subtitle": "您的账户目前为空",
     "addFunds": "添加资金",
-    "titleRamp": "添加 {{currency}} 以开始使用 Valora",
+    "titleRamp": "添加 {{currency}} 以开始使用 Kolektivo",
     "subtitleRamp": "通过我们信任的外部提供商之一，支付少许费用来添加资金。"
   },
   "balances": "资产",
@@ -1284,7 +1284,7 @@
   "nftViewer": "NFT 查看器",
   "whatTotalValue": {
     "title": "总余额是指什么？",
-    "body": "总余额是您所有 Valora 资产的大致总和。您的总余额将随着价格波动而有所变化。总余额每 10 分钟更新一次。\n某些资产可能无法显示在总余额中，因为其价格在计算时不可用。",
+    "body": "总余额是您所有 Kolektivo 资产的大致总和。您的总余额将随着价格波动而有所变化。总余额每 10 分钟更新一次。\n某些资产可能无法显示在总余额中，因为其价格在计算时不可用。",
     "dismiss": "忽略"
   },
   "supportExportLogsStart": "正在导出日志...",
@@ -1322,15 +1322,15 @@
     "stepTwo": {
       "label": "第 2 步",
       "disabledTitle": "链接银行账户",
-      "disabledDescription": "即将支持银行账户！当您可以将银行账户关联到 Valora 时，我们将会给您发送通知。",
+      "disabledDescription": "即将支持银行账户！当您可以将银行账户关联到 Kolektivo 时，我们将会给您发送通知。",
       "disabledCta": "即将推出！",
       "title": "输入银行详细信息",
-      "description": "马上即可完成！请输入银行详细信息以将您的账户与 Valora 链接。",
+      "description": "马上即可完成！请输入银行详细信息以将您的账户与 Kolektivo 链接。",
       "cta": "链接银行账户",
       "error": {
         "title": "无法链接银行账户。",
         "description": "请尝试再次链接您的银行账户，或联系支持团队。",
-        "contactSupportPrefill": "无法将我的银行账户链接到 Valora"
+        "contactSupportPrefill": "无法将我的银行账户链接到 Kolektivo"
       }
     }
   },
@@ -1401,12 +1401,12 @@
   },
   "dappsScreenHelpDialog": {
     "title": "什么是 dapp？",
-    "message": "Dapp（去中心化应用程序）为您使用加密货币、赚取奖励和探索 Web3 提供了新方式。\n\n将 Valora 与 dapp 关联，开始新体验吧。",
+    "message": "Dapp（去中心化应用程序）为您使用加密货币、赚取奖励和探索 Web3 提供了新方式。\n\n将 Kolektivo 与 dapp 关联，开始新体验吧。",
     "dismiss": "忽略"
   },
   "dappsScreenBottomSheet": {
     "title": "{{dappName}} 是一个外部应用程序",
-    "message": "您即将打开一个非 Valora 运营的应用程序。\n\nValora 不对该应用程序做任何担保。请自行承担使用风险。",
+    "message": "您即将打开一个非 Kolektivo 运营的应用程序。\n\nKolektivo 不对该应用程序做任何担保。请自行承担使用风险。",
     "button": "转至 {{dappName}}"
   },
   "dappsScreenInfoSheet": {
@@ -1459,7 +1459,7 @@
     "newLabel": "新",
     "newDialog": {
       "title": "资金转账的新方式",
-      "body": "我们即将发布直接从 Valora 应用程序与银行账户互相转账的新方式。\n\n如果您看到这条信息，则意味着您所在地区能够使用该功能。",
+      "body": "我们即将发布直接从 Kolektivo 应用程序与银行账户互相转账的新方式。\n\n如果您看到这条信息，则意味着您所在地区能够使用该功能。",
       "dismiss": "忽略"
     },
     "cashIn": {
@@ -1492,7 +1492,7 @@
     "button": "设置 ID 验证"
   },
   "fiatConnectKycStatusScreen": {
-    "contactSupportPrefill": "通过 Valora 验证我的身份时出现问题。",
+    "contactSupportPrefill": "通过 Kolektivo 验证我的身份时出现问题。",
     "contactSupport": "联系支持团队",
     "pending": {
       "title": "正在审查您的身份验证。",
@@ -1559,7 +1559,7 @@
     },
     "cashIn": {
       "cancel": "取消添加资金",
-      "contactSupportPrefill": "向 Valora 钱包添加资金时遇到问题"
+      "contactSupportPrefill": "向 Kolektivo 钱包添加资金时遇到问题"
     },
     "success": {
       "header": "成功",
@@ -1649,7 +1649,7 @@
       },
       "mobileDialog": {
         "title": "手机号码",
-        "body": "使用您在移动货币服务商处注册时所使用的手机号码，可能与您关联的 Valora 手机号码不同。\n\n手机号码必须包含国家/地区代码。",
+        "body": "使用您在移动货币服务商处注册时所使用的手机号码，可能与您关联的 Kolektivo 手机号码不同。\n\n手机号码必须包含国家/地区代码。",
         "dismiss": "忽略"
       }
     },
@@ -1821,7 +1821,7 @@
     },
     "rewardsActiveCUSD": {
       "title": "邀请 {{contactName}} 注册 {{appName}} ，即可获得 0.50 cUSD 的奖励",
-      "body": "似乎 {{contactName}} 未在 Valora 上。如果您知道其钱包地址，则仍可发送付款，或者也可以发送一则邀请。\n\n在其下载 Valora，关联手机号码并向其钱包转账，并且 7 天之内不转出资金，之后你们都将获得 0.50 cUSD 的奖励，数额有限，赠完即止。"
+      "body": "似乎 {{contactName}} 未在 Kolektivo 上。如果您知道其钱包地址，则仍可发送付款，或者也可以发送一则邀请。\n\n在其下载 Kolektivo，关联手机号码并向其钱包转账，并且 7 天之内不转出资金，之后你们都将获得 0.50 cUSD 的奖励，数额有限，赠完即止。"
     }
   },
   "celoNews": {
@@ -1832,7 +1832,7 @@
     "retryButtonText": "重试"
   },
   "chooseYourAdventure": {
-    "header": "欢迎使用 Valora",
+    "header": "欢迎使用 Kolektivo",
     "subtitle": "您想先做什么？",
     "later": "我稍后再试",
     "options": {
@@ -1949,14 +1949,14 @@
     "results": "结果",
     "qr": {
       "title": "扫描或显示二维码",
-      "subtitle": "快速查找 Valora 上的地址"
+      "subtitle": "快速查找 Kolektivo 上的地址"
     },
     "invite": {
       "title": "向朋友发送加密货币",
       "subtitle": "从联系人列表中邀请朋友"
     },
     "getStarted": {
-      "title": "在 Valora 上发送资金的方式",
+      "title": "在 Kolektivo 上发送资金的方式",
       "subtitle": "开始",
       "options": {
         "one": {
@@ -1965,7 +1965,7 @@
         },
         "two": {
           "title": "手机号码",
-          "subtitle": "直接发送到某人的电话号码（如果该人有 Valora）"
+          "subtitle": "直接发送到某人的电话号码（如果该人有 Kolektivo）"
         },
         "three": {
           "title": "ENS",
@@ -1973,7 +1973,7 @@
         },
         "four": {
           "title": "个人资料名称",
-          "subtitle": "您可以搜索 Valora 上的现有用户"
+          "subtitle": "您可以搜索 Kolektivo 上的现有用户"
         }
       }
     },
@@ -2029,7 +2029,7 @@
   },
   "multichainBeta": {
     "beta": "BETA",
-    "title": "新消息！Ethereum 登陆 Valora 了",
+    "title": "新消息！Ethereum 登陆 Kolektivo 了",
     "description1": "我们将首先向特定人群开放这项功能。您是幸运儿之一！",
     "description2": "这还是个新产品，我们的团队仍在努力使其更加完美。我们希望听到您的反馈意见。",
     "primaryCta": "立即试试看",

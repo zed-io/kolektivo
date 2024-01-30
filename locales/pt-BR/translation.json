@@ -4,7 +4,7 @@
   "languageSettings": "Idioma",
   "localCurrencySetting": "Moeda",
   "licenses": "Licenças",
-  "removeAccountTitle": "Redefinir a Valora",
+  "removeAccountTitle": "Redefinir a Kolektivo",
   "removeAccountDetails": "A redefinição removerá sua conta deste dispositivo. Seus fundos permanecerão na conta, mas só estarão acessíveis com a Frase de Recuperação.",
   "legal": "Jurídico",
   "appPreferences": "Preferências do app",
@@ -44,11 +44,11 @@
   },
   "accountKeyModal": {
     "header": "Sem a sua Frase de Recuperação, você perderá o acesso aos seus fundos para sempre",
-    "body1": "Para redefinir a Valora, você precisará confirmar o que escreveu na sua Frase de Recuperação.",
-    "body2": "Ninguém, nem mesmo a Valora, pode recuperar sua conta sem sua frase."
+    "body1": "Para redefinir a Kolektivo, você precisará confirmar o que escreveu na sua Frase de Recuperação.",
+    "body2": "Ninguém, nem mesmo a Kolektivo, pode recuperar sua conta sem sua frase."
   },
   "promptConfirmRemovalModal": {
-    "header": "Tem certeza de que deseja redefinir a Valora?",
+    "header": "Tem certeza de que deseja redefinir a Kolektivo?",
     "body": "Você não poderá mais acessar seus fundos ou sua Frase de Recuperação a partir deste dispositivo. Não há como recuperar sua Frase de Recuperação se você não a anotou.",
     "resetNow": "Redefinir agora"
   },
@@ -75,7 +75,7 @@
   },
   "walletSecurityPrimer": {
     "title": "Mantenha sua carteira segura",
-    "description": "Só você pode acessar sua carteira. Se seu telefone for perdido ou roubado, a Valora não poderá recuperá-la por você.\n\nVocê precisará definir um método para manter sua carteira segura e proteger seus fundos."
+    "description": "Só você pode acessar sua carteira. Se seu telefone for perdido ou roubado, a Kolektivo não poderá recuperá-la por você.\n\nVocê precisará definir um método para manter sua carteira segura e proteger seus fundos."
   },
   "setUpKeylessBackup": {
     "title": "Configurar o backup da carteira",
@@ -173,7 +173,7 @@
   "backupKeyNotification2": "Mantenha seus fundos em segurança. Faça o backup da sua frase de recuperação agora.",
   "backupKeyCTA": "Concluir backup agora",
   "backupKeySummary": "Encontre um local privado e anote a sua Frase de Recuperação. Guarde-a em um lugar seguro. Não salve em seu telefone.",
-  "backupKeyWarning": "Se você perder sua frase de recuperação, perderá acesso a todos os fundos mantidos na Valora.",
+  "backupKeyWarning": "Se você perder sua frase de recuperação, perderá acesso a todos os fundos mantidos na Kolektivo.",
   "copied": "Frase copiada para a área de transferência",
   "moreInfo": "Mais informações",
   "savedConfirmation": "Sim, eu anotei minha frase.",
@@ -243,7 +243,7 @@
     "dismiss": "Ignorar"
   },
   "superchargingTitle": "Atualização do app necessária",
-  "superchargingDescription": "Atualize o app da Valora para continuar recebendo recompensas do Supercharge semanalmente.",
+  "superchargingDescription": "Atualize o app da Kolektivo para continuar recebendo recompensas do Supercharge semanalmente.",
   "superchargingTitleV1_54": "Você está recebendo recompensas de Supercharge no seus {{token}}",
   "superchargingDescriptionV1_54": "Você recebe {{apy}}% anualmente. Toda semana você receberá uma notificação avisando quando as suas recompensas estiverem pronta. Basta voltar aqui para resgatá-las.",
   "superchargeRewardsAvailable": "Você tem {{amount}} {{token}} disponíveis para resgatar!",
@@ -333,7 +333,7 @@
   "tokenBalance": "Saldo em {{token}}",
   "addFunds": "Adicionar Fundos",
   "addFundsHeaderWithCurrency": "Adicionar {{token}}",
-  "addFundsSubtitle": "Adicione fundos à sua conta da Valora",
+  "addFundsSubtitle": "Adicione fundos à sua conta da Kolektivo",
   "exchanges": "Exchanges",
   "noExchanges": "Não há exchanges disponíveis para {{digitalAsset}} em sua região.",
   "buySellOnExchanges": "Comprar/Vender em exchanges",
@@ -387,11 +387,11 @@
   },
   "providerFeeDiscountDialog": {
     "title": "Desconto da taxa",
-    "body": "Como oferta especial de lançamento, as taxas são oferecidas momentaneamente pela Valora!"
+    "body": "Como oferta especial de lançamento, as taxas são oferecidas momentaneamente pela Kolektivo!"
   },
   "pleaseSelectProvider": "Por favor, selecione um fornecedor. Esses links são conectados a serviços de terceiros.",
-  "otherFundingOptions": "Para conhecer mais maneiras de adicionar e sacar fundos, visite <0>Como faço para adicionar fundos à minha conta da Valora?</0>",
-  "youCanTransferIn": "Você pode usar uma troca de terceiros para enviar {{digitalAsset}} à sua conta Valora. Você precisará do seu Endereço de Conta para isso.",
+  "otherFundingOptions": "Para conhecer mais maneiras de adicionar e sacar fundos, visite <0>Como faço para adicionar fundos à minha conta da Kolektivo?</0>",
+  "youCanTransferIn": "Você pode usar uma troca de terceiros para enviar {{digitalAsset}} à sua conta Kolektivo. Você precisará do seu Endereço de Conta para isso.",
   "youCanTransferOut": "Você pode sacar seus fundos enviando-os para uma troca de terceiros que suporta {{digitalAsset}}.",
   "useBalanceWithMerchants": "Use seu saldo com comerciantes apoiadores",
   "findMerchants": "Encontre comerciantes locais perto de você",
@@ -649,7 +649,7 @@
       "body": "Convide seus amigos e familiares para baixar o app {{appName}} e cada um de vocês ganhará um NFT exclusivo"
     },
     "rewardsActiveCUSD": {
-      "title": "TEMPO LIMITADO. Ganhe cUSD grátis convidando amigos para a Valora!",
+      "title": "TEMPO LIMITADO. Ganhe cUSD grátis convidando amigos para a Kolektivo!",
       "body": "As Recompensas por Indicação estão de volta e ainda mais fáceis do que antes. Ganhe 0,50 cUSD para cada amigo que convidar para a {{appName}}. Quando seu amigo adicionar fundos e mantê-los por 7 dias, vocês dois receberão 0,50 cUSD. Corra, pois os fundos são limitados! (Limite de 25 amigos)."
     }
   },
@@ -663,8 +663,8 @@
     "heading1": "Dados e privacidade",
     "heading2": "Ativos digitais e {{appName}}",
     "info": "Para usar nossos serviços, leia nosso <0>Termos de serviço e contrato do usuário</0> e toque no botão Aceitar para indicar que concorda.",
-    "privacy": "Ao ingressar nessa rede, você nos dá permissão para coletar informações anônimas sobre o seu uso do aplicativo. Além disso, se você conectar seu número de celular, uma cópia com hash dele será armazenada. Se você conceder à Valora acesso à sua lista de contatos, a Valora importará o nome, o número de celular e a foto de perfil de cada contato para permitir que os usuários se conectem por meio do aplicativo Valora. Para saber como coletamos e usamos essas informações, consulte a nossa <0>Política de Privacidade</0>.",
-    "goldDisclaimer": "Ao criar uma \"conta\" na Valora, você está criando uma carteira digital da qual somente você possui as chaves. Nenhuma outra pessoa, física ou jurídica, incluindo a Valora, pode recuperar sua chave, alterar ou desfazer transações ou recuperar fundos perdidos. Esteja ciente de que criptomoedas fazem parte de uma nova classe de ativos e apresentam o risco de perda financeira. Considere cuidadosamente suas circunstâncias financeiras e sua tolerância a riscos financeiros antes de comprar qualquer ativo."
+    "privacy": "Ao ingressar nessa rede, você nos dá permissão para coletar informações anônimas sobre o seu uso do aplicativo. Além disso, se você conectar seu número de celular, uma cópia com hash dele será armazenada. Se você conceder à Kolektivo acesso à sua lista de contatos, a Kolektivo importará o nome, o número de celular e a foto de perfil de cada contato para permitir que os usuários se conectem por meio do aplicativo Kolektivo. Para saber como coletamos e usamos essas informações, consulte a nossa <0>Política de Privacidade</0>.",
+    "goldDisclaimer": "Ao criar uma \"conta\" na Kolektivo, você está criando uma carteira digital da qual somente você possui as chaves. Nenhuma outra pessoa, física ou jurídica, incluindo a Kolektivo, pode recuperar sua chave, alterar ou desfazer transações ou recuperar fundos perdidos. Esteja ciente de que criptomoedas fazem parte de uma nova classe de ativos e apresentam o risco de perda financeira. Considere cuidadosamente suas circunstâncias financeiras e sua tolerância a riscos financeiros antes de comprar qualquer ativo."
   },
   "fullNameOrPsuedonym": "Nome ou pseudônimo",
   "namePlaceholder": "nome",
@@ -777,7 +777,7 @@
   "accessContacts": {
     "disclosure": {
       "title": "Importar contatos",
-      "body": "A Valora deseja importar seus contatos. Ao tocar abaixo, dou acesso aos números de celular, nomes e fotos dos meus contatos para me conectar com eles através da Valora."
+      "body": "A Kolektivo deseja importar seus contatos. Ao tocar abaixo, dou acesso aos números de celular, nomes e fotos dos meus contatos para me conectar com eles através da Kolektivo."
     }
   },
   "createAccount": "Criar conta",
@@ -827,12 +827,12 @@
   "verificationPrematureRevealMessage": "Espere um minuto antes de reenviar",
   "verificationLearnMoreDialog": {
     "title": "Números de celular e a {{appName}}",
-    "body": "A conexão permite que você envie e receba fundos com o seu número de celular.\n\n<0>Posso fazer isso mais tarde?</0>\n\nSim, mas carteiras que não estiverem conectadas podem enviar pagamentos apenas com códigos QR e Endereços de conta.\n\n<1>Seguro e privado</1>\n\nO Valora usa criptografia de ponta para manter o seu número de celular privado.",
+    "body": "A conexão permite que você envie e receba fundos com o seu número de celular.\n\n<0>Posso fazer isso mais tarde?</0>\n\nSim, mas carteiras que não estiverem conectadas podem enviar pagamentos apenas com códigos QR e Endereços de conta.\n\n<1>Seguro e privado</1>\n\nO Kolektivo usa criptografia de ponta para manter o seu número de celular privado.",
     "dismiss": "Ignorar"
   },
   "phoneVerificationScreen": {
     "screenTitle": "Número de celular",
-    "title": "Conecte seu número de celular a Valora",
+    "title": "Conecte seu número de celular a Kolektivo",
     "description": "Isso vincula seu endereço de carteira ao seu número de celular, sendo fácil enviar cripto",
     "startButtonLabel": "Conectar",
     "learnMore": {
@@ -966,7 +966,7 @@
   "inviteWithoutPayment": "Olá! Estou usando a {{appName}} para enviar cripto para o mundo inteiro. É muito fácil de usar e eu gostaria de convidar você para conferir com este link: {{link}}",
   "inviteWithEscrowedPayment": "Olá! Estou usando a {{appName}} para enviar cripto para o mundo inteiro. Acabei de enviar {{amount}} {{token}} para você. Instale o aplicativo da {{appName}} e resgate seus {{token}} usando este link: {{link}}",
   "inviteWithRewards": "Oi! 👋 Estou usando a {{appName}} como minha carteira cripto. É super rápido baixar o app e conectar seu número de celular — além disso, nós dois receberemos um NFT de edição especial como recompensa. 💫 \n\nUse este link para baixar: {{link}}",
-  "inviteWithRewardsCUSD": "Oi! Nós dois podemos receber uma recompensa gratuita de US$ 0,50 se você se inscrever e depositar fundos na sua carteira Valora. Com ela, eu aumento minhas economias em USD e cripto. Você só precisa de um número de celular para configurá-la em segundos. Não deixe de se inscrever com meu link de indicação aqui: \n\n{{link}} \n\nCorra, pois a promoção de indicação termina em breve.",
+  "inviteWithRewardsCUSD": "Oi! Nós dois podemos receber uma recompensa gratuita de US$ 0,50 se você se inscrever e depositar fundos na sua carteira Kolektivo. Com ela, eu aumento minhas economias em USD e cripto. Você só precisa de um número de celular para configurá-la em segundos. Não deixe de se inscrever com meu link de indicação aqui: \n\n{{link}} \n\nCorra, pois a promoção de indicação termina em breve.",
   "loadingContacts": "Encontrar seus contatos",
   "myCode": "Meu código",
   "scanCode": "Escanear",
@@ -1266,10 +1266,10 @@
   "transactionHeaderNftSent": "NFT enviado",
   "feedSectionHeaderRecent": "Recente",
   "cashInBottomSheet": {
-    "title": "Adicione fundos para começar a usar Valora!",
+    "title": "Adicione fundos para começar a usar Kolektivo!",
     "subtitle": "Atualmente sua conta está vazia",
     "addFunds": "Adicionar Fundos",
-    "titleRamp": "Adicione {{currency}} para começar a usar Valora",
+    "titleRamp": "Adicione {{currency}} para começar a usar Kolektivo",
     "subtitleRamp": "Adicione fundos com taxas baixas com um de nossos provedores externos."
   },
   "balances": "Ativos",
@@ -1286,7 +1286,7 @@
   "nftViewer": "NFT Viewer",
   "whatTotalValue": {
     "title": "O que significa Saldo total?",
-    "body": "O seu Saldo total é uma soma aproximada de todos os seus ativos na Valora. O Saldo total irá mudar conforme os preços flutuarem. Ele é atualizado a cada 10 minutos. \n\nÉ possível que alguns ativos não sejam refletidos no Saldo total porque o preço não está disponível no momento do cálculo.",
+    "body": "O seu Saldo total é uma soma aproximada de todos os seus ativos na Kolektivo. O Saldo total irá mudar conforme os preços flutuarem. Ele é atualizado a cada 10 minutos. \n\nÉ possível que alguns ativos não sejam refletidos no Saldo total porque o preço não está disponível no momento do cálculo.",
     "dismiss": "Ignorar"
   },
   "supportExportLogsStart": "Exportando registros...",
@@ -1324,7 +1324,7 @@
     "stepTwo": {
       "label": "Passo 2",
       "disabledTitle": "Vincule uma conta bancária",
-      "disabledDescription": "Suporte bancário em breve! Avisaremos quando você puder conectar sua conta bancária ao Valora.",
+      "disabledDescription": "Suporte bancário em breve! Avisaremos quando você puder conectar sua conta bancária ao Kolektivo.",
       "disabledCta": "Em breve!",
       "title": "Insira os dados bancários",
       "description": "Falta pouco! Insira os dados bancários para vincular sua conta.",
@@ -1332,7 +1332,7 @@
       "error": {
         "title": "Não foi possível vincular sua conta.",
         "description": "Tente vincular sua conta bancária novamente, ou entre em contato com o suporte.",
-        "contactSupportPrefill": "Eu não consegui vincular minha conta bancária à Valora."
+        "contactSupportPrefill": "Eu não consegui vincular minha conta bancária à Kolektivo."
       }
     }
   },
@@ -1403,12 +1403,12 @@
   },
   "dappsScreenHelpDialog": {
     "title": "O que são os dapps?",
-    "message": "Dapps (aplicativos descentralizados) fornecem novas maneiras de usar suas cripto, ganhar recompensas e explorar a Web3.\n\nConecte Valora a um dapp para começar.",
+    "message": "Dapps (aplicativos descentralizados) fornecem novas maneiras de usar suas cripto, ganhar recompensas e explorar a Web3.\n\nConecte Kolektivo a um dapp para começar.",
     "dismiss": "Ignorar"
   },
   "dappsScreenBottomSheet": {
     "title": "{{dappName}} é um aplicativo externo",
-    "message": "Você está prestes a abrir um aplicativo não operado por Valora.\n\nValora não faz representações sobre este aplicativo. Use por sua conta e risco.",
+    "message": "Você está prestes a abrir um aplicativo não operado por Kolektivo.\n\nKolektivo não faz representações sobre este aplicativo. Use por sua conta e risco.",
     "button": "Ir para {{dappName}}"
   },
   "dappsScreenInfoSheet": {
@@ -1461,7 +1461,7 @@
     "newLabel": "NOVOS",
     "newDialog": {
       "title": "Novas formas de transferir fundos",
-      "body": "Estamos a lançar novas formas de transferir fundos de e para contas bancárias, diretamente da Valora.\n\nSe estiver a ver isto, pode aceder a esta funcionalidade na sua região.",
+      "body": "Estamos a lançar novas formas de transferir fundos de e para contas bancárias, diretamente da Kolektivo.\n\nSe estiver a ver isto, pode aceder a esta funcionalidade na sua região.",
       "dismiss": "Ignorar"
     },
     "cashIn": {
@@ -1494,7 +1494,7 @@
     "button": "Configurar verificação de identidade"
   },
   "fiatConnectKycStatusScreen": {
-    "contactSupportPrefill": "Estou tendo dificuldade para verificar minha identidade na Valora.",
+    "contactSupportPrefill": "Estou tendo dificuldade para verificar minha identidade na Kolektivo.",
     "contactSupport": "Contate o suporte",
     "pending": {
       "title": "Sua verificação de identidade está em análise.",
@@ -1561,7 +1561,7 @@
     },
     "cashIn": {
       "cancel": "Cancelar adição de fundos",
-      "contactSupportPrefill": "Estou tento dificuldade para adicionar fundos à minha carteira da Valora."
+      "contactSupportPrefill": "Estou tento dificuldade para adicionar fundos à minha carteira da Kolektivo."
     },
     "success": {
       "header": "Sucesso",
@@ -1651,7 +1651,7 @@
       },
       "mobileDialog": {
         "title": "Número de celular",
-        "body": "Use o número de celular registrado no seu fornecedor de dinheiro móvel. Pode não ser o mesmo número de celular da Valora.\n\nNúmeros de celular devem incluir o código de país que fica ao lado do número de celular.",
+        "body": "Use o número de celular registrado no seu fornecedor de dinheiro móvel. Pode não ser o mesmo número de celular da Kolektivo.\n\nNúmeros de celular devem incluir o código de país que fica ao lado do número de celular.",
         "dismiss": "Ignorar"
       }
     },
@@ -1823,7 +1823,7 @@
     },
     "rewardsActiveCUSD": {
       "title": "Convide {{contactName}} para a {{appName}} e receba 0,50 cUSD",
-      "body": "Parece que {{contactName}} não está na Valora. Você ainda pode enviar um pagamento para essa pessoa se souber o endereço da carteira dela ou enviar um convite.\n\nApós ela baixar a carteira, conectar o número de celular e depositar fundos e mantê-los na sua carteira por 7 dias, vocês dois receberão 0,50 cUSD enquanto durarem os fundos."
+      "body": "Parece que {{contactName}} não está na Kolektivo. Você ainda pode enviar um pagamento para essa pessoa se souber o endereço da carteira dela ou enviar um convite.\n\nApós ela baixar a carteira, conectar o número de celular e depositar fundos e mantê-los na sua carteira por 7 dias, vocês dois receberão 0,50 cUSD enquanto durarem os fundos."
     }
   },
   "celoNews": {
@@ -1834,7 +1834,7 @@
     "retryButtonText": "Repetir"
   },
   "chooseYourAdventure": {
-    "header": "Bem-vindo à Valora",
+    "header": "Bem-vindo à Kolektivo",
     "subtitle": "O que você gostaria de fazer primeiro?",
     "later": "Explorarei mais tarde",
     "options": {
@@ -1951,14 +1951,14 @@
     "results": "Resultados",
     "qr": {
       "title": "Escanear ou mostrar o código QR",
-      "subtitle": "Encontre endereços rapidamente na Valora"
+      "subtitle": "Encontre endereços rapidamente na Kolektivo"
     },
     "invite": {
       "title": "Envie criptos para seus amigos",
       "subtitle": "Convide amigos da sua lista de contatos"
     },
     "getStarted": {
-      "title": "Formas de enviar fundos na Valora",
+      "title": "Formas de enviar fundos na Kolektivo",
       "subtitle": "COMEÇAR",
       "options": {
         "one": {
@@ -1967,7 +1967,7 @@
         },
         "two": {
           "title": "Número de celular",
-          "subtitle": "Envie diretamente para o número de celular de alguém que tenha a Valora"
+          "subtitle": "Envie diretamente para o número de celular de alguém que tenha a Kolektivo"
         },
         "three": {
           "title": "ENS",
@@ -1975,7 +1975,7 @@
         },
         "four": {
           "title": "Nome do perfil",
-          "subtitle": "Você pode pesquisar os usuários existentes na Valora"
+          "subtitle": "Você pode pesquisar os usuários existentes na Kolektivo"
         }
       }
     },
@@ -2031,7 +2031,7 @@
   },
   "multichainBeta": {
     "beta": "BETA",
-    "title": "Novo! Ethereum na Valora.",
+    "title": "Novo! Ethereum na Kolektivo.",
     "description1": "Primeiro, estamos disponibilizando este recurso para um grupo seleto de pessoas. Você é um dos sortudos!",
     "description2": "Isso ainda é novo e a nossa equipe ainda está trabalhando duro para aperfeiçoar tudo. Gostaríamos muito de receber o seu feedback.",
     "primaryCta": "Experimentar agora",
