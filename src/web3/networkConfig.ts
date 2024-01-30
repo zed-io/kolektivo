@@ -114,8 +114,8 @@ const ETH_TOKEN_ID_MAINNET = `${NetworkId['ethereum-mainnet']}:native`
 const CLOUD_FUNCTIONS_STAGING = 'https://api.alfajores.valora.xyz'
 const CLOUD_FUNCTIONS_MAINNET = 'https://api.mainnet.valora.xyz'
 
-const BLOCKCHAIN_API_STAGING = 'https://alfajores-dot-kolektivo-backend.uc.r.appspot.com'
-const BLOCKCHAIN_API_MAINNET = 'https://kolektivo-backend.uc.r.appspot.com'
+const BLOCKCHAIN_API_STAGING = 'https://blockchain-api-dot-celo-mobile-alfajores.appspot.com'
+const BLOCKCHAIN_API_MAINNET = 'https://blockchain-api-dot-celo-mobile-mainnet.appspot.com'
 
 const ALLOWED_MTW_IMPLEMENTATIONS_MAINNET: Address[] = [
   '0x6511FB5DBfe95859d8759AdAd5503D656E2555d7',
