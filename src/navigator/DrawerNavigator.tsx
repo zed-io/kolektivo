@@ -39,7 +39,6 @@ import { RewardsScreenOrigin } from 'src/consumerIncentives/analyticsEventsTrack
 import { dappsListApiUrlSelector } from 'src/dapps/selectors'
 import DAppsExplorerScreenSearchFilter from 'src/dappsExplorer/DAppsExplorerScreenSearchFilter'
 import ExchangeHomeScreen from 'src/exchange/ExchangeHomeScreen'
-import WalletHome from 'src/home/WalletHome'
 import AttentionIcon from 'src/icons/Attention'
 import { Home } from 'src/icons/Home'
 import { AccountKey } from 'src/icons/navigator/AccountKey'
@@ -51,6 +50,7 @@ import { NFT } from 'src/icons/navigator/NFT'
 import { Settings } from 'src/icons/navigator/Settings'
 import Invite from 'src/invite/Invite'
 import WalletSecurityPrimer from 'src/keylessBackup/WalletSecurityPrimer'
+import BottomTabNavigator from 'src/kolektivo/navigator/BottomTabNavigator'
 import DrawerItem from 'src/navigator/DrawerItem'
 import { ensurePincode } from 'src/navigator/NavigationService'
 import { getActiveRouteName } from 'src/navigator/NavigatorWrapper'
@@ -248,8 +248,8 @@ export default function DrawerNavigator({ route }: Props) {
       detachInactiveScreens={true}
     >
       <Drawer.Screen
-        name={Screens.WalletHome}
-        component={WalletHome}
+        name={Screens.TabNavigator}
+        component={BottomTabNavigator}
         options={{
           title: t('home') ?? undefined,
           drawerIcon: Home,

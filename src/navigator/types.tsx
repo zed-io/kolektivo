@@ -202,6 +202,11 @@ export type StackParamList = {
   [Screens.Licenses]: undefined
   [Screens.Main]: undefined
   [Screens.MainModal]: undefined
+  [Screens.MapScreen]:
+    | {
+        targetId: string
+      }
+    | undefined
   [Screens.MultichainBeta]: undefined
   [Screens.NotificationCenter]: undefined
   [Screens.NftGallery]: undefined
@@ -282,6 +287,7 @@ export type StackParamList = {
       }
     | undefined
   [Screens.SwapScreenWithBack]: { fromTokenId: string } | undefined
+  [Screens.TabNavigator]: undefined
   [Screens.TokenDetails]: { tokenId: string }
   [Screens.TokenImport]: undefined
   [Screens.TransactionDetailsScreen]: {
