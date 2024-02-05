@@ -298,9 +298,8 @@ export type StackParamList = {
   [Screens.ValidateRecipientAccount]: ValidateRecipientParams
   [Screens.VerificationStartScreen]:
     | {
-        hideOnboardingStep?: boolean
+        isOnboarding?: boolean
         selectedCountryCodeAlpha2?: string
-        choseToRestoreAccount?: boolean
       }
     | undefined
   [Screens.VerificationCodeInputScreen]: {
