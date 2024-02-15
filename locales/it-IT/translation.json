@@ -6,6 +6,14 @@
   "licenses": "Licenze",
   "removeAccountTitle": "Ripristina Kolektivo",
   "removeAccountDetails": "Il ripristino rimuoverà il tuo conto da questo dispositivo. I tuoi fondi rimarranno nel conto, ma saranno accessibili solo con la tua Frase di recupero.",
+  "deleteAccountTitle": "Elimina l'account",
+  "deleteAccountDetails": "L'eliminazione del tuo conto lo rimuoverà dal sito {{appName}}. I tuoi fondi rimarranno nel conto, ma saranno accessibili solo con la tua frase di recupero.",
+  "deleteAccountWarning": {
+    "title": "Sei sicuro?",
+    "description": "L'eliminazione del tuo conto da {{appName}} rimuove anche il numero di telefono collegato. I tuoi fondi rimarranno nel conto, ma saranno accessibili solo con la tua frase di recupero.",
+    "buttonLabel": "Continua",
+    "buttonLabelRevokingPhoneNumber": "Scollegamento del numero di telefono..."
+  },
   "legal": "Informazioni legali",
   "appPreferences": "Preferenze app",
   "security": "Sicurezza",

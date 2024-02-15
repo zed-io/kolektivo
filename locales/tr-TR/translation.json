@@ -6,6 +6,14 @@
   "licenses": "Lisanslar",
   "removeAccountTitle": "Kolektivo'yı Sıfırla",
   "removeAccountDetails": "Sıfırlama, hesabınızı bu cihazdan kaldıracaktır. Fonlarınız hesapta kalacak, ancak yalnızca Kurtarma Kelimeleri ile erişilebilir olacaktır",
+  "deleteAccountTitle": "Hesabı Sil",
+  "deleteAccountDetails": "Hesabınızı silmek, onu {{appName}}adresinden kaldıracaktır. Paranız hesapta kalacak, ancak yalnızca Kurtarma İfadeniz ile erişilebilir olacaktır",
+  "deleteAccountWarning": {
+    "title": "Emin misiniz?",
+    "description": "Hesabınızı {{appName}} adresinden sildiğinizde bağlı telefon numaraları da silinir. Paranız hesapta kalacak, ancak yalnızca Kurtarma İfadenizle erişilebilir olacaktır.",
+    "buttonLabel": "İleri",
+    "buttonLabelRevokingPhoneNumber": "Telefon numarası bağlantısını kaldırma..."
+  },
   "legal": "Yasal",
   "appPreferences": "Uygulama Tercihleri",
   "security": "Güvenlik",

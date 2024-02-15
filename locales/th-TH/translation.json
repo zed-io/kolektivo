@@ -6,6 +6,14 @@
   "licenses": "สิทธิ์การใช้งาน",
   "removeAccountTitle": "รีเซ็ต Kolektivo",
   "removeAccountDetails": "การรีเซ็ตจะลบบัญชีออกจากอุปกรณ์นี้ เงินของคุณจะยังคงอยู่ในบัญชี แต่จะสามารถเข้าถึงได้ด้วยวลีกู้คืนรหัส",
+  "deleteAccountTitle": "Delete Account",
+  "deleteAccountDetails": "Deleting your account will remove it from {{appName}}. Your funds will remain in the account, but will only be accessible with your Recovery Phrase",
+  "deleteAccountWarning": {
+    "title": "คุณแน่ใจหรือไม่",
+    "description": "Deleting your account from {{appName}} also removes any linked phone number. Your funds will remain in the account, but will only be accessible with your Recovery Phrase.",
+    "buttonLabel": "ดำเนินการต่อ",
+    "buttonLabelRevokingPhoneNumber": "Unlinking phone number..."
+  },
   "legal": "กฎหมาย",
   "appPreferences": "การตั้งค่าแอป",
   "security": "ความปลอดภัย",

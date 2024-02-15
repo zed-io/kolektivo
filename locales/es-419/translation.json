@@ -6,6 +6,14 @@
   "licenses": "Licencias",
   "removeAccountTitle": "Restablecer Kolektivo",
   "removeAccountDetails": "Si seleccionas esta opción, se borrará tu cuenta de este dispositivo. No se perderán los fondos, pero solo podrás acceder a ellos con tu Frase de recuperación.",
+  "deleteAccountTitle": "Eliminar cuenta",
+  "deleteAccountDetails": "Borrar tu cuenta la eliminará de {{appName}}. Tus fondos permanecerán en la cuenta, pero sólo serán accesibles con tu Frase de Recuperación",
+  "deleteAccountWarning": {
+    "title": "Estas seguro",
+    "description": "Al eliminar tu cuenta de {{appName}} también se elimina cualquier número de teléfono vinculado. Tus fondos permanecerán en la cuenta, pero sólo serán accesibles con tu Frase de Recuperación.",
+    "buttonLabel": "Continuar",
+    "buttonLabelRevokingPhoneNumber": "Desvincular número de teléfono..."
+  },
   "legal": "Legal",
   "appPreferences": "Preferencias de la app",
   "security": "Seguridad",

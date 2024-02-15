@@ -6,6 +6,14 @@
   "licenses": "Licenças",
   "removeAccountTitle": "Redefinir a Kolektivo",
   "removeAccountDetails": "A redefinição removerá sua conta deste dispositivo. Seus fundos permanecerão na conta, mas só estarão acessíveis com a Frase de Recuperação.",
+  "deleteAccountTitle": "Excluir conta",
+  "deleteAccountDetails": "A exclusão da sua conta a removerá do site {{appName}}. Seus fundos permanecerão na conta, mas você só poderá acessá-los com sua frase de recuperação",
+  "deleteAccountWarning": {
+    "title": "Tem certeza?",
+    "description": "A exclusão da sua conta do site {{appName}} também remove qualquer número de telefone vinculado. Seus fundos permanecerão na conta, mas só poderão ser acessados com sua frase de recuperação.",
+    "buttonLabel": "Continuar",
+    "buttonLabelRevokingPhoneNumber": "Desvinculação do número de telefone..."
+  },
   "legal": "Jurídico",
   "appPreferences": "Preferências do app",
   "security": "Segurança",

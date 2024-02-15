@@ -6,6 +6,14 @@
   "licenses": "Lizenzen",
   "removeAccountTitle": "Kolektivo zurücksetzen",
   "removeAccountDetails": "Das Zurücksetzen wird dein Konto von diesem Gerät entfernen. Dein Guthaben bleibt im Konto, wird aber nur mit deiner Wiederherstellungsphrase erreichbar sein",
+  "deleteAccountTitle": "Konto löschen",
+  "deleteAccountDetails": "Wenn du dein Konto löschst, wird es von {{appName}}entfernt. Dein Guthaben bleibt auf dem Konto, ist aber nur noch mit deiner Recovery Phrase zugänglich.",
+  "deleteAccountWarning": {
+    "title": "Bist Du sicher?",
+    "description": "Wenn du dein Konto von {{appName}} löschst, wird auch die damit verbundene Telefonnummer entfernt. Dein Guthaben bleibt auf dem Konto, ist aber nur noch mit deiner Recovery Phrase zugänglich.",
+    "buttonLabel": "Weiter",
+    "buttonLabelRevokingPhoneNumber": "Telefonnummer entkoppeln..."
+  },
   "legal": "Rechtshinweisen",
   "appPreferences": "App-Einstellungen",
   "security": "Sicherheit",

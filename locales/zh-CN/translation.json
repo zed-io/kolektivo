@@ -6,6 +6,14 @@
   "licenses": "许可",
   "removeAccountTitle": "重置 Kolektivo",
   "removeAccountDetails": "如果重置，则您的账户将从此设备上删除。您的资金仍保留在账户中，但将只能借助恢复短语才能访问",
+  "deleteAccountTitle": "删除账户",
+  "deleteAccountDetails": "删除账户将从 {{appName}}中移除。您的资金将保留在账户中，但只能通过您的恢复密码访问",
+  "deleteAccountWarning": {
+    "title": "您确定吗？",
+    "description": "从 {{appName}} 删除账户的同时也会删除任何链接的电话号码。您的资金将保留在账户中，但只能通过您的恢复密码访问。",
+    "buttonLabel": "继续",
+    "buttonLabelRevokingPhoneNumber": "取消连接电话号码..."
+  },
   "legal": "法律条款",
   "appPreferences": "应用程序首选项",
   "security": "安全",
