@@ -2176,7 +2176,8 @@
       "title": "My Wallet"
     },
     "home": {
-      "tabName": "Home"
+      "tabName": "Home",
+      "title": "Welcome"
     },
     "discover": {
       "tabName": "Discover"
