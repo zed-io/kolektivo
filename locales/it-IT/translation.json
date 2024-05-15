@@ -677,8 +677,8 @@
     "body": "Riceverete entrambi un NFT dopo che avrà configurato il wallet collegato il numero telefonico."
   },
   "inviteRewardsBannerCUSD": {
-    "title": "Invita amici e ricevi ricompense",
-    "body": "Una volta che si sarà registrato e avrà aggiunto US$ 5 al portafoglio, riceverete entrambi 0,50 cUSD."
+    "title": "Invita gli amici e ricevi fino a 12 cUSD",
+    "body": "Una volta che avranno collegato il loro numero e aggiunto fondi a {{appName}}, riceverete entrambi 0,50 cUSD."
   },
   "inviteWithUrl": {
     "title": "Invita un amico",
@@ -2354,7 +2354,8 @@
       "totalValue": "Valore totale:",
       "apy": "~{{apy}}% APY",
       "exitPool": "Piscina di uscita",
-      "depositMore": "Deposita di più"
+      "depositMore": "Deposita di più",
+      "viewPools": "Visualizza le piscine"
     },
     "depositBottomSheet": {
       "title": "Revisione e deposito",
@@ -2366,6 +2367,15 @@
       "footer": "Depositando criptovalute in un pool Aave, accetti i rischi associati all'utilizzo di Aave. <0>Termini e condizioni</0>",
       "primaryCta": "Completa",
       "secondaryCta": "Annulla"
+    },
+    "collect": {
+      "title": "Congratulazioni! Controlla e riscuoti i tuoi guadagni",
+      "total": "TOTALE",
+      "plus": "PIÙ",
+      "rate": "Tasso (est.)",
+      "apy": "~{{apy}}% APY",
+      "fee": "Tassa sul gas",
+      "cta": "Raccogli i guadagni"
     }
   },
   "celoDollarAmount": "<0></0> Celo Dollar",

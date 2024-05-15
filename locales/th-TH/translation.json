@@ -677,8 +677,8 @@
     "body": "เมื่อมีการตั้งค่ากระเป๋าเงิน {{appName}} และเชื่อมต่อหมายเลขแล้ว คุณแต่ละคนจะได้รับ NFT พิเศษ"
   },
   "inviteRewardsBannerCUSD": {
-    "title": "เชิญเพื่อนแล้วรับรางวัล",
-    "body": "เมื่อเพื่อนของคุณตั้งค่าและเติมเงินในกระเป๋าเงิน {{appName}} แล้ว คุณทั้งคู่จะได้รับ 0.50 cUSD"
+    "title": "Invite friends and get up to 12 cUSD",
+    "body": "Once they connect their number and add funds to {{appName}}, you’ll both receive 0.50 cUSD."
   },
   "inviteWithUrl": {
     "title": "เชิญเพื่อน",
@@ -2352,7 +2352,8 @@
       "totalValue": "Total Value:",
       "apy": "~{{apy}}% APY",
       "exitPool": "Exit Pool",
-      "depositMore": "Deposit More"
+      "depositMore": "Deposit More",
+      "viewPools": "View Pools"
     },
     "depositBottomSheet": {
       "title": "Review & Deposit",
@@ -2364,6 +2365,15 @@
       "footer": "By depositing crypto into an Aave pool, you accept the risks associated with using Aave. <0>Terms & Conditions</0>",
       "primaryCta": "Complete",
       "secondaryCta": "ยกเลิก"
+    },
+    "collect": {
+      "title": "Congratulations! Review & collect your earnings",
+      "total": "TOTAL",
+      "plus": "PLUS",
+      "rate": "Rate (est.)",
+      "apy": "~{{apy}}% APY",
+      "fee": "Gas Fee",
+      "cta": "Collect Earnings"
     }
   },
   "celoDollarAmount_0": "&amp;lt;0&amp;gt;&amp;lt;/0&amp;gt; Celo ดอลลาร์"

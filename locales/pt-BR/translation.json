@@ -677,8 +677,8 @@
     "body": "Depois que seu amigo configurar a carteira dele e conectar o seu número de celular, vocês receberão um NFT."
   },
   "inviteRewardsBannerCUSD": {
-    "title": "Convide amigos e receba recompensas",
-    "body": "Depois que a pessoa configurar e adicionar US$ 5 à carteira {{appName}}, vocês dois receberão 0,50 cUSD."
+    "title": "Convide amigos e ganhe até 12 cUSD",
+    "body": "Quando ele conectar seu número e adicionar fundos a {{appName}}, vocês dois receberão 0,50 cUSD."
   },
   "inviteWithUrl": {
     "title": "Convide um amigo",
@@ -2354,7 +2354,8 @@
       "totalValue": "Valor Total:",
       "apy": "~{{apy}}% APY",
       "exitPool": "Pool de saída",
-      "depositMore": "Depositar mais"
+      "depositMore": "Depositar mais",
+      "viewPools": "Ver piscinas"
     },
     "depositBottomSheet": {
       "title": "Revisão e depósito",
@@ -2366,6 +2367,15 @@
       "footer": "Ao depositar criptomoedas em um pool da Aave, você aceita os riscos associados ao uso da Aave. <0>Termos e condições</0>",
       "primaryCta": "Completo",
       "secondaryCta": "Cancelar"
+    },
+    "collect": {
+      "title": "Parabéns a você! Analise e receba seus ganhos",
+      "total": "TOTAL",
+      "plus": "MAIS",
+      "rate": "Taxa (est.)",
+      "apy": "~{{apy}}% APY",
+      "fee": "Taxa de gás",
+      "cta": "Coleta de ganhos"
     }
   },
   "celoDollarAmount": "<0></0> Celo Dollar",

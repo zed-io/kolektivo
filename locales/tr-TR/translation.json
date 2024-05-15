@@ -677,8 +677,8 @@
     "body": "Söz konusu kişi {{appName}} cüzdanını oluşturup numarasını bağladığında ikiniz de özel bir NFT alacaksınız."
   },
   "inviteRewardsBannerCUSD": {
-    "title": "Arkadaşlarınızı davet edin ve ödüller kazanın",
-    "body": "{{appName}} cüzdanlarını kurup fon eklediklerinde, ikiniz de 0,50 cUSD alacaksınız."
+    "title": "Arkadaşlarınızı davet edin ve 12 cUSD'ye kadar kazanın",
+    "body": "Numaralarını bağladıklarında ve {{appName}}adresine para eklediklerinde, her ikiniz de 0,50 cUSD alacaksınız."
   },
   "inviteWithUrl": {
     "title": "Arkadaşını davet et",
@@ -2354,7 +2354,8 @@
       "totalValue": "Toplam Değer:",
       "apy": "~{{apy}}% APY",
       "exitPool": "Çıkış Havuzu",
-      "depositMore": "Daha Fazla Yatırın"
+      "depositMore": "Daha Fazla Yatırın",
+      "viewPools": "Havuzları Görüntüle"
     },
     "depositBottomSheet": {
       "title": "İnceleme ve Para Yatırma",
@@ -2366,6 +2367,15 @@
       "footer": "Bir Aave havuzuna kripto yatırarak, Aave kullanımıyla ilişkili riskleri kabul etmiş olursunuz. <0>Şartlar ve Koşullar</0>",
       "primaryCta": "Tamamlandı",
       "secondaryCta": "İptal"
+    },
+    "collect": {
+      "title": "Tebrikler! Kazancınızı gözden geçirin ve toplayın",
+      "total": "TOPLAM",
+      "plus": "ARTI",
+      "rate": "Oran (tahmini)",
+      "apy": "~{{apy}}% APY",
+      "fee": "Gaz Ücreti",
+      "cta": "Kazançları Toplayın"
     }
   },
   "celoDollarAmount": "<0></0> Celo Dollar",

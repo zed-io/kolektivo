@@ -677,8 +677,8 @@
     "body": "Po założeniu portfela w aplikacji {{appName}} i podłączeniu numeru oboje otrzymacie ekskluzywne NFT."
   },
   "inviteRewardsBannerCUSD": {
-    "title": "Zapraszaj znajomych i otrzymuj nagrody",
-    "body": "Po skonfigurowaniu i dodaniu środków do portfela {{appName}} otrzymacie po 0,50 cUSD."
+    "title": "Zaproś znajomych i zdobądź do 12 USD",
+    "body": "Gdy połączą swój numer i dodadzą środki do {{appName}}, oboje otrzymacie 0,50 cUSD."
   },
   "inviteWithUrl": {
     "title": "Zaproś znajomego",
@@ -2358,7 +2358,8 @@
       "totalValue": "Całkowita wartość:",
       "apy": "~{{apy}}% APY",
       "exitPool": "Wyjście z puli",
-      "depositMore": "Zdeponuj więcej"
+      "depositMore": "Zdeponuj więcej",
+      "viewPools": "Zobacz baseny"
     },
     "depositBottomSheet": {
       "title": "Przegląd i wpłata",
@@ -2370,6 +2371,15 @@
       "footer": "Wpłacając kryptowaluty do puli Aave, akceptujesz ryzyko związane z korzystaniem z Aave. <0>Regulamin</0>",
       "primaryCta": "Kompletny",
       "secondaryCta": "Anuluj"
+    },
+    "collect": {
+      "title": "Gratulacje! Przejrzyj i odbierz swoje zarobki",
+      "total": "RAZEM",
+      "plus": "PLUS",
+      "rate": "Stawka (szacunkowa)",
+      "apy": "~{{apy}}% APY",
+      "fee": "Opłata za gaz",
+      "cta": "Zbieraj zarobki"
     }
   },
   "celoDollarAmount_0": "<0></0> Celo Dolar",
