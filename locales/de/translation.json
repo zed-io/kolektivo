@@ -720,6 +720,17 @@
     "wallet2": "Digitale Vermögenswerte, die Vermögenswerte, mit denen du bei Valora interagierst, sind mit einzigartigen Risiken verbunden. Wenn du Valora nutzt, akzeptierst du diese Risiken und übernimmst die Verantwortung dafür. Bitte bedenke deine Finanzen und deine Risikobereitschaft, bevor du Entscheidungen triffst.",
     "fullTerms": "Lies unsere vollständigen <0>Geschäftsbedingungen</0>"
   },
+  "termsColloquial": {
+    "title": "Beginnen wir mit der Erstellung deines Portemonnaies",
+    "privacyHeading": "Deine Infos & Privatsphäre:",
+    "privacy1": "Wir sammeln Nutzungsdaten, die uns helfen, die App und die Sicherheit zu verbessern. Welche Art von Daten wir sammeln, wie wir sie verwenden und welche Rechte du in Bezug auf diese Daten hast, kannst du in unserer <0>Datenschutzerklärung</0> nachlesen.",
+    "privacy2": "Wenn du dich entscheidest, deine Telefonnummer zu verknüpfen, speichern wir eine verschlüsselte Kopie davon.",
+    "privacy3": "Wenn du dich entscheidest, deine Kontakte zu verbinden, verwenden wir ihre Namen, Nummern und Profilbilder, um sie leichter zu finden.",
+    "walletHeading": "Dein digitales Portemonnaie mit Valora:",
+    "wallet1": "Du bist dabei, eine digitale Brieftasche zu erstellen. Nur du hast den Schlüssel für deine Brieftasche. Wir können deinen Schlüssel oder dein Vermögen nicht wiederherstellen, wenn du ihn verlierst. Wir können auch keine Aktionen rückgängig machen, die über Valora auf Blockchains durchgeführt wurden.",
+    "wallet2": "Digitale Vermögenswerte, die Vermögenswerte, mit denen du bei Valora interagierst, sind mit einzigartigen Risiken verbunden. Wenn du Valora nutzt, akzeptierst du diese Risiken und übernimmst die Verantwortung dafür. Bitte bedenke deine Finanzen und deine Risikobereitschaft, bevor du Entscheidungen triffst.",
+    "fullTerms": "Lies unsere vollständigen <0>Geschäftsbedingungen</0>"
+  },
   "fullNameOrPsuedonym": "Vollständiger Name oder Alias",
   "namePlaceholder": "z.B. Name",
   "nameAndPicGuideCopyTitle": "Wie heißt du?",

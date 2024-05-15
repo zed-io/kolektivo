@@ -720,6 +720,17 @@
     "wallet2": "Zasoby cyfrowe, z którymi będziesz wchodzić w interakcje z Valora, wiążą się z wyjątkowym ryzykiem. Korzystając z Valora, akceptujesz to ryzyko i bierzesz za nie odpowiedzialność. Przed dokonaniem wyboru weź pod uwagę swoje finanse i tolerancję na ryzyko.",
     "fullTerms": "Przeczytaj nasz pełny <0>Regulamin</0>"
   },
+  "termsColloquial": {
+    "title": "Zacznijmy od stworzenia twojego portfela",
+    "privacyHeading": "Twoje informacje i prywatność:",
+    "privacy1": "Gromadzimy dane dotyczące użytkowania, które pomagają nam ulepszać aplikację i bezpieczeństwo. Rodzaj gromadzonych przez nas informacji, sposób ich wykorzystania oraz Twoje prawa związane z tymi informacjami można znaleźć w naszej <0>Polityce prywatności</0>.",
+    "privacy2": "Jeśli zdecydujesz się połączyć swój numer telefonu, będziemy przechowywać jego zaszyfrowaną kopię.",
+    "privacy3": "Jeśli zdecydujesz się połączyć swoje kontakty, użyjemy ich nazw, numerów i zdjęć profilowych, aby ułatwić ich znalezienie.",
+    "walletHeading": "Twój cyfrowy portfel z Valora:",
+    "wallet1": "Zamierzasz utworzyć cyfrowy portfel. Tylko Ty masz klucz do swojego portfela. Nie możemy odzyskać Twojego klucza ani Twoich aktywów, jeśli go zgubisz. Nie możemy również cofnąć działań podjętych przez Valora na blockchainach.",
+    "wallet2": "Zasoby cyfrowe, z którymi będziesz wchodzić w interakcje z Valora, wiążą się z wyjątkowym ryzykiem. Korzystając z Valora, akceptujesz to ryzyko i bierzesz za nie odpowiedzialność. Przed dokonaniem wyboru weź pod uwagę swoje finanse i tolerancję na ryzyko.",
+    "fullTerms": "Przeczytaj nasz pełny <0>Regulamin</0>"
+  },
   "fullNameOrPsuedonym": "Imię i nazwisko lub pseudonim",
   "namePlaceholder": "np. imię",
   "nameAndPicGuideCopyTitle": "Jak masz na imię?",
