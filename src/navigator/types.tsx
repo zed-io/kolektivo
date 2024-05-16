@@ -57,6 +57,7 @@ interface ValidateRecipientParams {
 }
 
 export type StackParamList = {
+  [Screens.ActivityScreen]: undefined
   [Screens.BackupComplete]:
     | undefined
     | {

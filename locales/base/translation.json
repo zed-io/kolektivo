@@ -2047,5 +2047,8 @@
     "body": "Buy or transfer compatible tokens to send crypto and explore web3!"
   },
   "map": "Map",
-  "explore": "Explore"
+  "explore": "Explore",
+  "activities": {
+    "more": "More Activities"
+  }
 }

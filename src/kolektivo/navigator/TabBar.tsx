@@ -1,6 +1,6 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import customVariables from 'src/kolektivo/styles/variables'
 import Colors from 'src/styles/colors'
 import variables from 'src/styles/variables'
@@ -13,6 +13,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
         const label = options.tabBarLabel !== undefined ? options.title : route.name
         const icon = options.tabBarIcon
         const isFocused = state.index === index
+        const color = isFocused ? Colors.primary : '#B4B9BD'
 
         const onPress = () => {
           const event = navigation.emit({
@@ -47,9 +48,10 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
             {icon &&
               icon({
                 focused: isFocused,
-                color: isFocused ? Colors.primary : Colors.primaryDisabled,
+                color,
                 size: 24,
               })}
+            <Text style={{ color }}>{label && label}</Text>
           </TouchableOpacity>
         )
       })}

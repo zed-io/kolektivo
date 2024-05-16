@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import WalletHome from 'src/home/WalletHome'
 import { Home } from 'src/icons/Home'
 import Pin from 'src/icons/Pin'
+import ActivityScreen from 'src/kolektivo/activities/ActivityScreen'
 import MapScreen from 'src/kolektivo/map/MapScreen'
 import { TabBar } from 'src/kolektivo/navigator/TabBar'
 import { Screens } from 'src/navigator/Screens'
@@ -27,7 +28,17 @@ export default function BottomTabNavigator() {
         }}
       />
       <Tab.Screen
+        name={Screens.ActivityScreen}
+        component={ActivityScreen}
+        options={{
+          title: t('activity') ?? undefined,
+          tabBarLabel: t('activity') ?? undefined,
+          tabBarIcon: null,
+        }}
+      />
+      <Tab.Screen
         name={Screens.MapScreen}
+        // @ts-ignore
         component={MapScreen}
         options={{
           title: t('explore') ?? undefined,
