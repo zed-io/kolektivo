@@ -1,19 +1,17 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import WalletHome from 'src/home/WalletHome'
 import { Home } from 'src/icons/Home'
 import Pin from 'src/icons/Pin'
 import ActivityScreen from 'src/kolektivo/activities/ActivityScreen'
+import { Activity } from 'src/kolektivo/icons/Activity'
 import MapScreen from 'src/kolektivo/map/MapScreen'
 import { TabBar } from 'src/kolektivo/navigator/TabBar'
 import { Screens } from 'src/navigator/Screens'
-import { StackParamList } from 'src/navigator/types'
 
 const Tab = createBottomTabNavigator()
 
-type Props = NativeStackScreenProps<StackParamList, Screens.TabNavigator>
 export default function BottomTabNavigator() {
   const { t } = useTranslation()
   return (
@@ -33,7 +31,7 @@ export default function BottomTabNavigator() {
         options={{
           title: t('activity') ?? undefined,
           tabBarLabel: t('activity') ?? undefined,
-          tabBarIcon: null,
+          tabBarIcon: Activity,
         }}
       />
       <Tab.Screen

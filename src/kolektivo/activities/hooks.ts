@@ -6,17 +6,9 @@ export const useDefaultActivities = () => {
 
   activities.push({
     activityId: 'kol-tt-edu',
-    title: 'Kolektivo Trinidad',
+    title: 'Kolektivo Trinidad Event',
     activityHost: 'Zed Labs',
-    activityDate: '2024-06-01',
-    activityImageUri: 'https://via.placeholder.com/300',
-  })
-
-  activities.push({
-    activityId: 'kol-tt-edu',
-    title: 'Kolektivo Trinidad',
-    activityHost: 'Zed Labs',
-    activityDate: '2024-06-01',
+    activityDateTime: 1717434000,
     activityImageUri: 'https://via.placeholder.com/300',
   })
 

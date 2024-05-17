@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { RefreshControl, SectionList, StyleSheet, Text } from 'react-native'
+import { RefreshControl, ScrollView, SectionList, StyleSheet, Text } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ActivityListItem } from 'src/kolektivo/activities/ActivityListItem'
@@ -30,24 +30,25 @@ const ActivityScreen = () => {
   return (
     <SafeAreaView testID="ActivityHome" style={styles.container} edges={['top']}>
       <DrawerTopBar leftElement={null} rightElement={null} scrollPosition={scrollPosition} />
-      <AnimatedSectionList
+
+      <ScrollView
         style={styles.horizontalList}
-        sections={others}
         horizontal
-        keyExtractor={(item) => (item as any).title}
-        renderItem={({ item }) => <ActivityListItem {...(item as ActivityDetail)} />}
-        refreshControl={<RefreshControl refreshing={false} tintColor={'transparent'} />}
-        onEndReachedThreshold={0.1}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        alwaysBounceVertical={false}
+        alwaysBounceHorizontal={true}
         scrollEventThrottle={16}
-        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollPosition } } }], {
-          useNativeDriver: true,
-        })}
-      />
+      >
+        {activities.map((activity) => (
+          <ActivityListItem key={activity.activityId} {...activity} />
+        ))}
+      </ScrollView>
       <Text style={styles.header}>{t('activities.more')}</Text>
       <AnimatedSectionList
         style={styles.verticalList}
         sections={sections}
-        keyExtractor={(item) => (item as any).title}
+        keyExtractor={(item) => (item as any).id}
         renderItem={({ item }) => <ActivityListItem {...(item as ActivityDetail)} fullWidth />}
         refreshControl={<RefreshControl refreshing={false} tintColor={'transparent'} />}
         onEndReachedThreshold={0.1}

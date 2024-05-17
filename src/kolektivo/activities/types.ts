@@ -2,6 +2,6 @@ export type ActivityDetail = {
   title: string
   activityId: string
   activityHost: string
-  activityDate: string
+  activityDateTime: number
   activityImageUri?: string
 }
