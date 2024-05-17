@@ -417,16 +417,16 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = 48TPT4QN6K;
+						DevelopmentTeam = 2QB23S3GZ3;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					0F49F5EC270F2F2A0005F897 = {
 						CreatedOnToolsVersion = 12.5;
-						DevelopmentTeam = 48TPT4QN6K;
+						DevelopmentTeam = 2QB23S3GZ3;
 						ProvisioningStyle = Automatic;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 48TPT4QN6K;
+						DevelopmentTeam = 2QB23S3GZ3;
 						LastSwiftMigration = 1250;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -852,7 +852,7 @@
 			baseConfigurationReference = A7DD4FB9579104C1EB8C2328 /* Pods-celoTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 48TPT4QN6K;
+				DEVELOPMENT_TEAM = 2QB23S3GZ3;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -879,7 +879,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = 48TPT4QN6K;
+				DEVELOPMENT_TEAM = 2QB23S3GZ3;
 				INFOPLIST_FILE = celoTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -919,7 +919,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 48TPT4QN6K;
+				DEVELOPMENT_TEAM = 2QB23S3GZ3;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -959,7 +959,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 48TPT4QN6K;
+				DEVELOPMENT_TEAM = 2QB23S3GZ3;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = NotificationService/Info.plist;
@@ -982,7 +982,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = celo/celo.entitlements;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 48TPT4QN6K;
+				DEVELOPMENT_TEAM = 2QB23S3GZ3;
 				INFOPLIST_FILE = celo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1011,7 +1011,7 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = celo/celo.entitlements;
-				DEVELOPMENT_TEAM = 48TPT4QN6K;
+				DEVELOPMENT_TEAM = 2QB23S3GZ3;
 				INFOPLIST_FILE = celo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
