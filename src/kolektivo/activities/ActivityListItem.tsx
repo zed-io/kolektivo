@@ -2,6 +2,7 @@ import React from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { ActivityDetail } from 'src/kolektivo/activities/types'
 import variables from 'src/kolektivo/styles/variables'
+import Colors from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 
 type OwnProps = ActivityDetail & {
@@ -58,11 +59,11 @@ const styles = StyleSheet.create({
     ...typeScale.bodyMedium,
   },
   host: {
-    fontSize: 14,
-    color: 'gray',
+    ...typeScale.bodySmall,
+    color: Colors.gray5,
   },
   date: {
-    fontSize: 14,
-    color: 'gray',
+    ...typeScale.bodySmall,
+    color: Colors.gray5,
   },
 })
