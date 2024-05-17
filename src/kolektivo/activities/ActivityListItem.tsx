@@ -35,12 +35,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     borderRadius: variables.borderRadius,
-    marginRight: variables.contentPadding,
+    marginHorizontal: variables.contentPadding / 2,
     width: 300,
   },
   fullWidth: {
     width: '100%',
     height: 200,
+    marginHorizontal: 0,
     marginBottom: variables.contentPadding,
   },
   image: {
@@ -52,7 +53,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: variables.contentPadding,
-    marginLeft: 16,
   },
   title: {
     ...typeScale.bodyMedium,
