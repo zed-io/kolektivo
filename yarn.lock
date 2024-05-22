@@ -4834,11 +4834,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/geojson@^7946.0.13":
-  version "7946.0.14"
-  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.14.tgz#319b63ad6df705ee2a65a73ef042c8271e696613"
-  integrity sha512-WCfD5Ht3ZesJUsONdhvm84dmzWOiOzOAqOncN0++w0lBw1o8OuDNJF2McvvCef/yBqb/HYRahp1BYtODFQ8bRg==
-
 "@types/glob@*":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.2.0.tgz#bc1b5bf3aa92f25bd5dd39f35c57361bdce5b2eb"
@@ -15328,13 +15323,6 @@ react-native-localize@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-3.1.0.tgz#1b322c05af21fd3d78d44e9b747d872ab5155b10"
   integrity sha512-A7Rrxl8vuAr5FAqtMFrM5ELLdmszohK6FoHL6qlgxx4HScyOnadoZksbvKHbn+zV5nE8kud2Z4kJM10cN120Zg==
-
-react-native-maps@^1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.10.0.tgz#1b78270473f4caadc5ff8e8400285b6db9f14e12"
-  integrity sha512-Zs6lHZucEijTwkRVFyInMbPVkJ2UudDEI2fJPc8ArdzdnwDFAdL6OagqTjNRZyI1DBPHRihazfIWpy2+X1VwLg==
-  dependencies:
-    "@types/geojson" "^7946.0.13"
 
 react-native-modal@^13.0.1:
   version "13.0.1"
