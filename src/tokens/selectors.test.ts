@@ -5,11 +5,12 @@ import {
   _feeCurrenciesByNetworkIdSelector,
   cashInTokensByNetworkIdSelector,
   cashOutTokensByNetworkIdSelector,
-  defaultTokenToSendSelector,
   feeCurrenciesSelector,
   feeCurrenciesWithPositiveBalancesSelector,
   importedTokensSelector,
   lastKnownTokenBalancesSelector,
+  sortedTokensWithBalanceOrShowZeroBalanceSelector,
+  sortedTokensWithBalanceSelector,
   spendTokensByNetworkIdSelector,
   swappableFromTokensByNetworkIdSelector,
   swappableToTokensByNetworkIdSelector,
@@ -18,7 +19,6 @@ import {
   tokensByUsdBalanceSelector,
   tokensListSelector,
   tokensListWithAddressSelector,
-  tokensWithNonZeroBalanceAndShowZeroBalanceSelector,
   tokensWithUsdValueSelector,
   totalTokenBalanceSelector,
 } from 'src/tokens/selectors'
@@ -357,14 +357,6 @@ describe('tokensWithUsdValueSelector', () => {
   })
 })
 
-describe(defaultTokenToSendSelector, () => {
-  describe('when fetching the token with the highest balance', () => {
-    it('returns the right token', () => {
-      expect(defaultTokenToSendSelector(state)).toEqual('celo-alfajores:0x1')
-    })
-  })
-})
-
 describe(totalTokenBalanceSelector, () => {
   describe('when fetching the total token balance', () => {
     it('returns the right amount', () => {
@@ -387,9 +379,36 @@ describe(totalTokenBalanceSelector, () => {
   })
 })
 
-describe('tokensWithNonZeroBalanceAndShowZeroBalanceSelector', () => {
-  it('returns expected tokens in the correct order', () => {
-    const tokens = tokensWithNonZeroBalanceAndShowZeroBalanceSelector(state, [
+describe('sortedTokensWithBalanceSelector', () => {
+  it('returns expected tokens in the correct order without zero balances', () => {
+    const tokens = sortedTokensWithBalanceSelector(state, [
+      NetworkId['celo-alfajores'],
+      NetworkId['ethereum-sepolia'],
+    ])
+
+    expect(tokens.map((token) => token.tokenId)).toEqual([
+      'celo-alfajores:0x1',
+      'celo-alfajores:0xeur',
+      'celo-alfajores:0x4',
+      'celo-alfajores:0x5',
+      'ethereum-sepolia:0x7',
+    ])
+  })
+
+  it('avoids unnecessary recomputation', () => {
+    const prevComputations = sortedTokensWithBalanceSelector.recomputations()
+    const tokens = sortedTokensWithBalanceSelector(state, [NetworkId['celo-alfajores']])
+    const tokens2 = sortedTokensWithBalanceSelector(state, [NetworkId['celo-alfajores']])
+    expect(tokens).toEqual(tokens2)
+    expect(sortedTokensWithBalanceOrShowZeroBalanceSelector.recomputations()).toEqual(
+      prevComputations + 1
+    )
+  })
+})
+
+describe('sortedTokensWithBalanceOrShowZeroBalanceSelector', () => {
+  it('returns expected tokens in the correct order including show zero balances', () => {
+    const tokens = sortedTokensWithBalanceOrShowZeroBalanceSelector(state, [
       NetworkId['celo-alfajores'],
       NetworkId['ethereum-sepolia'],
     ])
@@ -404,16 +423,17 @@ describe('tokensWithNonZeroBalanceAndShowZeroBalanceSelector', () => {
       'celo-alfajores:0xusd',
     ])
   })
+
   it('avoids unnecessary recomputation', () => {
-    const prevComputations = tokensWithNonZeroBalanceAndShowZeroBalanceSelector.recomputations()
-    const tokens = tokensWithNonZeroBalanceAndShowZeroBalanceSelector(state, [
+    const prevComputations = sortedTokensWithBalanceOrShowZeroBalanceSelector.recomputations()
+    const tokens = sortedTokensWithBalanceOrShowZeroBalanceSelector(state, [
       NetworkId['celo-alfajores'],
     ])
-    const tokens2 = tokensWithNonZeroBalanceAndShowZeroBalanceSelector(state, [
+    const tokens2 = sortedTokensWithBalanceOrShowZeroBalanceSelector(state, [
       NetworkId['celo-alfajores'],
     ])
     expect(tokens).toEqual(tokens2)
-    expect(tokensWithNonZeroBalanceAndShowZeroBalanceSelector.recomputations()).toEqual(
+    expect(sortedTokensWithBalanceOrShowZeroBalanceSelector.recomputations()).toEqual(
       prevComputations + 1
     )
   })
@@ -493,6 +513,16 @@ describe('feeCurrenciesSelector', () => {
           isFeeCurrency: true,
           balance: '0',
         },
+        ['celo-alfajores:0xstbltest']: {
+          tokenId: 'celo-alfajores:0xstbltest',
+          networkId: NetworkId['celo-alfajores'],
+          name: 'STBLTEST',
+          address: '0xstbltest',
+          balance: '10',
+          symbol: 'STBLTEST',
+          priceFetchedAt: mockDate,
+          feeCurrencyAdapterAddress: '0xstbltest',
+        },
         [mockCeloTokenId]: {
           ...mockTokenBalances[mockCeloTokenId],
           isFeeCurrency: true,
@@ -515,6 +545,7 @@ describe('feeCurrenciesSelector', () => {
       mockCeloTokenId,
       'celo-alfajores:0xusd',
       'celo-alfajores:0xeur',
+      'celo-alfajores:0xstbltest',
     ])
   })
 
@@ -547,6 +578,16 @@ describe('feeCurrenciesWithPositiveBalancesSelector', () => {
           ...state.tokens.tokenBalances['celo-alfajores:0xeur'],
           isFeeCurrency: true,
           balance: '0',
+        },
+        ['celo-alfajores:0xstbltest']: {
+          tokenId: 'celo-alfajores:0xstbltest',
+          networkId: NetworkId['celo-alfajores'],
+          name: 'STBLTEST',
+          address: '0xstbltest',
+          balance: '0',
+          symbol: 'STBLTEST',
+          priceFetchedAt: mockDate,
+          feeCurrencyAdapterAddress: '0xstbltest',
         },
         [mockCeloTokenId]: {
           ...mockTokenBalances[mockCeloTokenId],

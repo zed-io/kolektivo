@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { ActivityIndicator, SectionList, StyleSheet, View } from 'react-native'
 import SectionHead from 'src/components/SectionHead'
 import GetStarted from 'src/home/GetStarted'
-import useSelector from 'src/redux/useSelector'
+import { useSelector } from 'src/redux/hooks'
 import { getFeatureGate } from 'src/statsig'
 import { StatsigFeatureGates } from 'src/statsig/types'
 import colors from 'src/styles/colors'
@@ -22,14 +22,8 @@ import {
   pendingStandbyTransactionsSelector,
   transactionsSelector,
 } from 'src/transactions/reducer'
-import { TokenTransaction, TransactionStatus } from 'src/transactions/types'
+import { TokenTransaction } from 'src/transactions/types'
 import { groupFeedItemsInSections } from 'src/transactions/utils'
-
-export type FeedTokenProperties = {
-  status: TransactionStatus // for standby transactions
-}
-
-export type FeedTokenTransaction = TokenTransaction & FeedTokenProperties
 
 function TransactionFeed() {
   const { loading, error, transactions, fetchingMoreTransactions, fetchMoreTransactions } =
@@ -74,7 +68,7 @@ function TransactionFeed() {
     )
   }
 
-  function renderItem({ item: tx }: { item: FeedTokenTransaction; index: number }) {
+  function renderItem({ item: tx }: { item: TokenTransaction; index: number }) {
     switch (tx.__typename) {
       case 'TokenExchangeV3':
         return <SwapFeedItem key={tx.transactionHash} exchange={tx} />

@@ -1,22 +1,25 @@
 import { fireEvent, render } from '@testing-library/react-native'
 import * as React from 'react'
 import { Provider } from 'react-redux'
+import { hideAlert } from 'src/alert/actions'
 import { HomeEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
-import {
-  AssetsTokenBalance,
-  FiatExchangeTokenBalance,
-  HomeTokenBalance,
-} from 'src/components/TokenBalance'
+import { toggleHideBalances } from 'src/app/actions'
+import { AssetsTokenBalance, FiatExchangeTokenBalance } from 'src/components/TokenBalance'
 import { LocalCurrencyCode } from 'src/localCurrency/consts'
-import { navigate } from 'src/navigator/NavigationService'
+import { navigateClearingStack } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { getDynamicConfigParams, getFeatureGate } from 'src/statsig'
-import { StatsigFeatureGates } from 'src/statsig/types'
 import { NetworkId } from 'src/transactions/types'
 import { ONE_DAY_IN_MILLIS } from 'src/utils/time'
 import { createMockStore, getElementText } from 'test/utils'
-import { mockPositions, mockTokenBalances } from 'test/values'
+import {
+  mockCeurTokenId,
+  mockEthTokenId,
+  mockPoofTokenId,
+  mockPositions,
+  mockTokenBalances,
+} from 'test/values'
 
 jest.mock('src/statsig')
 
@@ -38,7 +41,7 @@ jest.mock('src/web3/networkConfig', () => {
 
 const defaultStore = {
   tokens: {
-    tokenBalances: mockTokenBalances,
+    tokenBalances: mockTokenBalances, // only one token has non-zero balance, total value is $0.50
   },
   positions: {
     positions: mockPositions, // Total value of positions is ~$7.91
@@ -49,555 +52,174 @@ const defaultStore = {
     usdToLocalRate: '1',
   },
 }
+const noPositions = {
+  positions: {
+    positions: [],
+  },
+}
+const noTokens = {
+  tokens: {
+    tokenBalances: {},
+  },
+}
+const multipleTokens = {
+  tokens: {
+    tokenBalances: {
+      [mockCeurTokenId]: {
+        ...mockTokenBalances[mockCeurTokenId],
+        balance: '7',
+      },
+      [mockEthTokenId]: {
+        ...mockTokenBalances[mockEthTokenId],
+        balance: '1.1',
+      },
+      [mockPoofTokenId]: {
+        ...mockTokenBalances[mockPoofTokenId],
+        balance: '5',
+        priceUsd: undefined,
+      },
+    },
+  },
+}
+const staleTokens = {
+  tokens: {
+    tokenBalances: {
+      [mockCeurTokenId]: {
+        ...mockTokenBalances[mockCeurTokenId],
+        priceFetchedAt: Date.now() - ONE_DAY_IN_MILLIS,
+        balance: '5',
+      },
+      [mockEthTokenId]: {
+        ...mockTokenBalances[mockEthTokenId],
+        priceFetchedAt: Date.now() - ONE_DAY_IN_MILLIS,
+        balance: '5',
+      },
+    },
+  },
+}
 
 jest.mocked(getDynamicConfigParams).mockReturnValue({
-  showBalances: [NetworkId['celo-alfajores']],
+  showBalances: [
+    NetworkId['ethereum-sepolia'],
+    NetworkId['celo-alfajores'],
+    NetworkId['arbitrum-sepolia'],
+    NetworkId['op-sepolia'],
+  ],
 })
 
-describe('FiatExchangeTokenBalance and HomeTokenBalance', () => {
+// Behavior specific to AssetsTokenBalance
+describe('AssetsTokenBalance', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    jest
-      .mocked(getFeatureGate)
-      .mockImplementation(
-        (featureGate) => featureGate !== StatsigFeatureGates.SHOW_ASSET_DETAILS_SCREEN
-      )
-  })
-
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'renders correctly with multiple token balances and positions',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore({
-        ...defaultStore,
-        tokens: {
-          tokenBalances: {
-            'celo-alfajores:0x00400FcbF0816bebB94654259de7273f4A05c762': {
-              priceUsd: '0.1',
-              tokenId: 'celo-alfajores:0x00400FcbF0816bebB94654259de7273f4A05c762',
-              address: '0x00400FcbF0816bebB94654259de7273f4A05c762',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'POOF',
-              balance: '5',
-              priceFetchedAt: Date.now(),
-            },
-            'celo-alfajores:0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F': {
-              priceUsd: '1.16',
-              tokenId: 'celo-alfajores:0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
-              address: '0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'cEUR',
-              balance: '7',
-              priceFetchedAt: Date.now(),
-            },
-            'celo-alfajores:0x048F47d358EC521a6cf384461d674750a3cB58C8': {
-              address: '0x048F47d358EC521a6cf384461d674750a3cB58C8',
-              tokenId: 'celo-alfajores:0x048F47d358EC521a6cf384461d674750a3cB58C8',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'TT',
-              balance: '10',
-              priceFetchedAt: Date.now(),
-            },
-          },
-        },
-      })
-
-      const tree = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      expect(tree.queryByTestId('ViewBalances')).toBeTruthy()
-      expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$16.53')
-    }
-  )
-
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'navigates to TokenBalances screen on View Balances tap if AssetDetails feature gate is false',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore({
-        ...defaultStore,
-        tokens: {
-          // FiatExchangeTokenBalance requires 2 balances to display the View Balances button
-          tokenBalances: {
-            'celo-alfajores:0x00400FcbF0816bebB94654259de7273f4A05c762': {
-              priceUsd: '0.1',
-              tokenId: 'celo-alfajores:0x00400FcbF0816bebB94654259de7273f4A05c762',
-              address: '0x00400FcbF0816bebB94654259de7273f4A05c762',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'POOF',
-              balance: '5',
-              priceFetchedAt: Date.now(),
-            },
-            'celo-alfajores:0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F': {
-              priceUsd: '1.16',
-              address: '0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
-              tokenId: 'celo-alfajores:0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'cEUR',
-              balance: '7',
-              priceFetchedAt: Date.now(),
-            },
-          },
-        },
-      })
-
-      const { getByTestId } = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      fireEvent.press(getByTestId('ViewBalances'))
-      expect(navigate).toHaveBeenCalledWith(Screens.TokenBalances)
-    }
-  )
-
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'navigates to Assets screen on View Balances tap if AssetDetails feature gate is true',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore({
-        ...defaultStore,
-        tokens: {
-          // FiatExchangeTokenBalance requires 2 balances to display the View Balances button
-          tokenBalances: {
-            'celo-alfajores:0x00400FcbF0816bebB94654259de7273f4A05c762': {
-              priceUsd: '0.1',
-              tokenId: 'celo-alfajores:0x00400FcbF0816bebB94654259de7273f4A05c762',
-              address: '0x00400FcbF0816bebB94654259de7273f4A05c762',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'POOF',
-              balance: '5',
-              priceFetchedAt: Date.now(),
-            },
-            'celo-alfajores:0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F': {
-              priceUsd: '1.16',
-              address: '0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
-              tokenId: 'celo-alfajores:0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'cEUR',
-              balance: '7',
-              priceFetchedAt: Date.now(),
-            },
-          },
-        },
-      })
-
-      jest.mocked(getFeatureGate).mockReturnValue(true)
-
-      const { getByTestId } = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      fireEvent.press(getByTestId('ViewBalances'))
-      expect(navigate).toHaveBeenCalledWith(Screens.Assets)
-    }
-  )
-
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'renders correctly with zero token balance and zero positions',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore({
-        ...defaultStore,
-        tokens: {
-          tokenBalances: {},
-        },
-        positions: {
-          positions: [],
-        },
-      })
-
-      const tree = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      expect(tree.queryByTestId('ViewBalances')).toBeFalsy()
-      expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$0.00')
-    }
-  )
-
-  it('HomeTokenBalance shows View Assets link if balance is zero and feature gate is true', async () => {
-    const store = createMockStore({
-      ...defaultStore,
-      tokens: {
-        tokenBalances: {},
-      },
-      positions: {
-        positions: [],
-      },
-    })
-
     jest.mocked(getFeatureGate).mockReturnValue(true)
-
-    const tree = render(
-      <Provider store={store}>
-        <HomeTokenBalance />
-      </Provider>
-    )
-
-    expect(tree.getByTestId('ViewBalances')).toBeTruthy()
-    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$0.00')
   })
 
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'renders correctly with zero balance and some positions',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore({
-        ...defaultStore,
-        tokens: {
-          tokenBalances: {},
-        },
-      })
-
-      const tree = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      expect(tree.queryByTestId('ViewBalances')).toBeFalsy()
-      expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$7.91')
-    }
-  )
-
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'renders correctly with one token balance and zero positions',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore({
-        ...defaultStore,
-        positions: {
-          positions: [],
-        },
-      })
-
-      const tree = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$0.50')
-    }
-  )
-
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'renders correctly with one token balance and some positions',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore(defaultStore)
-
-      const tree = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$8.41')
-    }
-  )
-
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'renders correctly with one token balance and another token without priceUsd with balance and zero positions',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore({
-        ...defaultStore,
-        tokens: {
-          tokenBalances: {
-            'celo-alfajores:0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F': {
-              priceUsd: '1.16',
-              address: '0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
-              tokenId: 'celo-alfajores:0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'cEUR',
-              balance: '7',
-              priceFetchedAt: Date.now(),
-            },
-            'celo-alfajores:0x048F47d358EC521a6cf384461d674750a3cB58C8': {
-              address: '0x048F47d358EC521a6cf384461d674750a3cB58C8',
-              tokenId: 'celo-alfajores:0x048F47d358EC521a6cf384461d674750a3cB58C8',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'TT',
-              balance: '10',
-            },
-          },
-        },
-        positions: {
-          positions: [],
-        },
-      })
-
-      const tree = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      expect(tree.queryByTestId('ViewBalances')).toBeTruthy()
-      expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$8.12')
-    }
-  )
-
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'renders correctly with one token balance and another token without priceUsd with balance and some positions',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore({
-        ...defaultStore,
-        tokens: {
-          tokenBalances: {
-            'celo-alfajores:0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F': {
-              priceUsd: '1.16',
-              address: '0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
-              tokenId: 'celo-alfajores:0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'cEUR',
-              balance: '7',
-              priceFetchedAt: Date.now(),
-            },
-            'celo-alfajores:0x048F47d358EC521a6cf384461d674750a3cB58C8': {
-              address: '0x048F47d358EC521a6cf384461d674750a3cB58C8',
-              tokenId: 'celo-alfajores:0x048F47d358EC521a6cf384461d674750a3cB58C8',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'TT',
-              balance: '10',
-            },
-          },
-        },
-      })
-
-      const tree = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      expect(tree.queryByTestId('ViewBalances')).toBeTruthy()
-      expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$16.03')
-    }
-  )
-
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'renders correctly with no token balance and no positions',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore({
-        tokens: {
-          tokenBalances: {},
-        },
-        positions: {
-          positions: [],
-        },
-      })
-
-      const tree = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      expect(tree.queryByTestId('ViewBalances')).toBeFalsy()
-      expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('₱0.00')
-    }
-  )
-
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'renders correctly with no token balance and some positions',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore({
-        tokens: {
-          tokenBalances: {},
-        },
-      })
-
-      const tree = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      expect(tree.queryByTestId('ViewBalances')).toBeFalsy()
-      expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('₱10.52')
-    }
-  )
-
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'renders correctly with stale token balance and no positions',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore({
-        tokens: {
-          tokenBalances: {
-            'celo-alfajores:native': {
-              tokenId: 'celo-alfajores:native',
-              name: 'Celo',
-              address: '0xcelo',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'CELO',
-              balance: '1',
-              priceUsd: '0.90',
-              priceFetchedAt: Date.now() - ONE_DAY_IN_MILLIS,
-              isFeeCurrency: true,
-            },
-            'celo-alfajores:0x048F47d358EC521a6cf384461d674750a3cB58C8': {
-              address: '0x048F47d358EC521a6cf384461d674750a3cB58C8',
-              tokenId: 'celo-alfajores:0x048F47d358EC521a6cf384461d674750a3cB58C8',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'TT',
-              balance: '10',
-            },
-          },
-        },
-        positions: {
-          positions: [],
-        },
-      })
-
-      const tree = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      expect(tree.queryByTestId('ViewBalances')).toBeTruthy()
-      expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('₱-')
-    }
-  )
-
-  it.each([HomeTokenBalance, FiatExchangeTokenBalance])(
-    'renders correctly with stale token balance and some positions',
-    async (TokenBalanceComponent) => {
-      const store = createMockStore({
-        tokens: {
-          tokenBalances: {
-            'celo-alfajores:native': {
-              tokenId: 'celo-alfajores:native',
-              name: 'Celo',
-              address: '0xcelo',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'CELO',
-              balance: '1',
-              priceUsd: '0.90',
-              priceFetchedAt: Date.now() - ONE_DAY_IN_MILLIS,
-              isFeeCurrency: true,
-            },
-            'celo-alfajores:0x048F47d358EC521a6cf384461d674750a3cB58C8': {
-              address: '0x048F47d358EC521a6cf384461d674750a3cB58C8',
-              tokenId: 'celo-alfajores:0x048F47d358EC521a6cf384461d674750a3cB58C8',
-              networkId: NetworkId['celo-alfajores'],
-              symbol: 'TT',
-              balance: '10',
-            },
-          },
-        },
-      })
-
-      const tree = render(
-        <Provider store={store}>
-          <TokenBalanceComponent />
-        </Provider>
-      )
-
-      expect(tree.queryByTestId('ViewBalances')).toBeTruthy()
-      // Even we have positions, the balance is stale so we show '-'
-      expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('₱-')
-    }
-  )
-
-  it('renders correctly when fetching the token balances failed and no positions', async () => {
-    const store = createMockStore({
-      tokens: {
-        tokenBalances: {},
-        error: true,
+  it.each([
+    {
+      testName: 'zero token balance and zero positions',
+      storeOverrides: {
+        ...noTokens,
+        ...noPositions,
       },
-      positions: {
-        positions: [],
+      expectedTotal: '$0.00',
+    },
+    {
+      testName: 'zero token balance and some positions',
+      storeOverrides: {
+        ...noTokens,
       },
-    })
-
-    const tree = render(
-      <Provider store={store}>
-        <HomeTokenBalance />
-      </Provider>
-    )
-
-    expect(tree.queryByTestId('ViewBalances')).toBeFalsy()
-    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('₱-')
-
-    expect(store.getActions()).toMatchInlineSnapshot(`
-      [
-        {
-          "action": {
-            "type": "HOME/REFRESH_BALANCES",
-          },
-          "alertType": "toast",
-          "buttonMessage": "outOfSyncBanner.button",
-          "dismissAfter": null,
-          "displayMethod": 0,
-          "message": "outOfSyncBanner.message",
-          "title": "outOfSyncBanner.title",
-          "type": "ALERT/SHOW",
-          "underlyingError": undefined,
-        },
-      ]
-    `)
-  })
-
-  it('renders correctly when fetching the token balances failed and some positions', async () => {
-    const store = createMockStore({
-      tokens: {
-        tokenBalances: {},
-        error: true,
+      expectedTotal: '$7.91',
+    },
+    {
+      testName: 'one token balance and some positions',
+      storeOverrides: {},
+      expectedTotal: '$8.41',
+    },
+    {
+      testName: 'one token balance and zero positions',
+      storeOverrides: {
+        ...noPositions,
       },
-    })
-
-    const tree = render(
-      <Provider store={store}>
-        <HomeTokenBalance />
-      </Provider>
-    )
-
-    expect(tree.queryByTestId('ViewBalances')).toBeFalsy()
-    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('₱-')
-
-    expect(store.getActions()).toMatchInlineSnapshot(`
-      [
-        {
-          "action": {
-            "type": "HOME/REFRESH_BALANCES",
-          },
-          "alertType": "toast",
-          "buttonMessage": "outOfSyncBanner.button",
-          "dismissAfter": null,
-          "displayMethod": 0,
-          "message": "outOfSyncBanner.message",
-          "title": "outOfSyncBanner.title",
-          "type": "ALERT/SHOW",
-          "underlyingError": undefined,
-        },
-      ]
-    `)
-  })
-
-  it('renders correctly when fetching the local currency failed and no positions', async () => {
+      expectedTotal: '$0.50',
+    },
+    {
+      testName: 'multiple token balances (some with no price) and positions',
+      storeOverrides: {
+        ...multipleTokens,
+      },
+      expectedTotal: '$1,666.03',
+    },
+    {
+      testName: 'stale token balance and positions',
+      storeOverrides: {
+        ...staleTokens,
+      },
+      expectedTotal: '$-',
+    },
+  ])('renders correctly with $testName', ({ storeOverrides, expectedTotal }) => {
     const store = createMockStore({
       ...defaultStore,
-      localCurrency: {
-        error: true,
-        usdToLocalRate: null,
-      },
-      positions: {
-        positions: [],
-      },
+      ...storeOverrides,
     })
 
     const tree = render(
       <Provider store={store}>
-        <HomeTokenBalance />
+        <AssetsTokenBalance showInfo={false} />
       </Provider>
     )
 
-    expect(tree.queryByTestId('ViewBalances')).toBeTruthy()
-    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('₱-')
+    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual(expectedTotal)
+  })
+
+  it.each([
+    {
+      testName: 'fetching the token balances failed and no positions',
+      storeOverrides: {
+        tokens: {
+          tokenBalances: {},
+          error: true,
+        },
+        ...noPositions,
+      },
+    },
+    {
+      testName: 'fetching the token balances failed and some positions',
+      storeOverrides: {
+        tokens: {
+          tokenBalances: {},
+          error: true,
+        },
+      },
+    },
+    {
+      testName: 'fetching the local currency failed and no positions',
+      storeOverrides: {
+        ...defaultStore,
+        localCurrency: {
+          error: true,
+          usdToLocalRate: null,
+        },
+        ...noPositions,
+      },
+    },
+    {
+      testName: 'fetching the local currency failed and some positions',
+      storeOverrides: {
+        ...defaultStore,
+        localCurrency: {
+          error: true,
+          usdToLocalRate: null,
+        },
+      },
+    },
+  ])('renders error banner when $testName', ({ storeOverrides }) => {
+    const store = createMockStore(storeOverrides)
+
+    render(
+      <Provider store={store}>
+        <AssetsTokenBalance showInfo={false} />
+      </Provider>
+    )
 
     expect(store.getActions()).toMatchInlineSnapshot(`
       [
@@ -618,126 +240,6 @@ describe('FiatExchangeTokenBalance and HomeTokenBalance', () => {
     `)
   })
 
-  it('renders correctly when fetching the local currency failed and some positions', async () => {
-    const store = createMockStore({
-      ...defaultStore,
-      localCurrency: {
-        error: true,
-        usdToLocalRate: null,
-      },
-    })
-
-    const tree = render(
-      <Provider store={store}>
-        <HomeTokenBalance />
-      </Provider>
-    )
-
-    expect(tree.queryByTestId('ViewBalances')).toBeTruthy()
-    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('₱-')
-
-    expect(store.getActions()).toMatchInlineSnapshot(`
-      [
-        {
-          "action": {
-            "type": "HOME/REFRESH_BALANCES",
-          },
-          "alertType": "toast",
-          "buttonMessage": "outOfSyncBanner.button",
-          "dismissAfter": null,
-          "displayMethod": 0,
-          "message": "outOfSyncBanner.message",
-          "title": "outOfSyncBanner.title",
-          "type": "ALERT/SHOW",
-          "underlyingError": undefined,
-        },
-      ]
-    `)
-  })
-
-  it('renders correctly when hideBalance is true', async () => {
-    const store = createMockStore({ ...defaultStore, app: { hideHomeBalances: true } })
-
-    const tree = render(
-      <Provider store={store}>
-        <HomeTokenBalance />
-      </Provider>
-    )
-
-    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('XX.XX')
-    expect(tree.getByTestId('HiddenEyeIcon')).toBeTruthy()
-  })
-
-  it('renders correctly when hideBalance is false', async () => {
-    const store = createMockStore(defaultStore)
-
-    const tree = render(
-      <Provider store={store}>
-        <HomeTokenBalance />
-      </Provider>
-    )
-
-    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$8.41')
-    expect(tree.getByTestId('EyeIcon')).toBeTruthy()
-  })
-
-  it('renders correctly when feature flag is off, hideBalance is false', async () => {
-    jest
-      .mocked(getFeatureGate)
-      .mockImplementation(
-        (featureGate) =>
-          featureGate !== StatsigFeatureGates.SHOW_ASSET_DETAILS_SCREEN &&
-          featureGate !== StatsigFeatureGates.SHOW_HIDE_HOME_BALANCES_TOGGLE
-      )
-    const store = createMockStore(defaultStore)
-
-    const tree = render(
-      <Provider store={store}>
-        <HomeTokenBalance />
-      </Provider>
-    )
-
-    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$8.41')
-    expect(tree.queryByTestId('EyeIcon')).toBeFalsy()
-    expect(tree.queryByTestId('HiddenEyeIcon')).toBeFalsy()
-  })
-
-  it('renders correctly when feature flag is off, hideBalance is true', async () => {
-    jest
-      .mocked(getFeatureGate)
-      .mockImplementation(
-        (featureGate) =>
-          featureGate !== StatsigFeatureGates.SHOW_ASSET_DETAILS_SCREEN &&
-          featureGate !== StatsigFeatureGates.SHOW_HIDE_HOME_BALANCES_TOGGLE
-      )
-    const store = createMockStore({ ...defaultStore, app: { hideHomeBalances: true } })
-
-    const tree = render(
-      <Provider store={store}>
-        <HomeTokenBalance />
-      </Provider>
-    )
-
-    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$8.41')
-    expect(tree.queryByTestId('EyeIcon')).toBeFalsy()
-    expect(tree.queryByTestId('HiddenEyeIcon')).toBeFalsy()
-  })
-
-  it('tracks analytics event when eye icon is pressed', async () => {
-    const store = createMockStore(defaultStore)
-
-    const tree = render(
-      <Provider store={store}>
-        <HomeTokenBalance />
-      </Provider>
-    )
-    fireEvent.press(tree.getByTestId('EyeIcon'))
-    expect(ValoraAnalytics.track).toHaveBeenCalledTimes(1)
-    expect(ValoraAnalytics.track).toHaveBeenCalledWith(HomeEvents.hide_balances)
-  })
-})
-
-describe('AssetsTokenBalance', () => {
   it('should show info on tap', () => {
     const { getByText, getByTestId, queryByText } = render(
       <Provider store={createMockStore()}>
@@ -745,11 +247,153 @@ describe('AssetsTokenBalance', () => {
       </Provider>
     )
 
-    expect(getByText('totalAssets')).toBeTruthy()
     expect(getByTestId('TotalTokenBalance')).toHaveTextContent('₱55.74')
     expect(queryByText('totalAssetsInfo')).toBeFalsy()
 
     fireEvent.press(getByTestId('AssetsTokenBalance/Info'))
     expect(getByText('totalAssetsInfo')).toBeTruthy()
+  })
+
+  it('renders title, balance and eye icon', () => {
+    const { getByText, getByTestId, queryByText } = render(
+      <Provider store={createMockStore()}>
+        <AssetsTokenBalance showInfo={false} />
+      </Provider>
+    )
+
+    expect(getByTestId('EyeIcon')).toBeTruthy()
+    expect(getByText('bottomTabsNavigator.wallet.title')).toBeTruthy()
+    expect(getByTestId('TotalTokenBalance')).toHaveTextContent('₱55.74')
+    expect(queryByText('AssetsTokenBalance/Info')).toBeFalsy()
+  })
+
+  it('renders correctly when hideBalance is true and dispatches action on icon press', async () => {
+    const store = createMockStore({ ...defaultStore, app: { hideBalances: true } })
+
+    const tree = render(
+      <Provider store={store}>
+        <AssetsTokenBalance showInfo={false} />
+      </Provider>
+    )
+
+    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('XX.XX')
+    expect(tree.getByTestId('HiddenEyeIcon')).toBeTruthy()
+    fireEvent.press(tree.getByTestId('HiddenEyeIcon'))
+    expect(ValoraAnalytics.track).toHaveBeenCalledTimes(1)
+    expect(ValoraAnalytics.track).toHaveBeenCalledWith(HomeEvents.show_balances)
+    expect(store.getActions()).toEqual([hideAlert(), toggleHideBalances()])
+  })
+
+  it('renders correctly when hideBalance is false and dispatches action on icon press', async () => {
+    const store = createMockStore(defaultStore)
+
+    const tree = render(
+      <Provider store={store}>
+        <AssetsTokenBalance showInfo={false} />
+      </Provider>
+    )
+
+    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$8.41')
+    expect(tree.getByTestId('EyeIcon')).toBeTruthy()
+    fireEvent.press(tree.getByTestId('EyeIcon'))
+    expect(ValoraAnalytics.track).toHaveBeenCalledTimes(1)
+    expect(ValoraAnalytics.track).toHaveBeenCalledWith(HomeEvents.hide_balances)
+    expect(store.getActions()).toEqual([hideAlert(), toggleHideBalances()])
+  })
+})
+
+// Behavior specific to FiatExchangeTokenBalance
+describe('FiatExchangeTokenBalance', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    jest.mocked(getFeatureGate).mockReturnValue(true)
+  })
+
+  it.each([
+    {
+      testName: 'zero token balance and zero positions',
+      storeOverrides: {
+        ...noTokens,
+        ...noPositions,
+      },
+      expectedTotal: '$0.00',
+    },
+    {
+      testName: 'zero token balance and some positions',
+      storeOverrides: {
+        ...noTokens,
+      },
+      expectedTotal: '$7.91',
+    },
+    {
+      testName: 'one token balance and some positions',
+      storeOverrides: {},
+      expectedTotal: '$8.41',
+    },
+  ])('renders correctly with $testName', ({ storeOverrides, expectedTotal }) => {
+    const store = createMockStore({
+      ...defaultStore,
+      ...storeOverrides,
+    })
+
+    const tree = render(
+      <Provider store={store}>
+        <FiatExchangeTokenBalance />
+      </Provider>
+    )
+
+    expect(tree.queryByTestId('ViewBalances')).toBeFalsy()
+    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual(expectedTotal)
+  })
+
+  it('includes token icon with one token balance and zero positions', () => {
+    const store = createMockStore({
+      ...defaultStore,
+      ...noPositions,
+    })
+
+    const tree = render(
+      <Provider store={store}>
+        <FiatExchangeTokenBalance />
+      </Provider>
+    )
+
+    expect(tree.queryByTestId('ViewBalances')).toBeFalsy()
+    expect(tree.getByTestId('TokenIcon')).toBeTruthy()
+    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$0.50')
+  })
+
+  it('renders correctly with multiple token balances and positions and navigates to wallet tab if tab navigator gate is true', () => {
+    const store = createMockStore({
+      ...defaultStore,
+      ...multipleTokens,
+    })
+
+    const tree = render(
+      <Provider store={store}>
+        <FiatExchangeTokenBalance />
+      </Provider>
+    )
+
+    expect(tree.getByTestId('ViewBalances')).toBeTruthy()
+    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('$1,666.03')
+    fireEvent.press(tree.getByTestId('ViewBalances'))
+    expect(navigateClearingStack).toHaveBeenCalledWith(Screens.TabNavigator, {
+      initialScreen: Screens.TabWallet,
+    })
+  })
+
+  it('renders correctly with stale token balance and some positions', async () => {
+    const store = createMockStore(staleTokens)
+
+    const tree = render(
+      <Provider store={store}>
+        <FiatExchangeTokenBalance />
+      </Provider>
+    )
+
+    expect(tree.queryByTestId('ViewBalances')).toBeTruthy()
+    // Even we have positions, the balance is stale so we show '-'
+    expect(getElementText(tree.getByTestId('TotalTokenBalance'))).toEqual('₱-')
   })
 })

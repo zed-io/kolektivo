@@ -27,16 +27,16 @@ export default function AccountNumber({ address, touchDisabled, location }: Prop
     Logger.showMessage(t('addressCopied'))
     vibrateInformative()
 
-    if (location === Screens.DrawerNavigator) {
-      ValoraAnalytics.track(HomeEvents.drawer_address_copy)
-    }
-
     if (location === Screens.TransactionDetailsScreen) {
       ValoraAnalytics.track(HomeEvents.transaction_feed_address_copy)
     }
 
     if (location === Screens.ExternalExchanges) {
       ValoraAnalytics.track(FiatExchangeEvents.cico_cash_out_copy_address)
+    }
+
+    if (location === Screens.ProfileMenu) {
+      ValoraAnalytics.track(HomeEvents.profile_address_copy)
     }
   }
   // Turns '0xce10ce10ce10ce10ce10ce10ce10ce10ce10ce10'

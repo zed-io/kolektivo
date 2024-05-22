@@ -58,6 +58,8 @@ const WATCHING_DELAY_BY_NETWORK: Record<Network, number> = {
   [Network.Ethereum]: 15000,
   [Network.Arbitrum]: 2000,
   [Network.Optimism]: 2000,
+  [Network.PolygonPoS]: 2000,
+  [Network.Base]: 2000,
 }
 const MIN_WATCHING_DELAY_MS = 2000
 
@@ -256,7 +258,7 @@ export function* getTransactionReceipt(
   const { feeCurrencyId, transactionHash } = transaction
 
   try {
-    const receipt = yield* call([publicClient[network], 'getTransactionReceipt'], {
+    const receipt = yield* call([publicClient[network], 'waitForTransactionReceipt'], {
       hash: transactionHash as Hash,
     })
 
@@ -321,7 +323,7 @@ export function* transactionSaga() {
   yield* spawn(watchPendingTransactions)
 }
 
-export function* handleTransactionReceiptReceived(
+function* handleTransactionReceiptReceived(
   txId: string,
   receipt: TransactionReceipt | CeloTxReceipt,
   networkId: NetworkId,
@@ -331,8 +333,11 @@ export function* handleTransactionReceiptReceived(
 
   const feeTokenInfo = feeCurrencyId && tokensById[feeCurrencyId]
 
-  if (!feeTokenInfo) {
-    Logger.error(TAG, `No information found for token ${feeCurrencyId} in network ${networkId}`)
+  if (!!feeCurrencyId && !feeTokenInfo) {
+    Logger.error(
+      TAG,
+      `No information found for fee currency ${feeCurrencyId} in network ${networkId} for transaction ${txId}`
+    )
   }
 
   const gasFeeInSmallestUnit = new BigNumber(receipt.gasUsed.toString()).times(
@@ -370,7 +375,11 @@ function buildGasFees(feeCurrencyInfo: BaseToken, gasFeeInSmallestUnit: BigNumbe
     {
       type: 'SECURITY_FEE',
       amount: {
-        value: gasFeeInSmallestUnit.shiftedBy(-feeCurrencyInfo.decimals).toFixed(),
+        // TODO: would be more correct to check the actual fee currency (ERC20 or adapter) set in the TX
+        // in the meantime, this is good enough
+        value: gasFeeInSmallestUnit
+          .shiftedBy(-(feeCurrencyInfo.feeCurrencyAdapterDecimals ?? feeCurrencyInfo.decimals))
+          .toFixed(),
         tokenId: feeCurrencyInfo.tokenId,
       },
     },

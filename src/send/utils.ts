@@ -1,4 +1,5 @@
 import { SendOrigin } from 'src/analytics/types'
+import { MAX_ENCRYPTED_COMMENT_LENGTH_APPROX } from 'src/config'
 import { LocalCurrencyCode } from 'src/localCurrency/consts'
 import {
   convertDollarsToLocalAmount,
@@ -12,16 +13,15 @@ import { Screens } from 'src/navigator/Screens'
 import { UriData, uriDataFromUrl } from 'src/qrcode/schema'
 import { AddressRecipient, Recipient, RecipientType } from 'src/recipients/recipient'
 import { updateValoraRecipientCache } from 'src/recipients/reducer'
-import { canSendTokensSelector } from 'src/send/selectors'
-import { TransactionDataInput } from 'src/send/SendAmount'
-import { getFeatureGate } from 'src/statsig'
-import { StatsigFeatureGates } from 'src/statsig/types'
+import { TransactionDataInput } from 'src/send/types'
 import { tokensListSelector } from 'src/tokens/selectors'
 import { TokenBalance } from 'src/tokens/slice'
 import { convertLocalToTokenAmount, getSupportedNetworkIdsForSend } from 'src/tokens/utils'
 import { Currency } from 'src/utils/currencies'
 import Logger from 'src/utils/Logger'
 import { call, put, select } from 'typed-redux-saga'
+
+export const COMMENT_PLACEHOLDER_FOR_FEE_ESTIMATE = ' '.repeat(MAX_ENCRYPTED_COMMENT_LENGTH_APPROX)
 
 const TAG = 'send/utils'
 
@@ -30,8 +30,6 @@ export function* handleSendPaymentData(
   isFromScan: boolean,
   cachedRecipient?: Recipient
 ) {
-  const useNewSendFlow = getFeatureGate(StatsigFeatureGates.USE_NEW_SEND_FLOW)
-  const sendAmountScreen = useNewSendFlow ? Screens.SendEnterAmount : Screens.SendAmount
   const recipient: AddressRecipient = {
     address: data.address.toLowerCase(),
     name: data.displayName || cachedRecipient?.name,
@@ -54,7 +52,7 @@ export function* handleSendPaymentData(
   const tokenInfo = tokens.find((token) => token?.symbol === (data.token ?? Currency.Dollar))
 
   if (!tokenInfo?.priceUsd) {
-    navigate(sendAmountScreen, {
+    navigate(Screens.SendEnterAmount, {
       recipient,
       isFromScan,
       origin: SendOrigin.AppSendFlow,
@@ -91,17 +89,14 @@ export function* handleSendPaymentData(
       tokenId: tokenInfo.tokenId,
       comment: data.comment,
     }
+
     navigate(Screens.SendConfirmation, {
       transactionData,
       isFromScan,
       origin: SendOrigin.AppSendFlow,
     })
   } else {
-    const canSendTokens: boolean = yield* select(canSendTokensSelector)
-    if (!canSendTokens) {
-      throw new Error("Precondition failed: Can't send tokens from payment data")
-    }
-    navigate(sendAmountScreen, {
+    navigate(Screens.SendEnterAmount, {
       recipient,
       isFromScan,
       origin: SendOrigin.AppSendFlow,

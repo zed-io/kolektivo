@@ -1,18 +1,16 @@
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform } from 'react-native'
-import { useDispatch } from 'react-redux'
+import Education, { EducationTopic } from 'src/account/Education'
 import { setGoldEducationCompleted } from 'src/account/actions'
-import Education, { EducationTopic, EmbeddedNavBar } from 'src/account/Education'
 import { celoEducationCompletedSelector } from 'src/account/selectors'
 import { OnboardingEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import { BtnTypes } from 'src/components/Button'
 import { celoEducation1, celoEducation2, celoEducation3, celoEducation4 } from 'src/images/Images'
 import { noHeader } from 'src/navigator/Headers'
-import { navigate, navigateBack } from 'src/navigator/NavigationService'
-import { Screens } from 'src/navigator/Screens'
-import useSelector from 'src/redux/useSelector'
+import { navigateBack, navigateHome } from 'src/navigator/NavigationService'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 
 export default function GoldEducation() {
   const { t } = useTranslation()
@@ -27,7 +25,7 @@ export default function GoldEducation() {
     if (isCeloEducationComplete) {
       navigateBack()
     } else {
-      navigate(Screens.ExchangeHomeScreen)
+      navigateHome()
       dispatch(setGoldEducationCompleted())
     }
   }
@@ -40,7 +38,6 @@ export default function GoldEducation() {
 
   return (
     <Education
-      embeddedNavBar={EmbeddedNavBar.Close}
       stepInfo={stepInfo}
       onFinish={onFinish}
       finalButtonType={BtnTypes.PRIMARY}

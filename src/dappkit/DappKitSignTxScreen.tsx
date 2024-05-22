@@ -4,18 +4,17 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, Text, View } from 'react-native'
 import Toast from 'react-native-simple-toast'
-import { useDispatch, useSelector } from 'react-redux'
 import { DappKitEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import BottomSheetScrollView from 'src/components/BottomSheetScrollView'
 import Touchable from 'src/components/Touchable'
 import { getDefaultRequestTrackedProperties, requestTxSignature } from 'src/dappkit/dappkit'
-import { activeDappSelector, dappConnectInfoSelector } from 'src/dapps/selectors'
-import { DappConnectInfo } from 'src/dapps/types'
+import { activeDappSelector } from 'src/dapps/selectors'
 import CopyIcon from 'src/icons/CopyIcon'
 import { isBottomSheetVisible, navigateBack } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 import colors from 'src/styles/colors'
 import fontStyles from 'src/styles/fonts'
 import { vibrateInformative } from 'src/styles/hapticFeedback'
@@ -35,7 +34,6 @@ const DappKitSignTxScreen = ({ route }: Props) => {
   const { dappName, txs, callback } = dappKitRequest
 
   const activeDapp = useSelector(activeDappSelector)
-  const dappConnectInfo = useSelector(dappConnectInfoSelector)
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const isDappListed = useIsDappListed(callback)
@@ -74,13 +72,13 @@ const DappKitSignTxScreen = ({ route }: Props) => {
   }
 
   return (
-    <BottomSheetScrollView>
+    <BottomSheetScrollView isScreen>
       <RequestContent
         type="confirm"
         onAccept={handleAllow}
         onDeny={handleCancel}
         dappName={dappName}
-        dappImageUrl={dappConnectInfo === DappConnectInfo.Basic ? activeDapp?.iconUrl : undefined}
+        dappImageUrl={activeDapp?.iconUrl}
         title={t('confirmTransaction')}
         description={t('walletConnectRequest.signTransaction', { dappName })}
         testId="DappKitSignRequest"

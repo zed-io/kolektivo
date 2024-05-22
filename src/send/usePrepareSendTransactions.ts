@@ -1,21 +1,18 @@
-import { useState } from 'react'
+import BigNumber from 'bignumber.js'
+import { useAsyncCallback } from 'react-async-hook'
+import { tokenAmountInSmallestUnit } from 'src/tokens/saga'
+import { TokenBalance, isNativeTokenBalance, tokenBalanceHasAddress } from 'src/tokens/slice'
+import { tokenSupportsComments } from 'src/tokens/utils'
+import Logger from 'src/utils/Logger'
 import {
-  PreparedTransactionsResult,
   prepareERC20TransferTransaction,
   prepareSendNativeAssetTransaction,
   prepareTransferWithCommentTransaction,
 } from 'src/viem/prepareTransactions'
-import { TokenBalance, tokenBalanceHasAddress, isNativeTokenBalance } from 'src/tokens/slice'
-import BigNumber from 'bignumber.js'
-import { useAsyncCallback } from 'react-async-hook'
-import { tokenSupportsComments } from 'src/tokens/utils'
-import Logger from 'src/utils/Logger'
-import { tokenAmountInSmallestUnit } from 'src/tokens/saga'
 
 const TAG = 'src/send/usePrepareSendTransactions'
 
-// just exported for testing
-export async function _prepareSendTransactionsCallback({
+export async function prepareSendTransactionsCallback({
   amount,
   token,
   recipientAddress,
@@ -66,21 +63,16 @@ export async function _prepareSendTransactionsCallback({
  * Hook to prepare transactions for sending crypto.
  */
 export function usePrepareSendTransactions() {
-  const [prepareTransactionsResult, setPrepareTransactionsResult] = useState<
-    PreparedTransactionsResult | undefined
-  >()
-
-  const prepareTransactions = useAsyncCallback(_prepareSendTransactionsCallback, {
+  const prepareTransactions = useAsyncCallback(prepareSendTransactionsCallback, {
     onError: (error) => {
       Logger.error(TAG, `prepareTransactionsOutput: ${error}`)
     },
-    onSuccess: setPrepareTransactionsResult,
   })
+
   return {
-    prepareTransactionsResult,
+    prepareTransactionsResult: prepareTransactions.result,
     refreshPreparedTransactions: prepareTransactions.execute,
-    clearPreparedTransactions: () => {
-      setPrepareTransactionsResult(undefined)
-    },
+    clearPreparedTransactions: prepareTransactions.reset,
+    prepareTransactionError: prepareTransactions.error,
   }
 }

@@ -8,13 +8,14 @@ export enum IconSize {
   SMALL = 'small',
   MEDIUM = 'medium',
   LARGE = 'large',
+  XLARGE = 'xlarge',
 }
 
 const IconSizeToStyle = {
   [IconSize.SMALL]: {
-    tokenImageSize: 20,
-    networkImageSize: 8,
-    networkImagePosition: 13,
+    tokenImageSize: 24,
+    networkImageSize: 9,
+    networkImagePosition: 15,
     tokenTextSize: 6,
   },
   [IconSize.MEDIUM]: {
@@ -28,6 +29,12 @@ const IconSizeToStyle = {
     networkImageSize: 16,
     networkImagePosition: 25,
     tokenTextSize: 12,
+  },
+  [IconSize.XLARGE]: {
+    tokenImageSize: 48,
+    networkImageSize: 20,
+    networkImagePosition: 30,
+    tokenTextSize: 14,
   },
 }
 

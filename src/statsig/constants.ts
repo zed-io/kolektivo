@@ -1,5 +1,10 @@
-import { StatsigDynamicConfigs, StatsigExperiments, StatsigFeatureGates } from 'src/statsig/types'
-import { Network } from 'src/transactions/types'
+import {
+  StatsigDynamicConfigs,
+  StatsigExperiments,
+  StatsigFeatureGates,
+  StatsigParameter,
+} from 'src/statsig/types'
+import { NetworkId } from 'src/transactions/types'
 import networkConfig from 'src/web3/networkConfig'
 
 export const FeatureGates = {
@@ -7,47 +12,30 @@ export const FeatureGates = {
   [StatsigFeatureGates.SHOW_CLAIM_SHORTCUTS]: false,
   [StatsigFeatureGates.ALLOW_HOOKS_PREVIEW]: true,
   [StatsigFeatureGates.APP_REVIEW]: false,
-  [StatsigFeatureGates.SHOW_IN_APP_NFT_VIEWER]: false,
-  [StatsigFeatureGates.SHOW_RECEIVE_AMOUNT_IN_SELECT_PROVIDER]: false,
-  [StatsigFeatureGates.SHOW_IN_APP_NFT_GALLERY]: false,
-  [StatsigFeatureGates.SHOW_NOTIFICATION_CENTER]: false,
   [StatsigFeatureGates.SHOW_CLOUD_ACCOUNT_BACKUP_SETUP]: false,
   [StatsigFeatureGates.SHOW_CLOUD_ACCOUNT_BACKUP_RESTORE]: false,
-  [StatsigFeatureGates.USE_VIEM_FOR_SEND]: false,
-  [StatsigFeatureGates.SHOW_ASSET_DETAILS_SCREEN]: false,
   [StatsigFeatureGates.RESTRICT_SUPERCHARGE_FOR_CLAIM_ONLY]: false,
-  [StatsigFeatureGates.USE_VIEM_FOR_WALLETCONNECT_TRANSACTIONS]: false,
-  [StatsigFeatureGates.USE_NEW_SEND_FLOW]: false,
   [StatsigFeatureGates.SHOW_IMPORT_TOKENS_FLOW]: false,
-  [StatsigFeatureGates.SHOW_HIDE_HOME_BALANCES_TOGGLE]: false,
   [StatsigFeatureGates.SHOW_MULTICHAIN_BETA_SCREEN]: false,
   [StatsigFeatureGates.SHOW_BETA_TAG]: false,
   [StatsigFeatureGates.SAVE_CONTACTS]: false,
-  [StatsigFeatureGates.USE_PRICE_HISTORY_FROM_BLOCKCHAIN_API]: false,
   [StatsigFeatureGates.SHOW_GET_STARTED]: false,
   [StatsigFeatureGates.CLEVERTAP_INBOX]: false,
-}
+  [StatsigFeatureGates.SHOW_SWAP_TOKEN_FILTERS]: false,
+  [StatsigFeatureGates.SHUFFLE_SWAP_TOKENS_ORDER]: false,
+  [StatsigFeatureGates.SHOW_NFT_CELEBRATION]: false,
+  [StatsigFeatureGates.SHOW_NFT_REWARD]: false,
+  [StatsigFeatureGates.SHOW_JUMPSTART_SEND]: false,
+  [StatsigFeatureGates.SHOW_POINTS]: false,
+  [StatsigFeatureGates.SHOW_STABLECOIN_EARN]: false,
+} satisfies { [key in StatsigFeatureGates]: boolean }
 
 export const ExperimentConfigs = {
   // NOTE: the keys of defaultValues MUST be parameter names
-  [StatsigExperiments.CHOOSE_YOUR_ADVENTURE]: {
-    experimentName: StatsigExperiments.CHOOSE_YOUR_ADVENTURE,
-    defaultValues: {
-      onboardingNameScreenEnabled: true,
-      chooseAdventureEnabled: false,
-      cashInBottomSheetEnabled: true,
-    },
-  },
   [StatsigExperiments.DAPP_RANKINGS]: {
     experimentName: StatsigExperiments.DAPP_RANKINGS,
     defaultValues: {
       dappRankingsEnabled: false,
-    },
-  },
-  [StatsigExperiments.DAPP_MENU_ITEM_COPY]: {
-    experimentName: StatsigExperiments.DAPP_MENU_ITEM_COPY,
-    defaultValues: {
-      discoverCopyEnabled: false,
     },
   },
   [StatsigExperiments.SWAP_BUY_AMOUNT]: {
@@ -56,6 +44,23 @@ export const ExperimentConfigs = {
       swapBuyAmountEnabled: true,
     },
   },
+  [StatsigExperiments.ONBOARDING_PHONE_VERIFICATION]: {
+    experimentName: StatsigExperiments.ONBOARDING_PHONE_VERIFICATION,
+    defaultValues: {
+      skipVerification: false,
+    },
+  },
+  [StatsigExperiments.ONBOARDING_TERMS_AND_CONDITIONS]: {
+    experimentName: StatsigExperiments.ONBOARDING_TERMS_AND_CONDITIONS,
+    defaultValues: {
+      variant: 'control' as 'control' | 'colloquial_terms' | 'checkbox',
+    },
+  },
+} satisfies {
+  [key in StatsigExperiments]: {
+    experimentName: key
+    defaultValues: { [key: string]: StatsigParameter }
+  }
 }
 
 export const DynamicConfigs = {
@@ -84,6 +89,8 @@ export const DynamicConfigs = {
       showWalletConnect: [networkConfig.defaultNetworkId],
       showApprovalTxsInHomefeed: [],
       showNfts: [networkConfig.defaultNetworkId],
+      showPositions: [networkConfig.defaultNetworkId],
+      showShortcuts: [networkConfig.defaultNetworkId],
     },
   },
   [StatsigDynamicConfigs.DAPP_WEBVIEW_CONFIG]: {
@@ -96,6 +103,8 @@ export const DynamicConfigs = {
     configName: StatsigDynamicConfigs.SWAP_CONFIG,
     defaultValues: {
       maxSlippagePercentage: '0.3',
+      enableAppFee: false,
+      popularTokenIds: [] as string[],
     },
   },
   [StatsigDynamicConfigs.CICO_TOKEN_INFO]: {
@@ -106,6 +115,37 @@ export const DynamicConfigs = {
   },
   [StatsigDynamicConfigs.WALLET_JUMPSTART_CONFIG]: {
     configName: StatsigDynamicConfigs.WALLET_JUMPSTART_CONFIG,
-    defaultValues: {} as { [key in Network]?: { contractAddress?: string } },
+    defaultValues: {
+      jumpstartContracts: {} as {
+        [key in NetworkId]?: {
+          contractAddress?: string
+          depositERC20GasEstimate: string
+          retiredContractAddresses?: string[]
+        }
+      },
+      maxAllowedSendAmountUsd: 100,
+    },
   },
+  [StatsigDynamicConfigs.NFT_CELEBRATION_CONFIG]: {
+    configName: StatsigDynamicConfigs.NFT_CELEBRATION_CONFIG,
+    defaultValues: {
+      celebratedNft: {} as { networkId?: NetworkId; contractAddress?: string },
+      deepLink: '',
+      rewardExpirationDate: new Date(0).toISOString(),
+      rewardReminderDate: new Date(0).toISOString(),
+    },
+  },
+  [StatsigDynamicConfigs.EARN_STABLECOIN_CONFIG]: {
+    configName: StatsigDynamicConfigs.EARN_STABLECOIN_CONFIG,
+    defaultValues: {
+      providerName: 'Aave',
+      providerLogoUrl: '',
+      providerTermsAndConditionsUrl: '',
+    },
+  },
+} satisfies {
+  [key in StatsigDynamicConfigs]: {
+    configName: key
+    defaultValues: { [key: string]: StatsigParameter }
+  }
 }

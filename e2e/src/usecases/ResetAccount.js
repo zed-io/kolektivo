@@ -1,6 +1,6 @@
 import { SAMPLE_BACKUP_KEY } from '../utils/consts'
 import { reloadReactNative } from '../utils/retries'
-import { enterPinUiIfNecessary, waitForElementId } from '../utils/utils'
+import { enterPinUiIfNecessary, navigateToSettings, waitForElementId } from '../utils/utils'
 
 export default ResetAccount = () => {
   beforeEach(async () => {
@@ -16,9 +16,7 @@ export default ResetAccount = () => {
     // }
 
     // Go to Settings
-    await waitForElementId('Hamburger')
-    await element(by.id('Hamburger')).tap()
-    await element(by.id('Settings')).tap()
+    await navigateToSettings()
 
     // Scroll to bottom and start the reset process.
     // await waitForElementId('SettingsScrollView')
@@ -34,7 +32,7 @@ export default ResetAccount = () => {
         .scroll(350, 'down')
     } catch {}
     await element(by.id('ResetAccount')).tap()
-    await element(by.id('RemoveAccountModal/PrimaryAction')).tap()
+    await element(by.id('ResetAccountButton')).tap()
 
     await enterPinUiIfNecessary()
 

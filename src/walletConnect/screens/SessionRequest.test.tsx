@@ -4,7 +4,6 @@ import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import * as React from 'react'
 import 'react-native'
 import { Provider } from 'react-redux'
-import { DappConnectInfo } from 'src/dapps/types'
 import { acceptSession, denySession } from 'src/walletConnect/actions'
 import { SupportedActions, SupportedEvents } from 'src/walletConnect/constants'
 import SessionRequest from 'src/walletConnect/screens/SessionRequest'
@@ -17,7 +16,7 @@ describe(SessionRequest, () => {
     params: {
       id: 1690539550772665,
       pairingTopic: 'b655eac1cf0cc18780a1c6503d7395f633b3d10791b7a628d9602d10b2fe3f26',
-      expiry: 1690539851,
+      expiryTimestamp: 1690539851,
       requiredNamespaces: {
         eip155: {
           methods: ['eth_sendTransaction', 'personal_sign'],
@@ -65,11 +64,7 @@ describe(SessionRequest, () => {
 
   const supportedChains = ['eip155:44787']
 
-  const store = createMockStore({
-    dapps: {
-      dappConnectInfo: DappConnectInfo.Basic,
-    },
-  })
+  const store = createMockStore({})
 
   beforeEach(() => {
     store.clearActions()

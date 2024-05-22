@@ -3,7 +3,8 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import { Text, View } from 'react-native'
 import { Provider } from 'react-redux'
-import { getDynamicConfigParams } from 'src/statsig'
+import { getDynamicConfigParams, getFeatureGate } from 'src/statsig'
+import { StatsigFeatureGates } from 'src/statsig/types'
 import {
   useAmountAsUsd,
   useCashInTokens,
@@ -12,12 +13,12 @@ import {
   useSwappableTokens,
   useTokenPricesAreStale,
   useTokenToLocalAmount,
-  useTokensForSend,
 } from 'src/tokens/hooks'
 import { TokenBalance } from 'src/tokens/slice'
 import { NetworkId } from 'src/transactions/types'
 import { createMockStore } from 'test/utils'
 import {
+  mockAccount,
   mockCeloTokenId,
   mockCeurTokenId,
   mockCrealTokenId,
@@ -26,17 +27,18 @@ import {
   mockTokenBalances,
 } from 'test/values'
 
-jest.mock('src/statsig', () => ({
-  getDynamicConfigParams: jest.fn(() => {
-    return {
-      showCico: ['celo-alfajores'],
-      showSend: ['celo-alfajores'],
-      showSwap: ['celo-alfajores'],
-      showBalances: ['celo-alfajores'],
-    }
-  }),
-  getFeatureGate: jest.fn().mockReturnValue(true),
-}))
+jest.mock('src/statsig')
+
+beforeEach(() => {
+  jest.clearAllMocks()
+  jest.mocked(getFeatureGate).mockReturnValue(true)
+  jest.mocked(getDynamicConfigParams).mockReturnValue({
+    showCico: ['celo-alfajores'],
+    showSend: ['celo-alfajores'],
+    showSwap: ['celo-alfajores'],
+    showBalances: ['celo-alfajores'],
+  })
+})
 
 const tokenAddressWithPriceAndBalance = '0x001'
 const tokenIdWithPriceAndBalance = `celo-alfajores:${tokenAddressWithPriceAndBalance}`
@@ -95,8 +97,11 @@ const store = (usdToLocalRate: string | null, priceFetchedAt: number) =>
     },
   })
 
-const storeWithMultipleNetworkTokens = () =>
+const storeWithMultipleNetworkTokens = (walletAddress?: string) =>
   createMockStore({
+    web3: {
+      account: walletAddress ?? mockAccount,
+    },
     tokens: {
       tokenBalances: {
         ...mockTokenBalances,
@@ -208,42 +213,14 @@ describe('token to fiat exchanges', () => {
   })
 })
 
-describe('useTokensForSend', () => {
-  it('returns tokens with balance', () => {
-    const { getByTestId } = render(
-      <Provider store={storeWithMultipleNetworkTokens()}>
-        <TokenHookTestComponent hook={useTokensForSend} />
-      </Provider>
-    )
-
-    expect(getByTestId('tokenIDs').props.children).toEqual([
-      mockPoofTokenId,
-      mockCeloTokenId,
-      mockCrealTokenId,
-    ])
-  })
-
-  it('returns tokens with balance for multiple networks', () => {
-    jest.mocked(getDynamicConfigParams).mockReturnValueOnce({
-      showSend: [NetworkId['celo-alfajores'], NetworkId['ethereum-sepolia']],
-    })
-    const { getByTestId } = render(
-      <Provider store={storeWithMultipleNetworkTokens()}>
-        <TokenHookTestComponent hook={useTokensForSend} />
-      </Provider>
-    )
-
-    expect(getByTestId('tokenIDs').props.children).toEqual([
-      mockPoofTokenId,
-      mockCeloTokenId,
-      mockCrealTokenId,
-      ethTokenId,
-    ])
-  })
-})
-
 describe('useSwappableTokens', () => {
-  it('returns the correct swappable tokens', () => {
+  it('returns sorted swappable tokens for the non-holdout group', () => {
+    jest
+      .mocked(getFeatureGate)
+      .mockImplementation(
+        (featureGate) => featureGate !== StatsigFeatureGates.SHUFFLE_SWAP_TOKENS_ORDER
+      )
+
     const { result } = renderHook(() => useSwappableTokens(), {
       wrapper: (component) => (
         <Provider store={storeWithMultipleNetworkTokens()}>
@@ -260,9 +237,15 @@ describe('useSwappableTokens', () => {
       mockPoofTokenId,
       mockCrealTokenId,
     ])
+    expect(result.current.areSwapTokensShuffled).toBe(false)
   })
 
-  it('returns tokens with balance for multiple networks', () => {
+  it('returns sorted tokens with balance for multiple networks for the non-holdout group', () => {
+    jest
+      .mocked(getFeatureGate)
+      .mockImplementation(
+        (featureGate) => featureGate !== StatsigFeatureGates.SHUFFLE_SWAP_TOKENS_ORDER
+      )
     jest.mocked(getDynamicConfigParams).mockReturnValueOnce({
       showSwap: [NetworkId['celo-alfajores'], NetworkId['ethereum-sepolia']],
     })
@@ -284,6 +267,49 @@ describe('useSwappableTokens', () => {
       mockPoofTokenId,
       mockCrealTokenId,
     ])
+  })
+
+  it('returns deterministically shuffled tokens for each user in the holdout group', () => {
+    jest.mocked(getDynamicConfigParams).mockReturnValue({
+      showSwap: [NetworkId['celo-alfajores'], NetworkId['ethereum-sepolia']],
+    })
+
+    const expectedToTokens1 = [mockCeloTokenId, ethTokenId]
+    const expectedFromTokens1 = [mockPoofTokenId, mockCeloTokenId, ethTokenId, mockCrealTokenId]
+
+    const expectedToTokens2 = [ethTokenId, mockCeloTokenId]
+    const expectedFromTokens2 = [mockCrealTokenId, ethTokenId, mockPoofTokenId, mockCeloTokenId]
+
+    const { result: result1 } = renderHook(() => useSwappableTokens(), {
+      wrapper: (component) => (
+        <Provider store={storeWithMultipleNetworkTokens()}>
+          {component?.children ? component.children : component}
+        </Provider>
+      ),
+    })
+    const { result: result2 } = renderHook(() => useSwappableTokens(), {
+      wrapper: (component) => (
+        <Provider store={storeWithMultipleNetworkTokens('0xabcde')}>
+          {component?.children ? component.children : component}
+        </Provider>
+      ),
+    })
+
+    expect(result1.current.swappableToTokens.map((token) => token.tokenId)).toEqual(
+      expectedToTokens1
+    )
+    expect(result1.current.swappableFromTokens.map((token) => token.tokenId)).toEqual(
+      expectedFromTokens1
+    )
+    expect(result1.current.areSwapTokensShuffled).toBe(true)
+
+    expect(result2.current.swappableToTokens.map((token) => token.tokenId)).toEqual(
+      expectedToTokens2
+    )
+    expect(result2.current.swappableFromTokens.map((token) => token.tokenId)).toEqual(
+      expectedFromTokens2
+    )
+    expect(result2.current.areSwapTokensShuffled).toBe(true)
   })
 })
 

@@ -6,9 +6,9 @@ import { CachesDirectoryPath } from 'react-native-fs'
 import { SpendMerchant } from 'src/fiatExchanges/Spend'
 import { LoggerLevel } from 'src/utils/LoggerLevels'
 // eslint-disable-next-line import/no-relative-packages
+import { TORUS_SAPPHIRE_NETWORK } from '@toruslabs/constants'
 import * as secretsFile from '../secrets.json'
 import { ONE_HOUR_IN_MILLIS } from './utils/time'
-
 export * from 'src/brandingConfig'
 
 // extract secrets from secrets.json
@@ -43,7 +43,6 @@ export const GAS_INFLATION_FACTOR = 1.5 // Used when estimating gas for txs
 export const GAS_PRICE_INFLATION_FACTOR = 5 // Used when getting gas price, must match what Geth does
 export const BALANCE_OUT_OF_SYNC_THRESHOLD = 1 * 60 // 1 minute
 export const ALERT_BANNER_DURATION = 5000
-export const NUMBER_INPUT_MAX_DECIMALS = 2
 export const MAX_COMMENT_LENGTH = 70
 export const MAX_ENCRYPTED_COMMENT_LENGTH_APPROX = 640 // used to estimate fees. should be updated if MAX_COMMENT_LENGTH is changed. chosen empirically by encrypting a comment of max length
 export const INPUT_DEBOUNCE_TIME = 1000 // milliseconds
@@ -93,9 +92,10 @@ export const STATSIG_ENV = {
 export const E2E_TEST_STATSIG_ID = 'e2e_test_statsig_id'
 
 // Keyless backup settings
-export const TORUS_NETWORK = DEFAULT_TESTNET === 'mainnet' ? 'cyan' : 'testnet'
-export const TORUS_SIGNER_BASE_URL =
-  TORUS_NETWORK === 'cyan' ? 'https://signer-polygon.tor.us' : 'https://signer.tor.us'
+export const TORUS_NETWORK =
+  DEFAULT_TESTNET === 'mainnet'
+    ? TORUS_SAPPHIRE_NETWORK.SAPPHIRE_MAINNET
+    : TORUS_SAPPHIRE_NETWORK.SAPPHIRE_DEVNET
 
 // FEATURE FLAGS
 export const FIREBASE_ENABLED = stringToBoolean(Config.FIREBASE_ENABLED || 'true')
@@ -105,6 +105,8 @@ export const SENTRY_ENABLED = stringToBoolean(Config.SENTRY_ENABLED || 'false')
 export const SUPERCHARGE_AVAILABLE_REWARDS_URL = Config.SUPERCHARGE_AVAILABLE_REWARDS_URL
 
 // SECRETS
+export const WEB3AUTH_CLIENT_ID = keyOrUndefined(secretsFile, DEFAULT_TESTNET, 'WEB3AUTH_CLIENT_ID')
+
 export const ALCHEMY_ETHEREUM_API_KEY = keyOrUndefined(
   secretsFile,
   DEFAULT_TESTNET,
@@ -119,6 +121,16 @@ export const ALCHEMY_OPTIMISM_API_KEY = keyOrUndefined(
   secretsFile,
   DEFAULT_TESTNET,
   'ALCHEMY_OPTIMISM_API_KEY'
+)
+export const ALCHEMY_POLYGON_POS_API_KEY = keyOrUndefined(
+  secretsFile,
+  DEFAULT_TESTNET,
+  'ALCHEMY_POLYGON_POS_API_KEY'
+)
+export const ALCHEMY_BASE_API_KEY = keyOrUndefined(
+  secretsFile,
+  DEFAULT_TESTNET,
+  'ALCHEMY_BASE_API_KEY'
 )
 
 export const ZENDESK_API_KEY = keyOrUndefined(secretsFile, DEFAULT_TESTNET, 'ZENDESK_API_KEY')

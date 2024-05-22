@@ -4,13 +4,13 @@ import fetch from 'node-fetch'
 import { MOCK_PROVIDER_API_KEY, MOCK_PROVIDER_BASE_URL } from 'react-native-dotenv'
 import { SAMPLE_PRIVATE_KEY } from '../utils/consts'
 import {
-  dismissCashInBottomSheet,
   enterPinUiIfNecessary,
   fundWallet,
   quickOnboarding,
   sleep,
   waitForElementId,
 } from '../utils/utils'
+import { launchApp } from '../utils/retries'
 
 /**
  * From the home screen, navigate to the FiatExchange screen (add/withdraw)
@@ -62,9 +62,6 @@ async function submitTransfer(expectZeroBalance = false) {
   await element(by.id('Continue')).tap()
 
   // WalletHome
-  if (expectZeroBalance) {
-    await dismissCashInBottomSheet()
-  }
   await expect(element(by.id('HomeAction-Send'))).toBeVisible() // proxy for reaching home screen, imitating NewAccountOnboarding e2e test
 }
 
@@ -104,7 +101,7 @@ async function setWalletKycStatus(kycStatus, walletAddress) {
 async function onboardAndBeginTransferOut(token, fundingAmount, cashOutAmount) {
   const mnemonic = await generateMnemonic()
   const { address: walletAddress } = await generateKeys(mnemonic)
-  await quickOnboarding(mnemonic) // ends on home screen
+  await quickOnboarding({ mnemonic }) // ends on home screen
   await fundWallet(SAMPLE_PRIVATE_KEY, walletAddress, token, fundingAmount)
   // For now the balance only updates when the home screen is visible
   await waitFor(element(by.text(`${fundingAmount} cUSD`))) // need a balance to withdraw
@@ -170,7 +167,7 @@ export const fiatConnectNonKycTransferOut = () => {
   it('FiatConnect cash out', async () => {
     // ******** First time experience ************
     const cashOutAmount = 0.02
-    const gasAmount = 0.01
+    const gasAmount = 0.015
     const fundingAmount = `${2 * cashOutAmount + gasAmount}`
     const token = 'cUSD'
     await onboardAndBeginTransferOut(token, fundingAmount, cashOutAmount)
@@ -194,7 +191,7 @@ export const fiatConnectKycTransferOut = () => {
   it('FiatConnect cash out', async () => {
     // ******** First time experience ************
     const cashOutAmount = 0.01
-    const gasAmount = 0.01
+    const gasAmount = 0.015
     const fundingAmount = `${2 * cashOutAmount + gasAmount}`
     const token = 'cUSD'
     const walletAddress = await onboardAndBeginTransferOut(token, fundingAmount, cashOutAmount)

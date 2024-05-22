@@ -9,8 +9,9 @@ import {
 } from 'src/config'
 import { usdToLocalCurrencyRateSelector } from 'src/localCurrency/selectors'
 import { RootState } from 'src/redux/reducers'
-import { getFeatureGate } from 'src/statsig'
-import { StatsigFeatureGates } from 'src/statsig/types'
+import { getDynamicConfigParams, getFeatureGate } from 'src/statsig'
+import { DynamicConfigs } from 'src/statsig/constants'
+import { StatsigDynamicConfigs, StatsigFeatureGates } from 'src/statsig/types'
 import {
   TokenBalance,
   TokenBalanceWithAddress,
@@ -22,6 +23,7 @@ import { Currency } from 'src/utils/currencies'
 import { isVersionBelowMinimum } from 'src/utils/versionCheck'
 import networkConfig from 'src/web3/networkConfig'
 import {
+  isFeeCurrency,
   sortByUsdBalance,
   sortFirstStableThenCeloThenOthersByUsdBalance,
   usdBalance,
@@ -84,6 +86,22 @@ export const tokensByIdSelector = createSelector(
       },
       maxSize: DEFAULT_MEMOIZE_MAX_SIZE,
     },
+  }
+)
+
+export const networksIconSelector = createSelector(
+  [(state: RootState) => tokensByIdSelector(state, Object.values(NetworkId))],
+  (tokens) => {
+    const result: Partial<Record<NetworkId, string>> = {}
+    for (const networkId of Object.values(NetworkId)) {
+      // We use as network icon the network icon of any token in that network.
+      const token = Object.values(tokens).find(
+        (token) => token?.networkId === networkId && token.networkIconUrl
+      )
+      result[networkId] = token?.networkIconUrl
+    }
+
+    return result
   }
 )
 
@@ -190,13 +208,6 @@ export const coreTokensSelector = createSelector(tokensByUsdBalanceSelector, (to
 /**
  * @deprecated
  */
-export const stablecoinsSelector = createSelector(coreTokensSelector, (tokens) => {
-  return tokens.filter((tokenInfo) => tokenInfo.symbol !== 'CELO')
-})
-
-/**
- * @deprecated
- */
 export const celoAddressSelector = createSelector(coreTokensSelector, (tokens) => {
   return tokens.find((tokenInfo) => tokenInfo.symbol === 'CELO')?.address
 })
@@ -216,22 +227,6 @@ export const tokensByCurrencySelector = createSelector(
       [Currency.Euro]: cEurTokenInfo,
       [Currency.Celo]: celoTokenInfo,
     }
-  }
-)
-
-// Returns the token with the highest usd balance to use as default.
-/**
- * @deprecated
- */
-export const defaultTokenToSendSelector = createSelector(
-  tokensSortedToShowInSendSelector,
-  stablecoinsSelector,
-  (tokens, stableCoins) => {
-    if (tokens.length === 0) {
-      // TODO: ideally we return based on location - cUSD for now.
-      return stableCoins.find((coin) => coin.symbol === 'cUSD')?.tokenId ?? ''
-    }
-    return tokens[0].tokenId
   }
 )
 
@@ -322,14 +317,16 @@ export const swappableFromTokensByNetworkIdSelector = createSelector(
   (state: RootState, networkIds: NetworkId[]) => tokensListSelector(state, networkIds),
   (tokens) => {
     const appVersion = deviceInfoModule.getVersion()
+
     return (
       tokens
         .filter(
           (tokenInfo) =>
             tokenInfo.isSwappable ||
+            tokenInfo.isManuallyImported ||
+            tokenInfo.balance.gt(TOKEN_MIN_AMOUNT) ||
             (tokenInfo.minimumAppVersionToSwap &&
-              !isVersionBelowMinimum(appVersion, tokenInfo.minimumAppVersionToSwap)) ||
-            tokenInfo.balance.gt(TOKEN_MIN_AMOUNT)
+              !isVersionBelowMinimum(appVersion, tokenInfo.minimumAppVersionToSwap))
         )
         // sort by balance USD (DESC) then name (ASC), tokens without a priceUsd
         // are pushed last, sorted by name (ASC)
@@ -370,6 +367,7 @@ export const swappableToTokensByNetworkIdSelector = createSelector(
     return tokens.filter(
       (tokenInfo) =>
         tokenInfo.isSwappable ||
+        tokenInfo.isManuallyImported ||
         (tokenInfo.minimumAppVersionToSwap &&
           !isVersionBelowMinimum(appVersion, tokenInfo.minimumAppVersionToSwap))
     )
@@ -401,33 +399,44 @@ export const spendTokensByNetworkIdSelector = createSelector(
   (tokens) => tokens.filter((tokenInfo) => networkConfig.spendTokenIds.includes(tokenInfo.tokenId))
 )
 
-export const tokensWithNonZeroBalanceAndShowZeroBalanceSelector = createSelector(
+const tokensWithBalanceOrShowZeroBalanceSelector = createSelector(
   (state: RootState, networkIds: NetworkId[]) => tokensListSelector(state, networkIds),
   (tokens) =>
-    tokens
-      .filter((tokenInfo) => tokenInfo.balance.gt(TOKEN_MIN_AMOUNT) || tokenInfo.showZeroBalance)
-      .sort((token1, token2) => {
-        // Sorts by usd balance, then token balance, then zero balance natives by
-        // network id, then zero balance non natives by network id
-        const usdBalanceCompare = usdBalance(token2).comparedTo(usdBalance(token1))
-        if (usdBalanceCompare) {
-          return usdBalanceCompare
-        }
+    tokens.filter(
+      (tokenInfo) => tokenInfo.balance.gt(TOKEN_MIN_AMOUNT) || tokenInfo.showZeroBalance
+    )
+)
 
-        const balanceCompare = token2.balance.comparedTo(token1.balance)
-        if (balanceCompare) {
-          return balanceCompare
-        }
+export const sortedTokensWithBalanceOrShowZeroBalanceSelector = createSelector(
+  tokensWithBalanceOrShowZeroBalanceSelector,
+  (tokens) =>
+    tokens.sort((token1, token2) => {
+      // Sorts by usd balance, then token balance, then zero balance natives by
+      // network id, then zero balance non natives by network id
+      const usdBalanceCompare = usdBalance(token2).comparedTo(usdBalance(token1))
+      if (usdBalanceCompare) {
+        return usdBalanceCompare
+      }
 
-        if (token1.isNative && !token2.isNative) {
-          return -1
-        }
-        if (!token1.isNative && token2.isNative) {
-          return 1
-        }
+      const balanceCompare = token2.balance.comparedTo(token1.balance)
+      if (balanceCompare) {
+        return balanceCompare
+      }
 
-        return token1.networkId.localeCompare(token2.networkId)
-      })
+      if (token1.isNative && !token2.isNative) {
+        return -1
+      }
+      if (!token1.isNative && token2.isNative) {
+        return 1
+      }
+
+      return token1.networkId.localeCompare(token2.networkId)
+    })
+)
+
+export const sortedTokensWithBalanceSelector = createSelector(
+  sortedTokensWithBalanceOrShowZeroBalanceSelector,
+  (tokens) => tokens.filter((token) => token.balance.gt(TOKEN_MIN_AMOUNT))
 )
 
 const feeCurrenciesByNetworkIdSelector = createSelector(
@@ -436,7 +445,7 @@ const feeCurrenciesByNetworkIdSelector = createSelector(
     const feeCurrenciesByNetworkId: { [key in NetworkId]?: TokenBalance[] } = {}
     // collect fee currencies
     Object.values(tokens).forEach((token) => {
-      if (token?.isNative || token?.isFeeCurrency) {
+      if (isFeeCurrency(token)) {
         feeCurrenciesByNetworkId[token.networkId] = [
           ...(feeCurrenciesByNetworkId[token.networkId] ?? []),
           token,
@@ -496,13 +505,30 @@ export const feeCurrenciesWithPositiveBalancesSelector = createSelector(
   }
 )
 
-export const visualizeNFTsEnabledInHomeAssetsPageSelector = (state: RootState) =>
-  state.app.visualizeNFTsEnabledInHomeAssetsPage
+export const importedTokensSelector = createSelector(
+  [tokensListSelector],
+  (tokenList): TokenBalance[] => {
+    if (!getFeatureGate(StatsigFeatureGates.SHOW_IMPORT_TOKENS_FLOW)) {
+      return []
+    }
 
-export const importedTokensSelector = createSelector([tokensListSelector], (tokenList) => {
-  if (!getFeatureGate(StatsigFeatureGates.SHOW_IMPORT_TOKENS_FLOW)) {
-    return []
+    return tokenList.filter((token) => token?.isManuallyImported)
   }
+)
 
-  return tokenList.filter((token) => token?.isManuallyImported) as TokenBalance[]
-})
+const getJumpstartEnabledNetworkIds = () =>
+  Object.keys(
+    getDynamicConfigParams(DynamicConfigs[StatsigDynamicConfigs.WALLET_JUMPSTART_CONFIG])
+      .jumpstartContracts
+  ) as NetworkId[]
+
+export const jumpstartSendTokensSelector = createSelector(
+  [(state) => sortedTokensWithBalanceSelector(state, getJumpstartEnabledNetworkIds())],
+  (tokensWithBalance) => {
+    return tokensWithBalance.filter((token) => {
+      // the jumpstart contract currently requires a token address for the
+      // depositERC20 method
+      return !!token.address
+    })
+  }
+)

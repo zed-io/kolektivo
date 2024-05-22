@@ -1,13 +1,17 @@
 import { getAddressChunks } from '@celo/utils/lib/address'
 import {
-  EXAMPLE_NAME,
   SAMPLE_BACKUP_KEY,
   SAMPLE_BACKUP_KEY_12_WORDS,
   SAMPLE_WALLET_ADDRESS,
   SAMPLE_WALLET_ADDRESS_12_WORDS,
 } from '../utils/consts'
 import { launchApp } from '../utils/retries'
-import { enterPinUi, scrollIntoView, waitForElementId } from '../utils/utils'
+import {
+  enterPinUi,
+  scrollIntoView,
+  waitForElementByIdAndTap,
+  waitForElementId,
+} from '../utils/utils'
 
 export default RestoreAccountOnboarding = () => {
   beforeEach(async () => {
@@ -33,10 +37,6 @@ export default RestoreAccountOnboarding = () => {
       await expect(element(by.id('AcceptTermsButton'))).toBeVisible()
       await element(by.id('AcceptTermsButton')).tap()
 
-      // enter name
-      await element(by.id('NameEntry')).replaceText(EXAMPLE_NAME)
-      await element(by.id('NameAndPictureContinueButton')).tap()
-
       // Set and verify pin
       await enterPinUi()
       await enterPinUi()
@@ -60,21 +60,21 @@ export default RestoreAccountOnboarding = () => {
       }
 
       // start wallet import
-      await waitFor(element(by.id('ImportWalletButton')))
-        .toBeVisible()
-        .withTimeout(1000 * 5)
+      await scrollIntoView('Restore', 'ImportWalletKeyboardAwareScrollView')
       await element(by.id('ImportWalletButton')).tap()
 
       // verification step comes after restoring wallet, skip this step
       await waitForElementId('PhoneVerificationSkipHeader')
       await element(by.id('PhoneVerificationSkipHeader')).tap()
 
+      // Choose your own adventure (CYA screen)
+      await waitForElementByIdAndTap('ChooseYourAdventure/Later')
+
       // verify that we land on the home screen
       await expect(element(by.id('HomeAction-Send'))).toBeVisible()
 
       // verify that the correct account was restored
-      await waitForElementId('Hamburger')
-      await element(by.id('Hamburger')).tap()
+      await waitForElementByIdAndTap('WalletHome/AccountCircle')
       await scrollIntoView('Account Address', 'SettingsScrollView')
 
       const addressString = '0x ' + getAddressChunks(walletAddress).join(' ')

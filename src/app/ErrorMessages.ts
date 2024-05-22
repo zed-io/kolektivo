@@ -7,7 +7,6 @@ export enum ErrorMessages {
   SET_PIN_FAILED = 'setPinFailed',
   NSF_GOLD = 'notEnoughGoldError',
   NSF_STABLE = 'notEnoughStableError',
-  NSF_TO_SEND = 'needMoreFundsToSend',
   INVALID_AMOUNT = 'invalidAmount',
   INVALID_BACKUP_PHRASE = 'invalidBackupPhrase',
   INVALID_WORDS_IN_BACKUP_PHRASE = 'invalidWordsInBackupPhrase',
@@ -65,4 +64,5 @@ export enum ErrorMessages {
   INSUFFICIENT_BALANCE_STABLE = 'insufficientBalanceStable',
   HOOKS_INVALID_PREVIEW_API_URL = 'hooksPreview.invalidApiUrl',
   SHORTCUT_CLAIM_REWARD_FAILED = 'dappShortcuts.claimRewardFailure',
+  UNSUPPORTED_SWAP_TOKENS = 'swapScreen.unsupportedSwapTokens',
 }

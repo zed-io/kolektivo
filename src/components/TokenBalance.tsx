@@ -2,7 +2,6 @@ import BigNumber from 'bignumber.js'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  Image,
   StyleProp,
   StyleSheet,
   Text,
@@ -13,14 +12,13 @@ import {
 } from 'react-native'
 import { getNumberFormatSettings } from 'react-native-localize'
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useDispatch, useSelector } from 'react-redux'
 import { hideAlert, showToast } from 'src/alert/actions'
 import { AssetsEvents, FiatExchangeEvents, HomeEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
-import { toggleHideHomeBalances } from 'src/app/actions'
-import { hideHomeBalancesSelector } from 'src/app/selectors'
-import Dialog from 'src/components/Dialog'
+import { toggleHideBalances } from 'src/app/actions'
+import { hideWalletBalancesSelector } from 'src/app/selectors'
 import { formatValueToDisplay } from 'src/components/TokenDisplay'
+import TokenIcon, { IconSize } from 'src/components/TokenIcon'
 import Touchable from 'src/components/Touchable'
 import { useShowOrHideAnimation } from 'src/components/useShowOrHideAnimation'
 import { refreshAllBalances } from 'src/home/actions'
@@ -33,11 +31,10 @@ import {
   getLocalCurrencySymbol,
   localCurrencyExchangeRateErrorSelector,
 } from 'src/localCurrency/selectors'
-import { navigate } from 'src/navigator/NavigationService'
+import { navigateClearingStack } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { totalPositionsBalanceUsdSelector } from 'src/positions/selectors'
-import { getFeatureGate } from 'src/statsig'
-import { StatsigFeatureGates } from 'src/statsig/types'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 import Colors from 'src/styles/colors'
 import fontStyles, { typeScale } from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
@@ -55,11 +52,11 @@ import { getSupportedNetworkIdsForTokenBalances } from 'src/tokens/utils'
 function TokenBalance({
   style = styles.balance,
   singleTokenViewEnabled = true,
-  showHideHomeBalancesToggle = false,
+  showBalanceToggle = false,
 }: {
   style?: StyleProp<TextStyle>
   singleTokenViewEnabled?: boolean
-  showHideHomeBalancesToggle?: boolean
+  showBalanceToggle?: boolean
 }) {
   const supportedNetworkIds = getSupportedNetworkIdsForTokenBalances()
   const tokensWithUsdValue = useTokensWithUsdValue(supportedNetworkIds)
@@ -68,7 +65,7 @@ function TokenBalance({
   const tokenFetchLoading = useSelector(tokenFetchLoadingSelector)
   const tokenFetchError = useSelector(tokenFetchErrorSelector)
   const tokensAreStale = useTokenPricesAreStale(supportedNetworkIds)
-  // TODO: Update these to filter out unsupported networks once positions support non-Celo chains
+  // TODO(ACT-1095): Update these to filter out unsupported networks once positions support non-Celo chains
   const totalPositionsBalanceUsd = useSelector(totalPositionsBalanceUsdSelector)
   const totalPositionsBalanceLocal = useDollarsToLocalAmount(totalPositionsBalanceUsd)
   const totalBalanceLocal =
@@ -77,8 +74,8 @@ function TokenBalance({
       : undefined
   const { decimalSeparator } = getNumberFormatSettings()
 
-  const hideHomeBalanceState = useSelector(hideHomeBalancesSelector)
-  const hideBalance = showHideHomeBalancesToggle && hideHomeBalanceState
+  const hideWalletBalance = useSelector(hideWalletBalancesSelector)
+  const hideBalance = showBalanceToggle && hideWalletBalance
   const balanceDisplay = hideBalance ? `XX${decimalSeparator}XX` : totalBalanceLocal?.toFormat(2)
 
   const TotalTokenBalance = ({ balanceDisplay }: { balanceDisplay: string }) => {
@@ -88,7 +85,7 @@ function TokenBalance({
           {!hideBalance && localCurrencySymbol}
           {balanceDisplay}
         </Text>
-        {showHideHomeBalancesToggle && <HideBalanceButton hideBalance={hideBalance} />}
+        {showBalanceToggle && <HideBalanceButton hideBalance={hideBalance} />}
       </View>
     )
   }
@@ -104,7 +101,11 @@ function TokenBalance({
     const tokenBalance = tokensWithUsdValue[0].balance
     return (
       <View style={styles.oneBalance}>
-        <Image source={{ uri: tokensWithUsdValue[0].imageUrl }} style={styles.tokenImg} />
+        <TokenIcon
+          token={tokensWithUsdValue[0]}
+          size={IconSize.XLARGE}
+          viewStyle={styles.tokenImgView}
+        />
         <View style={styles.column}>
           <TotalTokenBalance balanceDisplay={balanceDisplay ?? '-'} />
           {!hideBalance && (
@@ -124,7 +125,7 @@ function HideBalanceButton({ hideBalance }: { hideBalance: boolean }) {
   const dispatch = useDispatch()
   const eyeIconOnPress = () => {
     ValoraAnalytics.track(hideBalance ? HomeEvents.show_balances : HomeEvents.hide_balances)
-    dispatch(toggleHideHomeBalances())
+    dispatch(toggleHideBalances())
   }
   return (
     <Touchable onPress={eyeIconOnPress} hitSlop={variables.iconHitslop}>
@@ -168,6 +169,8 @@ export function AssetsTokenBalance({ showInfo }: { showInfo: boolean }) {
   const [shouldRenderInfoComponent, setShouldRenderInfoComponent] = useState(false)
   const infoOpacity = useSharedValue(0)
 
+  useErrorMessageWithRefresh()
+
   useShowOrHideAnimation(
     infoOpacity,
     infoVisible,
@@ -200,7 +203,7 @@ export function AssetsTokenBalance({ showInfo }: { showInfo: boolean }) {
     <TouchableWithoutFeedback onPress={handleDismissInfo}>
       <View testID="AssetsTokenBalance">
         <View style={styles.row}>
-          <Text style={styles.totalAssets}>{t('totalAssets')}</Text>
+          <Text style={styles.walletTabTitle}>{t('bottomTabsNavigator.wallet.title')}</Text>
           {showInfo && (
             <TouchableOpacity
               onPress={toggleInfoVisible}
@@ -212,12 +215,9 @@ export function AssetsTokenBalance({ showInfo }: { showInfo: boolean }) {
           )}
         </View>
         <TokenBalance
-          style={
-            getFeatureGate(StatsigFeatureGates.SHOW_ASSET_DETAILS_SCREEN)
-              ? styles.totalBalance
-              : styles.balance
-          }
+          style={styles.totalBalance}
           singleTokenViewEnabled={false}
+          showBalanceToggle={true}
         />
 
         {shouldRenderInfoComponent && (
@@ -230,74 +230,6 @@ export function AssetsTokenBalance({ showInfo }: { showInfo: boolean }) {
   )
 }
 
-export function HomeTokenBalance() {
-  const { t } = useTranslation()
-
-  const totalBalance = useTotalTokenBalance()
-  const tokenBalances = useTokensWithTokenBalance()
-
-  useErrorMessageWithRefresh()
-
-  const onViewBalances = () => {
-    ValoraAnalytics.track(HomeEvents.view_token_balances, {
-      totalBalance: totalBalance?.toString(),
-    })
-    navigate(
-      getFeatureGate(StatsigFeatureGates.SHOW_ASSET_DETAILS_SCREEN)
-        ? Screens.Assets
-        : Screens.TokenBalances
-    )
-  }
-
-  const onCloseDialog = () => {
-    setInfoVisible(false)
-  }
-
-  const [infoVisible, setInfoVisible] = useState(false)
-
-  return (
-    <View style={styles.container} testID="HomeTokenBalance">
-      <View style={styles.title}>
-        <View style={styles.row}>
-          <Text style={styles.totalValue}>{t('totalValue')}</Text>
-          {tokenBalances.length > 0 && (
-            <TouchableOpacity onPress={() => setInfoVisible(true)} hitSlop={variables.iconHitslop}>
-              <InfoIcon size={14} color={Colors.gray3} />
-            </TouchableOpacity>
-          )}
-        </View>
-        <Dialog
-          title={t('whatTotalValue.title')}
-          isVisible={infoVisible}
-          actionText={t('whatTotalValue.dismiss')}
-          actionPress={onCloseDialog}
-          isActionHighlighted={false}
-          onBackgroundPress={onCloseDialog}
-        >
-          {t('whatTotalValue.body')}
-        </Dialog>
-        {(getFeatureGate(StatsigFeatureGates.SHOW_ASSET_DETAILS_SCREEN) ||
-          tokenBalances.length >= 1) && (
-          <TouchableOpacity style={styles.row} onPress={onViewBalances} testID="ViewBalances">
-            <Text style={styles.viewBalances}>{t('viewBalances')}</Text>
-            <ProgressArrow style={styles.arrow} color={Colors.primary} />
-          </TouchableOpacity>
-        )}
-      </View>
-      <TokenBalance
-        style={
-          getFeatureGate(StatsigFeatureGates.SHOW_ASSET_DETAILS_SCREEN)
-            ? styles.totalBalance
-            : styles.balance
-        }
-        showHideHomeBalancesToggle={getFeatureGate(
-          StatsigFeatureGates.SHOW_HIDE_HOME_BALANCES_TOGGLE
-        )}
-      />
-    </View>
-  )
-}
-
 export function FiatExchangeTokenBalance() {
   const { t } = useTranslation()
   const totalBalance = useTotalTokenBalance()
@@ -307,11 +239,7 @@ export function FiatExchangeTokenBalance() {
     ValoraAnalytics.track(FiatExchangeEvents.cico_landing_token_balance, {
       totalBalance: totalBalance?.toString(),
     })
-    navigate(
-      getFeatureGate(StatsigFeatureGates.SHOW_ASSET_DETAILS_SCREEN)
-        ? Screens.Assets
-        : Screens.TokenBalances
-    )
+    navigateClearingStack(Screens.TabNavigator, { initialScreen: Screens.TabWallet })
   }
 
   return (
@@ -337,10 +265,10 @@ const styles = StyleSheet.create({
   container: {
     margin: variables.contentPadding,
   },
-  totalAssets: {
-    ...typeScale.labelMedium,
-    color: Colors.gray5,
-    marginRight: 4,
+  walletTabTitle: {
+    ...typeScale.titleMedium,
+    color: Colors.black,
+    marginRight: 10,
   },
   totalAssetsInfoContainer: {
     position: 'absolute',
@@ -356,11 +284,6 @@ const styles = StyleSheet.create({
     color: Colors.white,
     textAlign: 'center',
   },
-  title: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 7,
-  },
   titleExchange: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -370,23 +293,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  totalValue: {
-    ...fontStyles.sectionHeader,
-    color: Colors.gray4,
-    paddingRight: 5,
-  },
   exchangeTotalValue: {
     ...fontStyles.label,
     color: Colors.gray4,
     paddingRight: 3,
-  },
-  viewBalances: {
-    ...fontStyles.label,
-    color: Colors.primary,
-    paddingRight: 8,
-  },
-  arrow: {
-    paddingTop: 3,
   },
   exchangeArrow: {
     paddingTop: 4,
@@ -404,9 +314,7 @@ const styles = StyleSheet.create({
   oneBalance: {
     flexDirection: 'row',
   },
-  tokenImg: {
-    width: 48,
-    height: 48,
+  tokenImgView: {
     borderRadius: 24,
     marginRight: 8,
   },

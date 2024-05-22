@@ -1,7 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet, Text } from 'react-native'
-import { useSelector } from 'react-redux'
 import { HomeEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import Card from 'src/components/Card'
@@ -16,10 +15,10 @@ import QuickActionsWithdraw from 'src/icons/quick-actions/Withdraw'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { isAppSwapsEnabledSelector } from 'src/navigator/selectors'
-import { getFeatureGate } from 'src/statsig'
-import { StatsigFeatureGates } from 'src/statsig/types'
+import { useSelector } from 'src/redux/hooks'
 import Colors from 'src/styles/colors'
-import fontStyles from 'src/styles/fonts'
+import { typeScale } from 'src/styles/fonts'
+import { Spacing } from 'src/styles/styles'
 
 function ActionsCarousel() {
   const { t } = useTranslation()
@@ -32,11 +31,7 @@ function ActionsCarousel() {
       title: t('homeActions.send'),
       icon: <QuickActionsSend color={Colors.successDark} />,
       onPress: () => {
-        navigate(
-          getFeatureGate(StatsigFeatureGates.USE_NEW_SEND_FLOW)
-            ? Screens.SendSelectRecipient
-            : Screens.Send
-        )
+        navigate(Screens.SendSelectRecipient)
       },
     },
     {
@@ -103,7 +98,12 @@ function ActionsCarousel() {
             >
               <>
                 {icon}
-                <Text style={styles.name} testID={`HomeAction/Title-${name}`}>
+                <Text
+                  numberOfLines={1}
+                  allowFontScaling={false}
+                  style={styles.name}
+                  testID={`HomeAction/Title-${name}`}
+                >
                   {title}
                 </Text>
               </>
@@ -116,12 +116,12 @@ function ActionsCarousel() {
 
 const styles = StyleSheet.create({
   carouselContainer: {
-    paddingHorizontal: 10,
-    marginBottom: 8,
+    paddingHorizontal: Spacing.Regular16,
+    marginBottom: Spacing.Smallest8,
+    gap: Spacing.Regular16,
   },
   card: {
     width: 84,
-    marginHorizontal: 6,
     padding: 0,
     backgroundColor: Colors.successLight,
     borderRadius: 10,
@@ -131,9 +131,9 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   name: {
-    ...fontStyles.small500,
+    ...typeScale.labelSmall,
     lineHeight: 17,
-    paddingTop: 8,
+    paddingTop: Spacing.Smallest8,
     color: Colors.successDark,
   },
 })

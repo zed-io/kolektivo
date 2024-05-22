@@ -6,6 +6,14 @@
   "licenses": "Licenças",
   "removeAccountTitle": "Redefinir a Kolektivo",
   "removeAccountDetails": "A redefinição removerá sua conta deste dispositivo. Seus fundos permanecerão na conta, mas só estarão acessíveis com a Frase de Recuperação.",
+  "deleteAccountTitle": "Excluir conta",
+  "deleteAccountDetails": "A exclusão da sua conta a removerá da {{appName}}. Seus fundos permanecerão na conta, mas você só poderá acessá-los com sua frase de recuperação",
+  "deleteAccountWarning": {
+    "title": "Tem certeza?",
+    "description": "A exclusão da sua conta da {{appName}} também removerá qualquer número de celular vinculado. Seus fundos permanecerão na conta, mas você só poderá acessá-los com sua frase de recuperação.",
+    "buttonLabel": "Continuar",
+    "buttonLabelRevokingPhoneNumber": "Desvinculando número de celular..."
+  },
   "legal": "Jurídico",
   "appPreferences": "Preferências do app",
   "security": "Segurança",
@@ -21,7 +29,8 @@
   "dataSaver": "Economia de Dados",
   "enableDataSaver": "Ativar Economia de Dados",
   "dataSaverDetail": "O modo de Economia de Dados permite a comunicação com a rede por meio de um nó confiável. Você sempre pode alterar esse modo nas configurações do aplicativo.",
-  "keylessBackupSettingsTitle": "Recuperação de e-mail e telefone",
+  "keylessBackupSettingsTitle": "Backup com e-mail e telefone",
+  "keylessBackupSettingsDeleteError": "Seu backup não pôde ser excluído, aguarde e tente novamente mais tarde.",
   "setup": "Configurar",
   "restartModalSwitchOff": {
     "header": "Reinicie para desativar Economia de Dados",
@@ -55,7 +64,7 @@
   "protectWallet": {
     "title": "Proteja sua carteira",
     "subtitle": "Proteja sua carteira",
-    "body": "Se perder seu celular ou ele for roubado, sua frase recuperação de {{mnemonicLength}} palavras é a única maneira de acessar seus fundos.",
+    "body": "Se o seu celular for perdido ou roubado, sua frase de recuperação de 12 palavras é a única maneira de acessar seus fundos.",
     "recoveryPhrase": {
       "title": "Usar frase de recuperação",
       "subtitle": "Anote sua frase de recuperação"
@@ -63,7 +72,7 @@
   },
   "recoveryPhrase": {
     "title": "Sua frase de recuperação",
-    "body": "Anote essas {{mnemonicLength}} palavras em algum lugar seguro, onde ninguém possa roubá-las ou danificá-las.",
+    "body": "Escreva essas 12 palavras em um lugar seguro, onde não possam ser roubadas ou danificadas.",
     "continue": "Já salvei",
     "copy": "Copiar para área de transferência",
     "mnemonicCopied": "Frase de recuperação copiada para a área de transferência",
@@ -77,16 +86,24 @@
     "title": "Mantenha sua carteira segura",
     "description": "Só você pode acessar sua carteira. Se seu telefone for perdido ou roubado, a Kolektivo não poderá recuperá-la por você.\n\nVocê precisará definir um método para manter sua carteira segura e proteger seus fundos."
   },
-  "setUpKeylessBackup": {
-    "title": "Configurar o backup da carteira",
-    "subtitle": "Você vai usar os seguintes itens para configurar o backup",
+  "keylessBackupIntro": {
     "emailAddress": "E-mail",
     "phoneNumber": "Número de celular",
-    "useRecoveryPhrase": "Usar frase de recuperação"
+    "setup": {
+      "title": "Configurar o backup da carteira",
+      "description": "Você usará os seguintes itens para configurar seu backup de e-mail e número de celular",
+      "useRecoveryPhrase": "Usar uma frase de recuperação em vez disso",
+      "reminder": "<0>Lembre-se</0>, estas informações são a única maneira de acessar sua carteira se o seu dispositivo for perdido ou roubado. A Valora não armazena seu e-mail ou número de celular. Você deve protegê-las!"
+    },
+    "restore": {
+      "description": "Certifique-se de que você tenha os seguintes itens disponíveis para restaurar sua carteira.",
+      "reminder": "<0>Lembre-se</0>, você precisa acessar o mesmo e-mail e número de celular que usou quando fez o backup"
+    }
   },
   "signInWithEmail": {
     "title": "Entrar com e-mail",
     "subtitle": "Entre com seu e-mail para configurá-lo como um backup.\n\nSerá solicitado que você entre novamente se perder sua carteira.",
+    "subtitleRestore": "Entre com o e-mail que você usou para configurar seu backup de carteira.",
     "google": "Entrar com o Google"
   },
   "keylessBackupPhoneInput": {
@@ -109,14 +126,36 @@
         "body": "Agora você pode recuperar sua carteira com seu endereço de e-mail e número de celular."
       },
       "failed": {
-        "title": "Backup sem chave indisponível",
-        "body": "Você pode configurar um backup sem chave mais tarde ou proteger sua conta agora fazendo backup manualmente.",
-        "later": "Vou fazer backup mais tarde",
-        "manual": "Backup manual"
+        "title": "Backup indisponível",
+        "body": "Você pode configurar o backup da carteira mais tarde ou proteger sua conta agora salvando sua frase de recuperação.",
+        "later": "Vou configurar o backup mais tarde",
+        "manual": "Salvar frase de recuperação"
+      }
+    },
+    "restore": {
+      "inProgress": {
+        "title": "Restaurando sua carteira"
+      },
+      "completed": {
+        "title": "Sua carteira foi restaurada!",
+        "bodyZeroBalance": "Você pode adicionar fundos à sua carteira depois de concluir a configuração.",
+        "bodyBalance": "Você tem um saldo de <0></0>"
+      },
+      "failed": {
+        "title": "Sua carteira não foi restaurada",
+        "body": "Houve um problema técnico ao tentar restaurar sua carteira. Entre em contato com a equipe de suporte para obter mais informações.",
+        "tryAgain": "Repetir",
+        "createNewWallet": "Criar carteira",
+        "help": "Ajuda"
+      },
+      "notFound": {
+        "title": "Carteira não encontrada",
+        "body": "Para restaurar sua carteira, use o <0>mesmo endereço de e-mail e número de celular</0> que você usou quando fez a configuração.\n\nVocê também pode restaurar sua carteira com sua frase de recuperação.",
+        "tryAgain": "Repetir",
+        "createNewWallet": "Criar carteira"
       }
     }
   },
-  "setupKeylessBackupReminder": "<0>Lembre-se</0>, estas informações são a única maneira de acessar sua carteira se o seu dispositivo for perdido ou roubado. A Valora não armazena seu e-mail ou número de celular. Você deve protegê-las!",
   "testFaqLink": "Perguntas frequentes da {{appName}}",
   "termsOfServiceLink": "Termos de serviço",
   "privacyPolicy": "Política de Privacidade",
@@ -171,6 +210,8 @@
   "completeEducation": "Eu compreendo",
   "yourAccountKey": "Sua Frase de Recuperação",
   "backupKeyNotification2": "Mantenha seus fundos em segurança. Faça o backup da sua frase de recuperação agora.",
+  "keylessBackupCTA": "Fazer backup agora",
+  "keylessBackupNotification": "Configure seu e-mail e número de celular para fazer backup de sua frase semente",
   "backupKeyCTA": "Concluir backup agora",
   "backupKeySummary": "Encontre um local privado e anote a sua Frase de Recuperação. Guarde-a em um lugar seguro. Não salve em seu telefone.",
   "backupKeyWarning": "Se você perder sua frase de recuperação, perderá acesso a todos os fundos mantidos na Kolektivo.",
@@ -178,6 +219,7 @@
   "moreInfo": "Mais informações",
   "savedConfirmation": "Sim, eu anotei minha frase.",
   "backupQuizWordCount": "Qual é a <0>{{ordinal}}</0> palavra da sua Frase de Recuperação?",
+  "backupQuizWordCountV1_83": "Qual é a <0>{{wordNumber}}</0> palavra da sua Frase de Recuperação?",
   "importBackupFailed": "A importação da conta falhou",
   "backupQuizFailed": "A Frase de Recuperação que você inseriu está incorreta. Tente novamente.",
   "invalidBackupPhrase": "A Frase de Recuperação não é válida",
@@ -474,6 +516,7 @@
   "to": "Para",
   "for": "Para",
   "reclaim": "Reivindicar",
+  "claimed": "Resgatada",
   "celoGold": "CELO",
   "celoEuros": "Celo Euros",
   "balanceAvailable": "<0></0> disponíveis",
@@ -634,8 +677,8 @@
     "body": "Depois que seu amigo configurar a carteira dele e conectar o seu número de celular, vocês receberão um NFT."
   },
   "inviteRewardsBannerCUSD": {
-    "title": "Convide amigos e receba recompensas",
-    "body": "Depois que a pessoa configurar e adicionar fundos à carteira {{appName}}, vocês dois receberão 0,50 cUSD."
+    "title": "Convide amigos e ganhe até 12 cUSD",
+    "body": "Quando ele conectar seu número e adicionar fundos a {{appName}}, vocês dois receberão 0,50 cUSD."
   },
   "inviteWithUrl": {
     "title": "Convide um amigo",
@@ -665,6 +708,28 @@
     "info": "Para usar nossos serviços, leia nosso <0>Termos de serviço e contrato do usuário</0> e toque no botão Aceitar para indicar que concorda.",
     "privacy": "Ao ingressar nessa rede, você nos dá permissão para coletar informações anônimas sobre o seu uso do aplicativo. Além disso, se você conectar seu número de celular, uma cópia com hash dele será armazenada. Se você conceder à Kolektivo acesso à sua lista de contatos, a Kolektivo importará o nome, o número de celular e a foto de perfil de cada contato para permitir que os usuários se conectem por meio do aplicativo Kolektivo. Para saber como coletamos e usamos essas informações, consulte a nossa <0>Política de Privacidade</0>.",
     "goldDisclaimer": "Ao criar uma \"conta\" na Kolektivo, você está criando uma carteira digital da qual somente você possui as chaves. Nenhuma outra pessoa, física ou jurídica, incluindo a Kolektivo, pode recuperar sua chave, alterar ou desfazer transações ou recuperar fundos perdidos. Esteja ciente de que criptomoedas fazem parte de uma nova classe de ativos e apresentam o risco de perda financeira. Considere cuidadosamente suas circunstâncias financeiras e sua tolerância a riscos financeiros antes de comprar qualquer ativo."
+  },
+  "termsColloquial": {
+    "title": "Vamos começar criando sua carteira",
+    "privacyHeading": "Suas informações e privacidade:",
+    "privacy1": "Coletamos dados de uso que nos ajudam a aprimorar o aplicativo e a segurança. O tipo de informação que coletamos, como a usamos e seus direitos relacionados a essas informações podem ser vistos em nossa <0>Política de Privacidade</0>.",
+    "privacy2": "Se você decidir vincular seu número de telefone, armazenaremos uma cópia criptografada dele.",
+    "privacy3": "Se você decidir conectar seus contatos, usaremos seus nomes, números e fotos de perfil para facilitar a localização deles.",
+    "walletHeading": "Sua carteira digital com a Valora:",
+    "wallet1": "Você está prestes a criar uma carteira digital. Somente você tem a chave de sua carteira. Não podemos recuperar sua chave ou seus ativos se você perder sua chave. Também não podemos reverter ações realizadas por meio da Valora em blockchains.",
+    "wallet2": "Os ativos digitais, os ativos com os quais você interagirá com o Valora, apresentam riscos exclusivos. Ao usar o Valora, você aceita esses riscos e assume a responsabilidade por eles. Considere suas finanças e sua tolerância a riscos antes de fazer escolhas.",
+    "fullTerms": "Leia nossos <0>Termos e Condições</0> completos"
+  },
+  "termsColloquial": {
+    "title": "Vamos começar criando sua carteira",
+    "privacyHeading": "Suas informações e privacidade:",
+    "privacy1": "Coletamos dados de uso que nos ajudam a aprimorar o aplicativo e a segurança. O tipo de informação que coletamos, como a usamos e seus direitos relacionados a essas informações podem ser vistos em nossa <0>Política de Privacidade</0>.",
+    "privacy2": "Se você decidir vincular seu número de telefone, armazenaremos uma cópia criptografada dele.",
+    "privacy3": "Se você decidir conectar seus contatos, usaremos seus nomes, números e fotos de perfil para facilitar a localização deles.",
+    "walletHeading": "Sua carteira digital com a Valora:",
+    "wallet1": "Você está prestes a criar uma carteira digital. Somente você tem a chave de sua carteira. Não podemos recuperar sua chave ou seus ativos se você perder sua chave. Também não podemos reverter ações realizadas por meio da Valora em blockchains.",
+    "wallet2": "Os ativos digitais, os ativos com os quais você interagirá com o Valora, apresentam riscos exclusivos. Ao usar o Valora, você aceita esses riscos e assume a responsabilidade por eles. Considere suas finanças e sua tolerância a riscos antes de fazer escolhas.",
+    "fullTerms": "Leia nossos <0>Termos e Condições</0> completos"
   },
   "fullNameOrPsuedonym": "Nome ou pseudônimo",
   "namePlaceholder": "nome",
@@ -772,7 +837,8 @@
     "restoreWallet": "Restaurar carteira",
     "hasWallet": "Já tenho uma carteira",
     "header": "Nossas boas-vindas! Vamos criar a sua carteira cripto.",
-    "getStarted": "Começar"
+    "getStarted": "Começar",
+    "agreeToTerms": "Ao criar uma carteira, você concorda com nossos <0>Termos e Condições</0>"
   },
   "accessContacts": {
     "disclosure": {
@@ -873,6 +939,18 @@
       "title": "Saldo\n<0></0>"
     }
   },
+  "importSelect": {
+    "title": "Restaurar sua carteira",
+    "description": "Se você configurou um backup para proteger sua carteira, escolha uma opção abaixo.",
+    "emailAndPhone": {
+      "title": "Do backup de e-mail e telefone",
+      "description": "Restaure sua carteira com o número de celular e o e-mail que você configurou anteriormente"
+    },
+    "recoveryPhrase": {
+      "title": "Da frase de recuperação",
+      "description": "Digite sua frase de recuperação de 12 palavras para recuperar o acesso à Valora"
+    }
+  },
   "verificationInput": {
     "title": "Confirmar",
     "body": "Enviamos três mensagens para você (SMS). Copie e cole-as abaixo.",
@@ -944,6 +1022,7 @@
   "receivedFrom": "De",
   "commentLabel": "Mensagem",
   "amountSent": "Quantia enviada",
+  "amountReceived": "Valor recebido",
   "amountCeloWithdrawn": "Quantia (CELO)",
   "feeEducation": "Blockchains cobram uma taxa de transação para manter o suporte e o bom funcionamento das redes.",
   "reviewPayment": "Revisar pagamento",
@@ -1096,6 +1175,10 @@
     "notEnoughBalanceForGas": {
       "title": "Balanço insuficiente de tokens de Gas",
       "description": "Você não tem {{feeCurrencies}} o suficiente para cobrir as taxas de gas. Adicione {{feeCurrencies}} à sua carteira para concluir esta transação."
+    },
+    "failedToPrepareTransaction": {
+      "title": "Falha ao preparar a transação",
+      "description": "Ocorreu um erro ao preparar a transação. Consulte o erro subjacente para obter mais detalhes.\n\n\"{{errorMessage}}\""
     },
     "session": {
       "failUnsupportedNamespace": {
@@ -1250,6 +1333,9 @@
   "feedItemGoldWithdrawal": "Transferidos para {{displayName}} ",
   "feedItemGoldReceived": "Recebidos de {{displayName}} ",
   "feedItemSwapPath": "{{token1}} para {{token2}}",
+  "feedItemJumpstartTitle": "Link ativo",
+  "feedItemJumpstartSentSubtitle": "Convite",
+  "feedItemJumpstartReceivedSubtitle": "Fundos recebidos",
   "transactionHeaderVerificationFee": "Confirmação",
   "transactionHeaderNetworkFee": "Rede",
   "transactionHeaderFaucet": "Faucet",
@@ -1687,10 +1773,11 @@
     "swapTo": "PARA",
     "insufficientFunds": "Saldo de {{token}} insuficiente. Insira um valor menor ou escolha um ativo diferente.",
     "fetchSwapQuoteFailed": "Lamentamos o atraso! A obtenção da melhor taxa de câmbio está demorando mais do que o normal. Tente novamente mais tarde.",
-    "disclaimer": "A melhor taxa é determinada pelos parceiros da rede. <0>Saiba mais</0>",
+    "disclaimer": "A melhor taxa determinada por fontes descentralizadas. <0>Saiba mais</0>",
     "swapFromTokenSelection": "TROCA DE",
     "swapToTokenSelection": "TROCA PARA",
     "tokenUsdValueUnknown": "-",
+    "unsupportedSwapTokens": "Os tokens selecionados não são suportados por nossos fornecedores de troca.",
     "switchedToNetworkWarning": {
       "title": "Você mudou para a rede {{networkName}}",
       "body_swapFrom": "Selecione um token de origem para trocar na rede {{networkName}} para continuar.",
@@ -1745,6 +1832,9 @@
       "slippageToleranceInfo": "Tolerância de slippage\n\nSua troca será executada dentro da porcentagem de tolerância de slippage. Se o preço mudar mais do que a tolerância de slippage, a {{appName}} protege você impedindo a execução da negociação.",
       "networkFeeInfoDismissButton": "Entendi",
       "exchangeRate": "Taxa de câmbio",
+      "exchangeRateInfo": "Taxa de câmbio\n\nEncontramos a melhor taxa de câmbio para você. Sua negociação será concluída a um preço dentro de {{slippagePercentage}}% da estimativa ou a transação será cancelada e os fundos serão devolvidos à sua carteira.",
+      "exchangeRateInfo_withAppFee": "Taxa de câmbio\n\nEncontramos a melhor taxa de câmbio para você. Sua negociação será concluída a um preço dentro de {{slippagePercentage}}% da estimativa ou a transação será cancelada e os fundos serão devolvidos à sua carteira.\n\nA taxa estimada inclui uma taxa {{appName}} de {{appFeePercentage}}%.",
+      "exchangeRateInfoDismissButton": "Entendi",
       "estimatedValue": "Valor estimado"
     },
     "fundYourWalletBottomSheet": {
@@ -1850,11 +1940,22 @@
   },
   "profileScreen": {
     "generateName": "Gerar um nome",
-    "namePlaceholder": "Selecione um nome (ex. {{exampleName}})"
+    "namePlaceholder": "Selecione um nome, como \"{{exampleName}}\"",
+    "profilePictureDisclaimer": "Personalize a {{appName}} com sua foto de perfil. Sua imagem permanece privada, nunca é compartilhada ou enviada."
   },
   "tokenBottomSheet": {
     "searchAssets": "Pesquisar ativos",
-    "noTokenInResult": "Nenhum resultado correspondente encontrado para <0>\"{{searchTerm}}\"</0>"
+    "noTokenInResult": "Nenhum resultado correspondente encontrado para <0>\"{{searchTerm}}\"</0>",
+    "noFilterSearchResults": "Não foram encontrados ativos que correspondam a \"{{searchTerm}}\" nas seguintes categorias: {{filterNames}}",
+    "noFilterResults": "Não foram encontrados ativos que correspondam às seguintes categorias: {{filterNames}}",
+    "noSearchResults": "Não foram encontrados ativos que correspondam a \"{{searchTerm}}\"",
+    "filters": {
+      "myTokens": "Meus tokens",
+      "popular": "Popular",
+      "recentlySwapped": "Trocado recentemente",
+      "network": "Rede {{networkName}}",
+      "selectNetwork": "Rede"
+    }
   },
   "homeActions": {
     "add": "Comprar",
@@ -1899,7 +2000,8 @@
       "collectibles": "Colecionáveis",
       "dappPositions": "DeFi"
     },
-    "importToken": "Importar"
+    "importToken": "Importar",
+    "importTokens": "Importar tokens"
   },
   "notificationCenterSpotlight": {
     "message": "Apresentamos uma nova forma de resgatar recompensas, ver alertas e consultar atualizações em um só lugar",
@@ -1937,7 +2039,9 @@
       "network": "Rede"
     },
     "error": {
-      "invalidToken": "Token inválido. Tente novamente ou entre em contato com a Equipe de Suporte"
+      "invalidAddress": "Endereço de token inválido. Revise-o",
+      "invalidToken": "Token inválido. Tente novamente ou entre em contato com a Equipe de Suporte",
+      "tokenAlreadySupported": "O token já é suportado"
     },
     "importSuccess": "Token {{tokenSymbol}} importado com sucesso",
     "importButton": "Importar"
@@ -1955,7 +2059,11 @@
     },
     "invite": {
       "title": "Envie criptos para seus amigos",
-      "subtitle": "Convide amigos da sua lista de contatos"
+      "subtitle": "Envie fundos ou um convite para seus contatos"
+    },
+    "jumpstart": {
+      "title": "Enviar com um link ao vivo",
+      "subtitle": "Compartilhe um link para enviar criptografia como um texto"
     },
     "getStarted": {
       "title": "Formas de enviar fundos na Kolektivo",
@@ -1971,7 +2079,7 @@
         },
         "three": {
           "title": "ENS",
-          "subtitle": "Enviar ativos para o identificador ENS de alguém"
+          "subtitle": "Envie ativos para o identificador ENS de alguém"
         },
         "four": {
           "title": "Nome do perfil",
@@ -2006,9 +2114,11 @@
   "viewOnCeloBlockExplorer": "Ver no CeloExplorer",
   "viewOnCeloScan": "Ver no CeloScan",
   "viewOnEthereumBlockExplorer": "Ver no Etherscan",
-  "viewOnArbiscan": "Ver em Arbiscan",
-  "viewOnOPMainnetExplorer": "Exibir no OP Mainnet Explorer",
-  "viewOnOPSepoliaExplorer": "Ver na OP Sepolia Explorer",
+  "viewOnArbiscan": "Ver no Arbiscan",
+  "viewOnOPMainnetExplorer": "Ver no OP Mainnet Explorer",
+  "viewOnOPSepoliaExplorer": "Ver no OP Sepolia Explorer",
+  "viewOnPolygonPoSScan": "Ver no PolygonScan",
+  "viewOnBaseScan": "Exibir no BaseScan",
   "sendEnterAmountScreen": {
     "title": "Insira o valor",
     "selectToken": "Selecione um token",
@@ -2021,6 +2131,45 @@
     "notEnoughBalanceForGasWarning": {
       "title": "Você precisa de mais {{feeTokenSymbol}} para o Gas",
       "description": "Adicione {{feeTokenSymbol}} para cobrir suas taxas de Gas ou ajuste a quantia que você está enviando"
+    },
+    "prepareTransactionError": {
+      "title": "Algo deu errado!",
+      "description": "Não foi possível preparar uma transação para esse token."
+    }
+  },
+  "jumpstartEnterAmountScreen": {
+    "maxAmountWarning": {
+      "title": "Você pode enviar até {{amountInLocalCurrency,currency}} em um link",
+      "description": "Esse link poderá ser resgatado por qualquer pessoa que tenha acesso a ele. Certifique-se de enviar links para pessoas em quem confia."
+    }
+  },
+  "jumpstartSendConfirmationScreen": {
+    "title": "Criar um link ao vivo",
+    "sendAmountLabel": "Quantia do link ativo",
+    "confirmButton": "Enviar e criar link",
+    "info": "Ao criar um link, os fundos são retirados de sua carteira. Você pode recuperar o link a qualquer momento. Compartilhe links com cuidado.",
+    "sendError": {
+      "title": "Não foi possível criar um link",
+      "description": "Seu link ativo não foi criado. Tente novamente.",
+      "ctaLabel": "Ignorar"
+    }
+  },
+  "jumpstartShareLinkScreen": {
+    "title": "Compartilhe seu Live Link",
+    "description": "Copie o link para enviar {{tokenSymbol}} pelo aplicativo de mensagens de sua preferência ou use o código QR.",
+    "linkLabel": "Link ativo",
+    "linkCopiedMessage": "Link ativo copiado",
+    "navigationWarning": {
+      "title": "Você compartilhou seu link?",
+      "description": "Certifique-se de compartilhar este link ativo ou salvá-lo em um local seguro.\n\nNão se preocupe se não for resgatado — você pode facilmente recuperar os fundos no seu feed de atividades.",
+      "ctaNavigate": "Ir para a tela inicial"
+    },
+    "ctaShare": "Compartilhar link",
+    "ctaScanQRCode": "Mostrar código QR",
+    "shareMessage": "Olá! Estou te enviando um link com fundos de {{tokenAmount}} {{tokenSymbol}} na {{appName}}. Use esse link para baixar o aplicativo e os fundos estarão disponíveis, esperando por você. {{link}}",
+    "qrCodeBottomSheet": {
+      "title": "Leia o código para receber fundos",
+      "description": "Verifique o status dos seus fundos na tela inicial. Como alternativa, copie ou compartilhe o link abaixo."
     }
   },
   "transactionFeed": {
@@ -2042,7 +2191,203 @@
   },
   "getStartedHome": {
     "title": "Comprar cripto ou transferir tokens",
-    "body": "Compre ou transfira tokens compatíveis para enviar criptomoedas e explorar a web3!"
+    "body": "Compre ou transfira tokens compatíveis para enviar cripto e explorar a web3!"
+  },
+  "nftCelebration": {
+    "bottomSheet": {
+      "title": "Parabéns!",
+      "description": "Você ganhou um item colecionável exclusivo para exploradores pioneiros do Ethereum. Dê boas-vindas ao Ethereum na {{appName}}.",
+      "cta": "Obrigado!"
+    },
+    "notification": {
+      "title": "Um novo NFT espera por você 🎉",
+      "description": "Você pode encontrar seu novo NFT {{rewardName}} em \"Colecionáveis\""
+    },
+    "rewardBottomSheet": {
+      "title": "Ganhe US$ 5 de ETH",
+      "description": "Adicione fundos à sua carteira com qualquer token Ethereum até 4 de abril de 2024 às 12:00 PM PDT, e nós daremos a você US$ 5 de ETH em 5 de abril de 2024 às 11:59 PM PDT.\n\nEsta é uma oferta exclusiva para você ser um Early Ethereum Explorer.",
+      "expirationLabel": "Expira em {{expirationLabelText}}",
+      "cta": "Usar recompensa"
+    },
+    "rewardReminderBottomSheet": {
+      "title": "Não perca essa chance, ganhe US$ 5 de ETH",
+      "description": "Adicione fundos à sua carteira com qualquer token Ethereum até 4 de abril de 2024 às 12:00 PM PDT, e nós daremos a você US$ 5 de ETH em 5 de abril de 2024 às 11:59 PM PDT.\n\nEsta é uma oferta exclusiva para você ser um Early Ethereum Explorer.",
+      "expirationLabel": "Expira em {{expirationLabelText}}",
+      "cta": "Usar recompensa"
+    }
+  },
+  "pleaseWait": "Aguarde",
+  "error": "Erro",
+  "linkPhoneNumber": {
+    "title": "Vincule um número de celular ao endereço da sua carteira",
+    "description": "Chega de endereços de carteira confusos! Envie cripto para outros usuários da Celo com apenas um número de celular",
+    "startButtonLabel": "Vincular número de celular",
+    "later": "Farei isso mais tarde"
+  },
+  "bottomTabsNavigator": {
+    "wallet": {
+      "tabName": "Conta",
+      "title": "Minha conta"
+    },
+    "home": {
+      "tabName": "Início",
+      "title": "Boas-vindas"
+    },
+    "discover": {
+      "tabName": "Descobrir",
+      "title": "Explore a web3"
+    }
+  },
+  "jumpstartStatus": {
+    "loading": {
+      "title": "Seus fundos estão a caminho",
+      "description": "Os fundos que seu amigo deu a você estão sendo transferidos. Aguarde... "
+    },
+    "error": {
+      "title": "Não foi possível resgatar os fundos",
+      "description": "Tente usar o link ativo novamente para tentar receber fundos ou peça ao seu amigo para tentar enviar um novo link",
+      "contactSupport": "Contate o suporte",
+      "dismiss": "Ignorar"
+    }
+  },
+  "jumpstartReclaim": {
+    "description": "A recuperação do seu link incorre em uma taxa de gás de rede. Você gostaria de continuar?",
+    "fetchStatusError": {
+      "title": "Ops, algo deu errado",
+      "description": "Não foi possível obter o status da reivindicação desse convite. Tente novamente mais tarde ou entre em contato com o suporte",
+      "retryCta": "Repetir"
+    },
+    "reclaimError": {
+      "title": "Não foi possível recuperar os fundos",
+      "description": "Tente recuperar novamente ou entre em contato com o suporte"
+    }
+  },
+  "multiSelect": {
+    "switchNetwork": "Rede de comutação",
+    "allNetworks": "Todas as redes"
+  },
+  "points": {
+    "title": "Pontos Valora",
+    "activity": "Atividades",
+    "history": {
+      "cards": {
+        "createWallet": {
+          "title": "Porta-carteiras",
+          "subtitle": "Membro de {{appName}}"
+        },
+        "swap": {
+          "title": "Trocar",
+          "subtitle": "{{fromToken}} para {{toToken}}"
+        }
+      },
+      "title": "Minha atividade de pontos",
+      "error": {
+        "title": "Não é possível carregar a atividade de pontos",
+        "subtitle": "Oops, algo deu errado ao tentar carregar seu feed de atividades de pontos. Por favor, tente novamente.",
+        "tryAgain": "Tentar novamente"
+      },
+      "empty": {
+        "title": "Nenhuma atividade de pontos ainda",
+        "subtitle": "Parece que você ainda não ganhou nenhum ponto. Use o site {{appName}} para que você comece a ganhar pontos!",
+        "gotIt": "Entendi"
+      },
+      "pageError": {
+        "title": "Não é possível carregar",
+        "subtitle": "Oops, algo deu errado quando você tentou terminar o carregamento. Tente novamente.",
+        "refresh": "Atualizar"
+      }
+    },
+    "fetchBalanceError": {
+      "title": "Não é possível carregar seus pontos",
+      "description": "Oops, algo deu errado ao tentar carregar seus pontos. As informações nesta página podem estar desatualizadas. Por favor, atualize.",
+      "retryCta": "Atualizar"
+    },
+    "loading": {
+      "title": "Reunir seus pontos",
+      "description": "Estamos no processo de contabilizar os pontos que você obteve, aguarde"
+    },
+    "error": {
+      "title": "Não é possível carregar pontos",
+      "description": "Oops, algo deu errado ao tentar carregar seus pontos. Por favor, tente novamente.",
+      "retryCta": "Tentar novamente"
+    },
+    "infoCard": {
+      "title": "Em breve, você terá mais maneiras de ganhar pontos 🚀.",
+      "body": "Estamos trabalhando para adicionar mais maneiras de você ganhar pontos usando o aplicativo. Continue checando para ver as atualizações."
+    },
+    "activitySection": {
+      "title": "Como faço para ganhar pontos?",
+      "body": "É fácil! Você ganha pontos simplesmente usando o aplicativo."
+    },
+    "noActivities": {
+      "title": "Atualize para desbloquear mais pontos 🔓",
+      "body": "Ops! Parece que você está usando uma versão mais antiga do {{appName}}. Atualize agora para descobrir todas as novas e empolgantes maneiras de você ganhar pontos."
+    },
+    "activityCards": {
+      "createWallet": {
+        "title": "Criar uma carteira {{appName}}"
+      },
+      "swap": {
+        "title": "Ativos de swap",
+        "bottomSheet": {
+          "title": "Ativos de swap",
+          "body": "Este espaço será usado para que você forneça todos os detalhes necessários para isso. Talvez o valor mínimo para você trocar. \n\nGanhe {{pointsValue}} pontos sempre que você trocar um ativo usando {{appName}}.",
+          "cta": "Ir para a troca"
+        }
+      },
+      "moreComing": {
+        "title": "Em breve, você receberá mais informações!"
+      }
+    }
+  },
+  "earnFlow": {
+    "addCryptoBottomSheet": {
+      "title": "Adicionar {{tokenSymbol}} em {{tokenNetwork}}",
+      "description": "Depois de adicionar tokens, você terá que voltar para terminar de depositar em um pool.",
+      "actions": {
+        "add": "Comprar",
+        "transfer": "Transferência",
+        "swap": "Trocar"
+      },
+      "actionDescriptions": {
+        "add": "Compre {{tokenSymbol}} em {{tokenNetwork}} usando um de nossos provedores confiáveis",
+        "transfer": "Use qualquer carteira ou bolsa compatível com {{tokenNetwork}} para depositar {{tokenSymbol}}",
+        "swap": "Trocar para {{tokenSymbol}} de outro token {{tokenNetwork}}"
+      }
+    },
+    "cta": {
+      "title": "Ganhe com suas stablecoins",
+      "subtitle": "Deposite hoje e ganhe retornos",
+      "description": "Veja quanto você pode ganhar ao fornecer um pool de empréstimos"
+    },
+    "activePools": {
+      "title": "Piscinas ativas",
+      "totalValue": "Valor Total:",
+      "apy": "~{{apy}}% APY",
+      "exitPool": "Pool de saída",
+      "depositMore": "Depositar mais",
+      "viewPools": "Ver piscinas"
+    },
+    "depositBottomSheet": {
+      "title": "Revisão e depósito",
+      "description": "Antes de depositar em um pool da Aave, leia os detalhes da transação abaixo",
+      "amount": "Quantia depositada",
+      "fee": "Est. Taxas de gás",
+      "provider": "Provedor de ganhos",
+      "network": "Rede",
+      "footer": "Ao depositar criptomoedas em um pool da Aave, você aceita os riscos associados ao uso da Aave. <0>Termos e condições</0>",
+      "primaryCta": "Completo",
+      "secondaryCta": "Cancelar"
+    },
+    "collect": {
+      "title": "Parabéns a você! Analise e receba seus ganhos",
+      "total": "TOTAL",
+      "plus": "MAIS",
+      "rate": "Taxa (est.)",
+      "apy": "~{{apy}}% APY",
+      "fee": "Taxa de gás",
+      "cta": "Coleta de ganhos"
+    }
   },
   "celoDollarAmount": "<0></0> Celo Dollar",
   "celoDollarAmount_plural": "<0></0> Celo Dollars"

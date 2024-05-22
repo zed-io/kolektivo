@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { Environment as PersonaEnvironment } from 'react-native-persona'
 import { BIDALI_URL, DEFAULT_FORNO_URL, DEFAULT_TESTNET, RECAPTCHA_SITE_KEY } from 'src/config'
 import { Network, NetworkId } from 'src/transactions/types'
@@ -8,12 +9,16 @@ import {
   Chain as ViemChain,
   arbitrum,
   arbitrumSepolia,
+  base,
+  baseSepolia,
   celo,
   celoAlfajores,
   mainnet as ethereum,
   sepolia as ethereumSepolia,
   optimism,
   optimismSepolia,
+  polygon,
+  polygonAmoy,
 } from 'viem/chains'
 
 export enum Testnets {
@@ -59,11 +64,16 @@ interface NetworkConfig {
   cabIssueValoraKeyshareUrl: string
   cabStoreEncryptedMnemonicUrl: string
   cabGetEncryptedMnemonicUrl: string
+  cabDeleteEncryptedMnemonicUrl: string
   cabLoginUrl: string
   cabClockUrl: string
   networkToNetworkId: Record<Network, NetworkId>
   defaultNetworkId: NetworkId
   getTokensInfoUrl: string
+  getPointsHistoryUrl: string
+  trackPointsEventUrl: string
+  getPointsBalanceUrl: string
+  simulateTransactionsUrl: string
   viemChain: {
     [key in Network]: ViemChain
   }
@@ -72,13 +82,17 @@ interface NetworkConfig {
   }
   celoTokenAddress: Address
   celoGasPriceMinimumAddress: Address
-  alchemyRpcUrl: Partial<Record<Network, string>>
+  alchemyRpcUrl: Record<Exclude<Network, Network.Celo>, string>
   cusdTokenId: string
   ceurTokenId: string
   crealTokenId: string
   celoTokenId: string
+  arbUsdcTokenId: string
   spendTokenIds: string[]
   saveContactsUrl: string
+  getPointsConfigUrl: string
+  arbAavePoolV3ContractAddress: Address
+  aaveArbUsdcTokenId: string
 }
 
 const ALCHEMY_ETHEREUM_RPC_URL_STAGING = 'https://eth-sepolia.g.alchemy.com/v2/'
@@ -89,6 +103,12 @@ const ALCHEMY_ARBITRUM_RPC_URL_MAINNET = 'https://arb-mainnet.g.alchemy.com/v2/'
 
 const ALCHEMY_OPTIMISM_RPC_URL_STAGING = 'https://opt-sepolia.g.alchemy.com/v2/'
 const ALCHEMY_OPTIMISM_RPC_URL_MAINNET = 'https://opt-mainnet.g.alchemy.com/v2/'
+
+const ALCHEMY_POLYGON_POS_RPC_URL_STAGING = 'https://polygon-amoy.g.alchemy.com/v2/'
+const ALCHEMY_POLYGON_POS_RPC_URL_MAINNET = 'https://polygon-mainnet.g.alchemy.com/v2/'
+
+const ALCHEMY_BASE_RPC_URL_STAGING = 'https://base-sepolia.g.alchemy.com/v2/'
+const ALCHEMY_BASE_RPC_URL_MAINNET = 'https://base-mainnet.g.alchemy.com/v2/'
 
 export type BlockExplorerUrls = {
   [key in NetworkId]: {
@@ -124,6 +144,15 @@ const CREAL_TOKEN_ID_MAINNET = `${NetworkId['celo-mainnet']}:0xe8537a3d056da4466
 
 const ETH_TOKEN_ID_STAGING = `${NetworkId['ethereum-sepolia']}:native`
 const ETH_TOKEN_ID_MAINNET = `${NetworkId['ethereum-mainnet']}:native`
+
+const ARB_USDC_TOKEN_ID_STAGING = `${NetworkId['arbitrum-sepolia']}:0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d`
+const ARB_USDC_TOKEN_ID_MAINNET = `${NetworkId['arbitrum-one']}:0xaf88d065e77c8cc2239327c5edb3a432268e5831`
+
+const AAVE_ARB_USDC_TOKEN_ID_STAGING = `${NetworkId['arbitrum-sepolia']}:0x460b97bd498e1157530aeb3086301d5225b91216`
+const AAVE_ARB_USDC_TOKEN_ID_MAINNET = `${NetworkId['arbitrum-one']}:0x724dc807b04555b71ed48a6896b6f41593b8c637`
+
+const ARB_AAVE_POOL_V3_CONTRACT_ADDRESS_STAGING = '0xBfC91D59fdAA134A4ED45f7B584cAf96D7792Eff'
+const ARB_AAVE_POOL_V3_CONTRACT_ADDRESS_MAINNET = '0x794a61358D6845594F94dc1DB02A252b5b4814aD'
 
 const CLOUD_FUNCTIONS_STAGING = 'https://api.alfajores.valora.xyz'
 const CLOUD_FUNCTIONS_MAINNET = 'https://api.mainnet.valora.xyz'
@@ -228,8 +257,24 @@ const CAB_CLOCK_MAINNET = `${CLOUD_FUNCTIONS_MAINNET}/clock`
 const CAB_GET_ENCRYPTED_MNEMONIC_ALFAJORES = `${CLOUD_FUNCTIONS_STAGING}/getEncryptedMnemonic`
 const CAB_GET_ENCRYPTED_MNEMONIC_MAINNET = `${CLOUD_FUNCTIONS_MAINNET}/getEncryptedMnemonic`
 
+const CAB_DELETE_ENCRYPTED_MNEMONIC_ALFAJORES = `${CLOUD_FUNCTIONS_STAGING}/deleteEncryptedMnemonic`
+const CAB_DELETE_ENCRYPTED_MNEMONIC_MAINNET = `${CLOUD_FUNCTIONS_MAINNET}/deleteEncryptedMnemonic`
+
 const SAVE_CONTACTS_ALFAJORES = `${CLOUD_FUNCTIONS_STAGING}/saveContacts`
 const SAVE_CONTACTS_MAINNET = `${CLOUD_FUNCTIONS_MAINNET}/saveContacts`
+
+const GET_POINTS_HISTORY_ALFAJORES = `${CLOUD_FUNCTIONS_STAGING}/getPointsHistory`
+const GET_POINTS_HISTORY_MAINNET = `${CLOUD_FUNCTIONS_MAINNET}/getPointsHistory`
+
+const GET_POINTS_CONFIG_ALFAJORES = `${CLOUD_FUNCTIONS_STAGING}/getPointsConfig`
+const GET_POINTS_CONFIG_MAINNET = `${CLOUD_FUNCTIONS_MAINNET}/getPointsConfig`
+const TRACK_POINTS_EVENT_ALFAJORES = `${CLOUD_FUNCTIONS_STAGING}/trackPointsEvent`
+const TRACK_POINTS_EVENT_MAINNET = `${CLOUD_FUNCTIONS_MAINNET}/trackPointsEvent`
+const GET_POINTS_BALANCE_ALFAJORES = `${CLOUD_FUNCTIONS_STAGING}/getPointsBalance`
+const GET_POINTS_BALANCE_MAINNET = `${CLOUD_FUNCTIONS_MAINNET}/getPointsBalance`
+
+const SIMULATE_TRANSACTIONS_ALFAJORES = `${CLOUD_FUNCTIONS_STAGING}/simulateTransactions`
+const SIMULATE_TRANSACTIONS_MAINNET = `${CLOUD_FUNCTIONS_MAINNET}/simulateTransactions`
 
 const networkConfigs: { [testnet: string]: NetworkConfig } = {
   [Testnets.alfajores]: {
@@ -239,6 +284,8 @@ const networkConfigs: { [testnet: string]: NetworkConfig } = {
       [Network.Ethereum]: NetworkId['ethereum-sepolia'],
       [Network.Arbitrum]: NetworkId['arbitrum-sepolia'],
       [Network.Optimism]: NetworkId['op-sepolia'],
+      [Network.PolygonPoS]: NetworkId['polygon-pos-amoy'],
+      [Network.Base]: NetworkId['base-sepolia'],
     },
     defaultNetworkId: NetworkId['celo-alfajores'],
     // blockchainApiUrl: 'http://127.0.0.1:8080',
@@ -283,14 +330,21 @@ const networkConfigs: { [testnet: string]: NetworkConfig } = {
     cabIssueValoraKeyshareUrl: CAB_ISSUE_VALORA_KEYSHARE_ALFAJORES,
     cabStoreEncryptedMnemonicUrl: CAB_STORE_ENCRYPTED_MNEMONIC_ALFAJORES,
     cabGetEncryptedMnemonicUrl: CAB_GET_ENCRYPTED_MNEMONIC_ALFAJORES,
+    cabDeleteEncryptedMnemonicUrl: CAB_DELETE_ENCRYPTED_MNEMONIC_ALFAJORES,
     cabLoginUrl: CAB_LOGIN_ALFAJORES,
     cabClockUrl: CAB_CLOCK_ALFAJORES,
     getTokensInfoUrl: GET_TOKENS_INFO_URL_ALFAJORES,
+    getPointsHistoryUrl: GET_POINTS_HISTORY_ALFAJORES,
+    trackPointsEventUrl: TRACK_POINTS_EVENT_ALFAJORES,
+    getPointsBalanceUrl: GET_POINTS_BALANCE_ALFAJORES,
+    simulateTransactionsUrl: SIMULATE_TRANSACTIONS_ALFAJORES,
     viemChain: {
       [Network.Celo]: celoAlfajores,
       [Network.Ethereum]: ethereumSepolia,
       [Network.Arbitrum]: arbitrumSepolia,
       [Network.Optimism]: optimismSepolia,
+      [Network.PolygonPoS]: polygonAmoy,
+      [Network.Base]: baseSepolia,
     },
     currencyToTokenId: {
       [CiCoCurrency.CELO]: CELO_TOKEN_ID_STAGING,
@@ -306,13 +360,19 @@ const networkConfigs: { [testnet: string]: NetworkConfig } = {
       [Network.Ethereum]: ALCHEMY_ETHEREUM_RPC_URL_STAGING,
       [Network.Arbitrum]: ALCHEMY_ARBITRUM_RPC_URL_STAGING,
       [Network.Optimism]: ALCHEMY_OPTIMISM_RPC_URL_STAGING,
+      [Network.PolygonPoS]: ALCHEMY_POLYGON_POS_RPC_URL_STAGING,
+      [Network.Base]: ALCHEMY_BASE_RPC_URL_STAGING,
     },
     cusdTokenId: CUSD_TOKEN_ID_STAGING,
     ceurTokenId: CEUR_TOKEN_ID_STAGING,
     crealTokenId: CREAL_TOKEN_ID_STAGING,
     celoTokenId: CELO_TOKEN_ID_STAGING,
+    arbUsdcTokenId: ARB_USDC_TOKEN_ID_STAGING,
     spendTokenIds: [CUSD_TOKEN_ID_STAGING, CEUR_TOKEN_ID_STAGING],
     saveContactsUrl: SAVE_CONTACTS_ALFAJORES,
+    getPointsConfigUrl: GET_POINTS_CONFIG_ALFAJORES,
+    arbAavePoolV3ContractAddress: ARB_AAVE_POOL_V3_CONTRACT_ADDRESS_STAGING,
+    aaveArbUsdcTokenId: AAVE_ARB_USDC_TOKEN_ID_STAGING,
   },
   [Testnets.mainnet]: {
     networkId: '42220',
@@ -321,6 +381,8 @@ const networkConfigs: { [testnet: string]: NetworkConfig } = {
       [Network.Ethereum]: NetworkId['ethereum-mainnet'],
       [Network.Arbitrum]: NetworkId['arbitrum-one'],
       [Network.Optimism]: NetworkId['op-mainnet'],
+      [Network.PolygonPoS]: NetworkId['polygon-pos-mainnet'],
+      [Network.Base]: NetworkId['base-mainnet'],
     },
     defaultNetworkId: NetworkId['celo-mainnet'],
     blockchainApiUrl: BLOCKCHAIN_API_MAINNET,
@@ -364,14 +426,21 @@ const networkConfigs: { [testnet: string]: NetworkConfig } = {
     cabIssueValoraKeyshareUrl: CAB_ISSUE_VALORA_KEYSHARE_MAINNET,
     cabStoreEncryptedMnemonicUrl: CAB_STORE_ENCRYPTED_MNEMONIC_MAINNET,
     cabGetEncryptedMnemonicUrl: CAB_GET_ENCRYPTED_MNEMONIC_MAINNET,
+    cabDeleteEncryptedMnemonicUrl: CAB_DELETE_ENCRYPTED_MNEMONIC_MAINNET,
     cabLoginUrl: CAB_LOGIN_MAINNET,
     cabClockUrl: CAB_CLOCK_MAINNET,
     getTokensInfoUrl: GET_TOKENS_INFO_URL_MAINNET,
+    getPointsHistoryUrl: GET_POINTS_HISTORY_MAINNET,
+    trackPointsEventUrl: TRACK_POINTS_EVENT_MAINNET,
+    getPointsBalanceUrl: GET_POINTS_BALANCE_MAINNET,
+    simulateTransactionsUrl: SIMULATE_TRANSACTIONS_MAINNET,
     viemChain: {
       [Network.Celo]: celo,
       [Network.Ethereum]: ethereum,
       [Network.Arbitrum]: arbitrum,
       [Network.Optimism]: optimism,
+      [Network.PolygonPoS]: polygon,
+      [Network.Base]: base,
     },
     currencyToTokenId: {
       [CiCoCurrency.CELO]: CELO_TOKEN_ID_MAINNET,
@@ -387,13 +456,19 @@ const networkConfigs: { [testnet: string]: NetworkConfig } = {
       [Network.Ethereum]: ALCHEMY_ETHEREUM_RPC_URL_MAINNET,
       [Network.Arbitrum]: ALCHEMY_ARBITRUM_RPC_URL_MAINNET,
       [Network.Optimism]: ALCHEMY_OPTIMISM_RPC_URL_MAINNET,
+      [Network.PolygonPoS]: ALCHEMY_POLYGON_POS_RPC_URL_MAINNET,
+      [Network.Base]: ALCHEMY_BASE_RPC_URL_MAINNET,
     },
     cusdTokenId: CUSD_TOKEN_ID_MAINNET,
     ceurTokenId: CEUR_TOKEN_ID_MAINNET,
     crealTokenId: CREAL_TOKEN_ID_MAINNET,
     celoTokenId: CELO_TOKEN_ID_MAINNET,
+    arbUsdcTokenId: ARB_USDC_TOKEN_ID_MAINNET,
     spendTokenIds: [CUSD_TOKEN_ID_MAINNET, CEUR_TOKEN_ID_MAINNET],
     saveContactsUrl: SAVE_CONTACTS_MAINNET,
+    getPointsConfigUrl: GET_POINTS_CONFIG_MAINNET,
+    arbAavePoolV3ContractAddress: ARB_AAVE_POOL_V3_CONTRACT_ADDRESS_MAINNET,
+    aaveArbUsdcTokenId: AAVE_ARB_USDC_TOKEN_ID_MAINNET,
   },
 }
 
@@ -406,8 +481,14 @@ const ETHERSCAN_BASE_URL_MAINNET = 'https://etherscan.io'
 const ARBISCAN_BASE_URL_ONE = 'https://arbiscan.io'
 const ARBISCAN_BASE_URL_SEPOLIA = 'https://sepolia.arbiscan.io'
 
-const OP_MAINNET_EXPLORER_BASE_URL = 'https://optimistic.etherscan.io/'
-const OP_SEPOLIA_EXPLORER_BASE_URL = 'https://sepolia-optimism.etherscan.io/'
+const OP_MAINNET_EXPLORER_BASE_URL = 'https://optimistic.etherscan.io'
+const OP_SEPOLIA_EXPLORER_BASE_URL = 'https://sepolia-optimism.etherscan.io'
+
+const POLYGON_POS_BASE_URL_AMOY = 'https://amoy.polygonscan.com'
+const POLYGON_POS_BASE_URL_MAINNET = 'https://polygonscan.com'
+
+const BASE_BASE_URL_SEPOLIA = 'https://sepolia.basescan.org'
+const BASE_BASE_URL_MAINNET = 'https://basescan.org'
 
 export const blockExplorerUrls: BlockExplorerUrls = {
   [NetworkId['celo-mainnet']]: {
@@ -458,6 +539,30 @@ export const blockExplorerUrls: BlockExplorerUrls = {
     baseTokenUrl: `${OP_SEPOLIA_EXPLORER_BASE_URL}/token/`,
     baseNftUrl: `${OP_SEPOLIA_EXPLORER_BASE_URL}/token/`,
   },
+  [NetworkId['polygon-pos-mainnet']]: {
+    baseTxUrl: `${POLYGON_POS_BASE_URL_MAINNET}/tx/`,
+    baseAddressUrl: `${POLYGON_POS_BASE_URL_MAINNET}/address/`,
+    baseTokenUrl: `${POLYGON_POS_BASE_URL_MAINNET}/token/`,
+    baseNftUrl: `${POLYGON_POS_BASE_URL_MAINNET}/token/`,
+  },
+  [NetworkId['polygon-pos-amoy']]: {
+    baseTxUrl: `${POLYGON_POS_BASE_URL_AMOY}/tx/`,
+    baseAddressUrl: `${POLYGON_POS_BASE_URL_AMOY}/address/`,
+    baseTokenUrl: `${POLYGON_POS_BASE_URL_AMOY}/token/`,
+    baseNftUrl: `${POLYGON_POS_BASE_URL_AMOY}/token/`,
+  },
+  [NetworkId['base-mainnet']]: {
+    baseTxUrl: `${BASE_BASE_URL_MAINNET}/tx/`,
+    baseAddressUrl: `${BASE_BASE_URL_MAINNET}/address/`,
+    baseTokenUrl: `${BASE_BASE_URL_MAINNET}/token/`,
+    baseNftUrl: `${BASE_BASE_URL_MAINNET}/token/`,
+  },
+  [NetworkId['base-sepolia']]: {
+    baseTxUrl: `${BASE_BASE_URL_SEPOLIA}/tx/`,
+    baseAddressUrl: `${BASE_BASE_URL_SEPOLIA}/address/`,
+    baseTokenUrl: `${BASE_BASE_URL_SEPOLIA}/token/`,
+    baseNftUrl: `${BASE_BASE_URL_SEPOLIA}/token/`,
+  },
 }
 
 export const networkIdToNetwork: NetworkIdToNetwork = {
@@ -469,6 +574,10 @@ export const networkIdToNetwork: NetworkIdToNetwork = {
   [NetworkId['arbitrum-sepolia']]: Network.Arbitrum,
   [NetworkId['op-mainnet']]: Network.Optimism,
   [NetworkId['op-sepolia']]: Network.Optimism,
+  [NetworkId['polygon-pos-mainnet']]: Network.PolygonPoS,
+  [NetworkId['polygon-pos-amoy']]: Network.PolygonPoS,
+  [NetworkId['base-mainnet']]: Network.Base,
+  [NetworkId['base-sepolia']]: Network.Base,
 }
 
 export const networkIdToWalletConnectChainId: Record<NetworkId, string> = {
@@ -480,28 +589,19 @@ export const networkIdToWalletConnectChainId: Record<NetworkId, string> = {
   [NetworkId['arbitrum-sepolia']]: 'eip155:421614',
   [NetworkId['op-mainnet']]: 'eip155:10',
   [NetworkId['op-sepolia']]: 'eip155:11155420',
+  [NetworkId['polygon-pos-mainnet']]: 'eip155:137',
+  [NetworkId['polygon-pos-amoy']]: 'eip155:80002',
+  [NetworkId['base-mainnet']]: 'eip155:8453',
+  [NetworkId['base-sepolia']]: 'eip155:84531',
 }
 
-export const walletConnectChainIdToNetworkId: Record<string, NetworkId> = {
-  'eip155:44787': NetworkId['celo-alfajores'],
-  'eip155:42220': NetworkId['celo-mainnet'],
-  'eip155:1': NetworkId['ethereum-mainnet'],
-  'eip155:11155111': NetworkId['ethereum-sepolia'],
-  'eip155:42161': NetworkId['arbitrum-one'],
-  'eip155:421614': NetworkId['arbitrum-sepolia'],
-  'eip155:10': NetworkId['op-mainnet'],
-  'eip155:11155420': NetworkId['op-sepolia'],
-}
+export const walletConnectChainIdToNetworkId: Record<string, NetworkId> = _.invert(
+  networkIdToWalletConnectChainId
+) as Record<string, NetworkId>
 
-export const walletConnectChainIdToNetwork: Record<string, Network> = {
-  'eip155:44787': Network.Celo,
-  'eip155:42220': Network.Celo,
-  'eip155:1': Network.Ethereum,
-  'eip155:11155111': Network.Ethereum,
-  'eip155:42161': Network.Arbitrum,
-  'eip155:421614': Network.Arbitrum,
-  'eip155:10': Network.Optimism,
-  'eip155:11155420': Network.Optimism,
+export const walletConnectChainIdToNetwork: Record<string, Network> = {}
+for (const [walletConnectChainId, networkId] of Object.entries(walletConnectChainIdToNetworkId)) {
+  walletConnectChainIdToNetwork[walletConnectChainId] = networkIdToNetwork[networkId]
 }
 
 Logger.info('Connecting to testnet: ', DEFAULT_TESTNET)

@@ -1,10 +1,17 @@
+import { useHeaderHeight } from '@react-navigation/elements'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActionSheetIOS, ActivityIndicator, Platform, StyleSheet, View } from 'react-native'
+import {
+  ActionSheetIOS,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes'
-import { useDispatch, useSelector } from 'react-redux'
 import { DappExplorerEvents, WebViewEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import { openDeepLink } from 'src/app/actions'
@@ -21,13 +28,14 @@ import { navigateBack } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { TopBarTextButton } from 'src/navigator/TopBarButton'
 import { StackParamList } from 'src/navigator/types'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 import { getDynamicConfigParams } from 'src/statsig'
 import { DynamicConfigs } from 'src/statsig/constants'
 import { StatsigDynamicConfigs } from 'src/statsig/types'
 import colors from 'src/styles/colors'
 import { iconHitslop } from 'src/styles/variables'
-import { navigateToURI } from 'src/utils/linking'
 import Logger from 'src/utils/Logger'
+import { navigateToURI } from 'src/utils/linking'
 import useBackHandler from 'src/utils/useBackHandler'
 import { isWalletConnectDeepLink } from 'src/walletConnect/walletConnect'
 import { WebViewAndroidBottomSheet } from 'src/webview/WebViewAndroidBottomSheet'
@@ -41,6 +49,7 @@ function WebViewScreen({ route, navigation }: Props) {
 
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const headerHeight = useHeaderHeight()
   const activeDapp = useSelector(activeDappSelector)
 
   const disabledMediaPlaybackRequiresUserActionOrigins = getDynamicConfigParams(
@@ -195,21 +204,28 @@ function WebViewScreen({ route, navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <WebView
-        ref={webViewRef}
-        originWhitelist={['https://*', 'celo://*']}
-        onShouldStartLoadWithRequest={handleLoadRequest}
-        source={{ uri }}
-        startInLoadingState={true}
-        renderLoading={() => <ActivityIndicator style={styles.loading} size="large" />}
-        onNavigationStateChange={(navState) => {
-          setCanGoBack(navState.canGoBack)
-          setCanGoForward(navState.canGoForward)
-          handleSetNavigationTitle(navState.url, navState.title, navState.loading)
-        }}
-        mediaPlaybackRequiresUserAction={mediaPlaybackRequiresUserAction}
-        testID={activeDapp ? `WebViewScreen/${activeDapp.name}` : 'RNWebView'}
-      />
+      <KeyboardAvoidingView
+        style={styles.keyboardView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={headerHeight}
+        testID="WebViewScreen/KeyboardAwareView"
+      >
+        <WebView
+          ref={webViewRef}
+          originWhitelist={['https://*', 'celo://*']}
+          onShouldStartLoadWithRequest={handleLoadRequest}
+          source={{ uri }}
+          startInLoadingState={true}
+          renderLoading={() => <ActivityIndicator style={styles.loading} size="large" />}
+          onNavigationStateChange={(navState) => {
+            setCanGoBack(navState.canGoBack)
+            setCanGoForward(navState.canGoForward)
+            handleSetNavigationTitle(navState.url, navState.title, navState.loading)
+          }}
+          mediaPlaybackRequiresUserAction={mediaPlaybackRequiresUserAction}
+          testID={activeDapp ? `WebViewScreen/${activeDapp.name}` : 'RNWebView'}
+        />
+      </KeyboardAvoidingView>
       {Platform.OS === 'android' && (
         <WebViewAndroidBottomSheet
           currentUrl={currentUrl}
@@ -252,6 +268,9 @@ function WebViewScreen({ route, navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  keyboardView: {
     flex: 1,
   },
   loading: {

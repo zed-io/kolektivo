@@ -2,13 +2,13 @@ import { useRef, useState } from 'react'
 import { useAsync } from 'react-async-hook'
 import { Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
-import { useDispatch } from 'react-redux'
 import { showError } from 'src/alert/actions'
 import { KeylessBackupEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import { ErrorMessages } from 'src/app/ErrorMessages'
 import { valoraKeyshareIssued } from 'src/keylessBackup/slice'
 import { KeylessBackupFlow } from 'src/keylessBackup/types'
+import { useDispatch } from 'src/redux/hooks'
 import Logger from 'src/utils/Logger'
 import { PhoneNumberVerificationStatus } from 'src/verify/hooks'
 import networkConfig from 'src/web3/networkConfig'
@@ -108,19 +108,19 @@ export function useVerifyPhoneNumber(phoneNumber: string, keylessBackupFlow: Key
       })
 
       if (response.ok) {
-        const { keyshare }: { keyshare: string } = await response.json()
-        return keyshare
+        return response
       } else {
         throw new Error(await response.text())
       }
     },
     [smsCode, phoneNumber, issueCodeCompleted],
     {
-      onSuccess: async (keyshare?: string) => {
-        if (!keyshare) {
+      onSuccess: async (response?: Response) => {
+        if (!response) {
           return
         }
 
+        const { keyshare, token } = await response.json()
         ValoraAnalytics.track(KeylessBackupEvents.cab_issue_valora_keyshare_success, {
           keylessBackupFlow,
         })
@@ -129,7 +129,7 @@ export function useVerifyPhoneNumber(phoneNumber: string, keylessBackupFlow: Key
           'Successfully verified sms code and got keyshare'
         )
         setVerificationStatus(PhoneNumberVerificationStatus.SUCCESSFUL)
-        dispatch(valoraKeyshareIssued({ keyshare, keylessBackupFlow }))
+        dispatch(valoraKeyshareIssued({ keyshare, keylessBackupFlow, jwt: token }))
       },
       onError: (error: Error) => {
         ValoraAnalytics.track(KeylessBackupEvents.cab_issue_valora_keyshare_error, {

@@ -15,8 +15,8 @@ import { updateKnownAddresses } from 'src/identity/actions'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { AddressRecipient, RecipientType, getDisplayName } from 'src/recipients/recipient'
-import { TransactionDataInput } from 'src/send/SendAmount'
 import { Actions as SendActions } from 'src/send/actions'
+import { TransactionDataInput } from 'src/send/types'
 import { CurrencyTokens, tokensByCurrencySelector } from 'src/tokens/selectors'
 import { Actions as TransactionActions, UpdateTransactionsAction } from 'src/transactions/actions'
 import { Network, TokenTransactionTypeV2 } from 'src/transactions/types'
@@ -50,8 +50,9 @@ function* bidaliPaymentRequest({
   }
 
   const tokens: CurrencyTokens = yield* select(tokensByCurrencySelector)
-  const tokenAddress = tokens[currency]?.address
-  const tokenId = tokens[currency]?.tokenId
+  const tokenInfo = tokens[currency]
+  const tokenAddress = tokenInfo?.address
+  const tokenId = tokenInfo?.tokenId
   if (!tokenId) {
     // This is not supposed to happen in production
     throw new Error(`No token ID found for currency: ${currency}`)
@@ -73,6 +74,7 @@ function* bidaliPaymentRequest({
     tokenAmount: new BigNumber(amount),
     comment: `${description} (${chargeId})`,
   }
+
   navigate(Screens.SendConfirmationModal, {
     transactionData,
     origin: SendOrigin.Bidali,

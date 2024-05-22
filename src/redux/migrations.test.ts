@@ -1,8 +1,7 @@
 import BigNumber from 'bignumber.js'
 import _ from 'lodash'
 import { FinclusiveKycStatus } from 'src/account/reducer'
-import { initialState as exchangeInitialState } from 'src/exchange/reducer'
-import { migrations } from 'src/redux/migrations'
+import { exchangeInitialState, migrations } from 'src/redux/migrations'
 import {
   Network,
   NetworkId,
@@ -45,7 +44,11 @@ import {
   v179Schema,
   v17Schema,
   v18Schema,
+  v197Schema,
   v1Schema,
+  v200Schema,
+  v201Schema,
+  v203Schema,
   v21Schema,
   v28Schema,
   v2Schema,
@@ -78,8 +81,12 @@ import {
 import {
   mockInvitableRecipient,
   mockInvitableRecipient2,
+  mockPositions,
+  mockPositionsLegacy,
   mockRecipient,
   mockRecipient2,
+  mockShortcuts,
+  mockShortcutsLegacy,
 } from 'test/values'
 
 describe('Redux persist migrations', () => {
@@ -1349,7 +1356,7 @@ describe('Redux persist migrations', () => {
         address: '0x123',
         hash: 'someHash',
       },
-    ]
+    ] as any
     const migratedSchema = migrations[161](preMigrationSchema)
 
     expect(migratedSchema.transactions.standbyTransactions).toEqual([
@@ -1530,6 +1537,77 @@ describe('Redux persist migrations', () => {
     const migratedSchema = migrations[180](oldSchema)
     const expectedSchema: any = _.cloneDeep(oldSchema)
     expectedSchema.send.recentRecipients = [mockRecipient, mockRecipient2]
+    expect(migratedSchema).toStrictEqual(expectedSchema)
+  })
+  it('works from 197 to 198', () => {
+    const oldSchema = {
+      ...v197Schema,
+      home: {
+        ...v197Schema.home,
+        nftCelebration: {
+          networkId: 'celo-alfajores',
+          contractAddress: '0xTEST',
+          displayed: true,
+        },
+      },
+    }
+    const migratedSchema = migrations[198](oldSchema)
+    const expectedSchema: any = _.cloneDeep(oldSchema)
+    expectedSchema.home.nftCelebration = null
+    expect(migratedSchema).toStrictEqual(expectedSchema)
+  })
+  it('works from 200 to 201', () => {
+    const oldSchema = {
+      ...v200Schema,
+      app: {
+        ...v200Schema.app,
+        hideHomeBalances: true,
+      },
+    }
+    const migratedSchema = migrations[201](oldSchema)
+    const expectedSchema: any = _.cloneDeep(oldSchema)
+    expectedSchema.app.hideBalances = true
+    delete expectedSchema.app.hideHomeBalances
+    expect(migratedSchema).toStrictEqual(expectedSchema)
+  })
+
+  it('works from 201 to 202', () => {
+    const oldSchema = v201Schema
+    const migratedSchema = migrations[202](oldSchema)
+    const expectedSchema: any = _.cloneDeep(oldSchema)
+    expectedSchema.walletConnect.pendingSessions = []
+    expect(migratedSchema).toStrictEqual(expectedSchema)
+  })
+
+  it('works from 203 to 204: recently inactive users', () => {
+    // users inactive since 4/2/2024 have legacy values in state
+    const oldSchema = {
+      ...v203Schema,
+      positions: {
+        ...(v203Schema.positions as any),
+        positions: mockPositionsLegacy,
+        shortcuts: mockShortcutsLegacy,
+      },
+    }
+    const expectedSchema = _.cloneDeep(oldSchema)
+    expectedSchema.positions.positions = mockPositions
+    expectedSchema.positions.shortcuts = mockShortcuts
+    const migratedSchema = migrations[204](oldSchema)
+
+    expect(migratedSchema).toStrictEqual(expectedSchema)
+  })
+
+  it('works from 203 to 204: recently active users', () => {
+    // api has been returning 'networkId' and 'networkIds' fields since 4/2/2024. users active since then will have noop migration
+    const oldSchema = {
+      ...v203Schema,
+      positions: {
+        positions: mockPositions,
+        shortcuts: mockShortcuts,
+      },
+    }
+    const expectedSchema = _.cloneDeep(oldSchema)
+    const migratedSchema = migrations[204](oldSchema)
     expect(migratedSchema).toStrictEqual(expectedSchema)
   })
 })

@@ -4,7 +4,6 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SettingsItemTextValue } from 'src/components/SettingsItem'
 import { FAQ_LINK, FORUM_LINK } from 'src/config'
-import DrawerTopBar from 'src/navigator/DrawerTopBar'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import fontStyles from 'src/styles/fonts'
@@ -20,8 +19,7 @@ const Support = () => {
   const { t } = useTranslation()
 
   return (
-    <SafeAreaView style={styles.container}>
-      <DrawerTopBar />
+    <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
       <ScrollView>
         <Text style={styles.title} testID={'SettingsTitle'}>
           {t('help')}

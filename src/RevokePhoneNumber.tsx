@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, Text, View } from 'react-native'
-import { useSelector } from 'react-redux'
 import { defaultCountryCodeSelector, e164NumberSelector } from 'src/account/selectors'
 import { SettingsEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import BottomSheet, { BottomSheetRefType } from 'src/components/BottomSheet'
 import Button, { BtnSizes, BtnTypes } from 'src/components/Button'
+import { NotificationVariant } from 'src/components/InLineNotification'
 import PhoneNumberWithFlag from 'src/components/PhoneNumberWithFlag'
-import ToastWithCTA from 'src/components/ToastWithCTA'
+import Toast from 'src/components/Toast'
 import AttentionIcon from 'src/icons/Attention'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
+import { useSelector } from 'src/redux/hooks'
 import { Colors } from 'src/styles/colors'
 import fontStyles from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
@@ -51,7 +52,7 @@ export const RevokePhoneNumber = ({ forwardedRef }: Props) => {
   }, [revokeNumberAsync.status])
 
   const handleNavigateToVerifiedNumber = () => {
-    navigate(Screens.VerificationStartScreen)
+    navigate(Screens.VerificationStartScreen, { hasOnboarded: true })
   }
 
   const handleRevokePhoneNumber = async () => {
@@ -91,12 +92,13 @@ export const RevokePhoneNumber = ({ forwardedRef }: Props) => {
           testID="RevokePhoneNumberBottomSheet/PrimaryAction"
         />
       </BottomSheet>
-      <ToastWithCTA
+      <Toast
         showToast={showRevokeSuccess}
-        message={t('revokePhoneNumber.revokeSuccess')}
-        labelCTA={t('revokePhoneNumber.addNewNumberButton')}
-        ctaAlignment="bottom"
-        onPress={handleNavigateToVerifiedNumber}
+        variant={NotificationVariant.Info}
+        hideIcon
+        description={t('revokePhoneNumber.revokeSuccess')}
+        ctaLabel={t('revokePhoneNumber.addNewNumberButton')}
+        onPressCta={handleNavigateToVerifiedNumber}
       />
     </>
   )

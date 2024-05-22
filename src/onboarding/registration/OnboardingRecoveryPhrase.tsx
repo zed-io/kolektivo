@@ -4,7 +4,6 @@ import React, { useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useDispatch, useSelector } from 'react-redux'
 import { recoveryPhraseInOnboardingCompleted } from 'src/account/actions'
 import { OnboardingEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
@@ -26,18 +25,15 @@ import {
   goToNextOnboardingScreen,
   onboardingPropsSelector,
 } from 'src/onboarding/steps'
-import { default as useTypedSelector } from 'src/redux/useSelector'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 import colors from 'src/styles/colors'
 import fontStyles from 'src/styles/fonts'
 import Logger from 'src/utils/Logger'
-import { twelveWordMnemonicEnabledSelector } from 'src/web3/selectors'
 
 type Props = NativeStackScreenProps<StackParamList, Screens.OnboardingRecoveryPhrase>
 
 function OnboardingRecoveryPhrase({ navigation }: Props) {
-  const twelveWordMnemonicEnabled = useSelector(twelveWordMnemonicEnabledSelector)
-  const mnemonicLength = twelveWordMnemonicEnabled ? '12' : '24'
-  const onboardingProps = useTypedSelector(onboardingPropsSelector)
+  const onboardingProps = useSelector(onboardingPropsSelector)
   const { step, totalSteps } = getOnboardingStepValues(Screens.ProtectWallet, onboardingProps)
   const accountKey = useAccountKey()
   const [showBottomSheet, setShowBottomSheet] = useState(false)
@@ -89,9 +85,7 @@ function OnboardingRecoveryPhrase({ navigation }: Props) {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Text style={styles.recoveryPhraseTitle}>{t('recoveryPhrase.title')}</Text>
-        <Text style={styles.recoveryPhraseBody}>
-          {t('recoveryPhrase.body', { mnemonicLength })}
-        </Text>
+        <Text style={styles.recoveryPhraseBody}>{t('recoveryPhrase.body')}</Text>
         <BackupPhraseContainer
           readOnlyStyle={styles.backupPhrase}
           value={accountKey}

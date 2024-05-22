@@ -3,14 +3,11 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet, Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useDispatch } from 'react-redux'
 import { KeylessBackupEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import Button, { BtnSizes, BtnTypes } from 'src/components/Button'
-import Chain from 'src/icons/Chain'
-import { keylessBackupStarted } from 'src/keylessBackup/slice'
+import KeylessBackup from 'src/icons/KeylessBackup'
 import { KeylessBackupFlow } from 'src/keylessBackup/types'
-import DrawerTopBar from 'src/navigator/DrawerTopBar'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
@@ -18,19 +15,14 @@ import colors from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
 
-type Props =
-  | NativeStackScreenProps<StackParamList, Screens.WalletSecurityPrimer>
-  | NativeStackScreenProps<StackParamList, Screens.WalletSecurityPrimerDrawer>
+type Props = NativeStackScreenProps<StackParamList, Screens.WalletSecurityPrimer>
 
 function WalletSecurityPrimer({ route }: Props) {
-  const dispatch = useDispatch()
   const { t } = useTranslation()
-  const showDrawerTopBar = route.params?.showDrawerTopBar
   return (
-    <SafeAreaView style={styles.container} edges={showDrawerTopBar ? undefined : ['bottom']}>
-      {showDrawerTopBar && <DrawerTopBar testID="WalletSecurityPrimer/DrawerTopBar" />}
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView style={styles.scrollContainer}>
-        <Chain style={styles.chainIcon} />
+        <KeylessBackup style={styles.icon} />
         <Text style={styles.title}>{t('walletSecurityPrimer.title')}</Text>
         <Text style={styles.description}>{t('walletSecurityPrimer.description')}</Text>
       </ScrollView>
@@ -38,12 +30,9 @@ function WalletSecurityPrimer({ route }: Props) {
         testID="WalletSecurityPrimer/GetStarted"
         onPress={function () {
           ValoraAnalytics.track(KeylessBackupEvents.wallet_security_primer_get_started)
-          dispatch(
-            keylessBackupStarted({
-              keylessBackupFlow: KeylessBackupFlow.Setup,
-            })
-          )
-          navigate(Screens.SetUpKeylessBackup)
+          navigate(Screens.KeylessBackupIntro, {
+            keylessBackupFlow: KeylessBackupFlow.Setup,
+          })
         }}
         text={t('getStarted')}
         size={BtnSizes.FULL}
@@ -59,12 +48,12 @@ export default WalletSecurityPrimer
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
-    flexGrow: 1,
+    height: '100%',
   },
   scrollContainer: {
     padding: Spacing.Thick24,
   },
-  chainIcon: {
+  icon: {
     alignSelf: 'center',
   },
   title: {

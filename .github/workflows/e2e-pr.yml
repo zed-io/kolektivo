@@ -3,11 +3,12 @@ on:
   pull_request:
     branches:
       - main
+  merge_group:
 
 # Cancel any in progress run of the workflow for a given PR
 # This avoids building outdated code
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -21,5 +22,5 @@ jobs:
     name: iOS
     uses: ./.github/workflows/e2e-ios.yml
     with:
-      ios-version: '14.5'
+      ios-version: '15.0'
     secrets: inherit

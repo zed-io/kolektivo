@@ -6,7 +6,6 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
-import { useDispatch, useSelector } from 'react-redux'
 import { cancelCreateOrRestoreAccount } from 'src/account/actions'
 import { accountToRecoverSelector, recoveringFromStoreWipeSelector } from 'src/account/selectors'
 import { hideAlert } from 'src/alert/actions'
@@ -26,12 +25,14 @@ import KeyboardSpacer from 'src/components/KeyboardSpacer'
 import RecoveryPhraseInput, { RecoveryPhraseInputStatus } from 'src/components/RecoveryPhraseInput'
 import { importBackupPhrase } from 'src/import/actions'
 import { HeaderTitleWithSubtitle, nuxNavigationOptions } from 'src/navigator/Headers'
-import { navigateClearingStack } from 'src/navigator/NavigationService'
+import { navigate, navigateClearingStack } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
 import TopBarTextButtonOnboarding from 'src/onboarding/TopBarTextButtonOnboarding'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 import { isAppConnected } from 'src/redux/selectors'
-import useTypedSelector from 'src/redux/useSelector'
+import { getFeatureGate } from 'src/statsig'
+import { StatsigFeatureGates } from 'src/statsig/types'
 import colors from 'src/styles/colors'
 import fontStyles from 'src/styles/fonts'
 import Logger from 'src/utils/Logger'
@@ -48,10 +49,13 @@ function ImportWallet({ navigation, route }: Props) {
   const [backupPhrase, setBackupPhrase] = useState('')
   const [keyboardVisible, setKeyboardVisible] = useState(false)
 
-  const isImportingWallet = useTypedSelector((state) => state.imports.isImportingWallet)
+  const isImportingWallet = useSelector((state) => state.imports.isImportingWallet)
   const appConnected = useSelector(isAppConnected)
-  const isRecoveringFromStoreWipe = useTypedSelector(recoveringFromStoreWipeSelector)
-  const accountToRecoverFromStoreWipe = useTypedSelector(accountToRecoverSelector)
+  const isRecoveringFromStoreWipe = useSelector(recoveringFromStoreWipeSelector)
+  const accountToRecoverFromStoreWipe = useSelector(accountToRecoverSelector)
+  const cloudAccountBackupEnabled = getFeatureGate(
+    StatsigFeatureGates.SHOW_CLOUD_ACCOUNT_BACKUP_RESTORE
+  )
 
   const dispatch = useDispatch()
   const { t } = useTranslation()
@@ -68,9 +72,13 @@ function ImportWallet({ navigation, route }: Props) {
   }
 
   const handleNavigateBack = () => {
-    dispatch(cancelCreateOrRestoreAccount())
+    if (cloudAccountBackupEnabled) {
+      navigate(Screens.ImportSelect)
+    } else {
+      dispatch(cancelCreateOrRestoreAccount())
+      navigateClearingStack(Screens.Welcome)
+    }
     ValoraAnalytics.track(OnboardingEvents.restore_account_cancel)
-    navigateClearingStack(Screens.Welcome)
   }
 
   useBackHandler(() => {
@@ -196,6 +204,7 @@ function ImportWallet({ navigation, route }: Props) {
                   !keyboardVisible && insets && { marginBottom: insets.bottom },
                 ]}
                 keyboardShouldPersistTaps={'always'}
+                testID="ImportWalletKeyboardAwareScrollView"
               >
                 <Text style={styles.title}>{t('importExistingKey.title')}</Text>
                 <Text style={styles.description}>{t('importExistingKey.description')}</Text>

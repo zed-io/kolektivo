@@ -9,7 +9,7 @@ import { CICOFlow } from 'src/fiatExchanges/utils'
 import { FiatConnectQuoteSuccess } from 'src/fiatconnect'
 import { LocalCurrencyCode } from 'src/localCurrency/consts'
 import { RootState } from 'src/redux/reducers'
-import { getFeatureGate } from 'src/statsig'
+import { getDynamicConfigParams, getFeatureGate } from 'src/statsig'
 import TransferFeedItem from 'src/transactions/feed/TransferFeedItem'
 import {
   Fee,
@@ -26,6 +26,7 @@ import {
   mockCusdAddress,
   mockCusdTokenId,
   mockFiatConnectQuotes,
+  mockJumpstartAdddress,
   mockName,
   mockTestTokenAddress,
   mockTestTokenTokenId,
@@ -41,6 +42,7 @@ const MOCK_CONTACT = {
   contactId: 'contactId',
   address: MOCK_ADDRESS,
 }
+const mockRetiredJumpstartAdddress = '0xabc'
 
 jest.mock('src/statsig')
 
@@ -64,6 +66,14 @@ describe('TransferFeedItem', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.mocked(getFeatureGate).mockReturnValue(true)
+    jest.mocked(getDynamicConfigParams).mockReturnValue({
+      jumpstartContracts: {
+        [NetworkId['celo-alfajores']]: {
+          contractAddress: mockJumpstartAdddress,
+          retiredContractAddresses: [mockRetiredJumpstartAdddress],
+        },
+      },
+    })
   })
   function renderScreen({
     storeOverrides = {},
@@ -76,6 +86,7 @@ describe('TransferFeedItem', () => {
     metadata = {},
     fees = [],
     status = TransactionStatus.Complete,
+    address = MOCK_ADDRESS,
   }: {
     type?: TokenTransactionTypeV2
     amount?: TokenAmount
@@ -83,6 +94,7 @@ describe('TransferFeedItem', () => {
     fees?: Fee[]
     storeOverrides?: RecursivePartial<RootState>
     status?: TransactionStatus
+    address?: string
   }) {
     const store = createMockStore({
       ...storeOverrides,
@@ -99,7 +111,7 @@ describe('TransferFeedItem', () => {
             transactionHash: MOCK_TX_HASH,
             timestamp: 1234,
             block: '2345',
-            address: MOCK_ADDRESS,
+            address,
             amount,
             metadata,
             fees,
@@ -627,16 +639,40 @@ describe('TransferFeedItem', () => {
     })
   })
 
-  it('shows balance when feature gate false, root state hide home balances flag is set', async () => {
-    jest.mocked(getFeatureGate).mockReturnValue(false)
-    const { getByTestId } = renderScreen({ storeOverrides: { app: { hideHomeBalances: true } } })
-    expect(getByTestId('TransferFeedItem/amount')).toBeTruthy()
-    expect(getByTestId('TransferFeedItem/tokenAmount')).toBeTruthy()
+  it.each([
+    { address: mockJumpstartAdddress, addressType: 'current' },
+    { address: mockRetiredJumpstartAdddress, addressType: 'retired' },
+  ])('renders correctly for jumpstart deposit to $addressType contract', async ({ address }) => {
+    const { getByTestId } = renderScreen({
+      type: TokenTransactionTypeV2.Sent,
+      address,
+      amount: {
+        tokenAddress: mockCusdAddress,
+        tokenId: mockCusdTokenId,
+        value: -10,
+      },
+    })
+
+    expectDisplay({
+      getByTestId,
+      expectedTitleSections: ['feedItemJumpstartTitle'],
+      expectedSubtitleSections: ['feedItemJumpstartSentSubtitle'],
+      expectedAmount: '-₱13.30',
+      expectedTokenAmount: '10.00 cUSD',
+    })
   })
 
-  it('hides balance when feature gate true, root state hide home balances flag is set', async () => {
-    const { queryByTestId } = renderScreen({ storeOverrides: { app: { hideHomeBalances: true } } })
-    expect(queryByTestId('TransferFeedItem/amount')).toBeNull()
-    expect(queryByTestId('TransferFeedItem/tokenAmount')).toBeNull()
+  it('renders correctly for jumpstart receive', async () => {
+    const { getByTestId } = renderScreen({
+      type: TokenTransactionTypeV2.Received,
+      address: mockJumpstartAdddress,
+    })
+    expectDisplay({
+      getByTestId,
+      expectedTitleSections: ['feedItemJumpstartTitle'],
+      expectedSubtitleSections: ['feedItemJumpstartReceivedSubtitle'],
+      expectedAmount: '+₱13.30',
+      expectedTokenAmount: '10.00 cUSD',
+    })
   })
 })

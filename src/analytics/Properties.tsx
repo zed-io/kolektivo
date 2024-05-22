@@ -4,6 +4,7 @@ import {
   FiatConnectError,
   KycStatus as FiatConnectKycStatus,
 } from '@fiatconnect/fiatconnect-types'
+import { ShareAction } from 'react-native'
 import { PermissionStatus } from 'react-native-permissions'
 import {
   AppEvents,
@@ -18,18 +19,21 @@ import {
   DappExplorerEvents,
   DappKitEvents,
   DappShortcutsEvents,
+  EarnEvents,
   EscrowEvents,
   FeeEvents,
   FiatExchangeEvents,
   HomeEvents,
   IdentityEvents,
   InviteEvents,
+  JumpstartEvents,
   KeylessBackupEvents,
   NavigationEvents,
   NftEvents,
   OnboardingEvents,
   PerformanceEvents,
   PhoneVerificationEvents,
+  PointsEvents,
   QrScreenEvents,
   RewardsEvents,
   SendEvents,
@@ -59,17 +63,17 @@ import { DappSection } from 'src/dapps/types'
 import { ProviderSelectionAnalyticsData } from 'src/fiatExchanges/types'
 import { CICOFlow, FiatExchangeFlow, PaymentMethod } from 'src/fiatExchanges/utils'
 import { HomeActionName, NotificationBannerCTATypes, NotificationType } from 'src/home/types'
-import { KeylessBackupFlow } from 'src/keylessBackup/types'
+import { KeylessBackupFlow, KeylessBackupStatus } from 'src/keylessBackup/types'
 import { LocalCurrencyCode } from 'src/localCurrency/consts'
 import { NftOrigin } from 'src/nfts/types'
 import { NotificationReceiveState } from 'src/notifications/types'
 import { AdventureCardName } from 'src/onboarding/types'
+import { PointsActivityId } from 'src/points/types'
 import { RecipientType } from 'src/recipients/recipient'
-import { QrCode } from 'src/send/types'
+import { AmountEnteredIn, QrCode } from 'src/send/types'
 import { Field } from 'src/swap/types'
-import { TokenDetailsActionName } from 'src/tokens/types'
+import { TokenActionName } from 'src/tokens/types'
 import { NetworkId, TokenTransactionTypeV2, TransactionStatus } from 'src/transactions/types'
-import { Currency } from 'src/utils/currencies'
 
 type Web3LibraryProps = { web3Library: 'contract-kit' | 'viem' }
 
@@ -151,12 +155,8 @@ interface AppEventsProperties {
 }
 
 interface HomeEventsProperties {
-  [HomeEvents.hamburger_tapped]: undefined
-  [HomeEvents.drawer_navigation]: {
-    navigateTo: string
-  }
-  [HomeEvents.drawer_address_copy]: undefined
-
+  [HomeEvents.account_circle_tapped]: undefined
+  [HomeEvents.profile_address_copy]: undefined
   [HomeEvents.notification_scroll]: {
     // TODO: Pass in notificationType and make param required
     notificationType?: NotificationType
@@ -177,12 +177,29 @@ interface HomeEventsProperties {
   [HomeEvents.transaction_feed_item_select]: undefined
   [HomeEvents.transaction_feed_address_copy]: undefined
   [HomeEvents.view_token_balances]: { totalBalance?: string }
-  [HomeEvents.view_nft_home_assets]: undefined
   [HomeEvents.home_action_pressed]: { action: HomeActionName }
   [HomeEvents.notification_bell_pressed]: { hasNotifications: boolean }
   [HomeEvents.notification_center_opened]: { notificationsCount: number }
   [HomeEvents.hide_balances]: undefined
   [HomeEvents.show_balances]: undefined
+  [HomeEvents.nft_celebration_displayed]: {
+    networkId: NetworkId
+    contractAddress: string
+  }
+  [HomeEvents.nft_celebration_animation_displayed]: {
+    userInterrupted: boolean
+    durationInSeconds: number
+  }
+  [HomeEvents.nft_reward_accept]: {
+    networkId: NetworkId
+    contractAddress: string
+    remainingDays: number
+  }
+  [HomeEvents.nft_reward_dismiss]: {
+    networkId: NetworkId
+    contractAddress: string
+    remainingDays: number
+  }
 }
 
 interface SettingsEventsProperties {
@@ -218,6 +235,8 @@ interface SettingsEventsProperties {
   [SettingsEvents.settings_analytics]: { enabled: boolean }
   [SettingsEvents.settings_revoke_phone_number]: undefined
   [SettingsEvents.settings_revoke_phone_number_confirm]: undefined
+  [SettingsEvents.settings_delete_account]: undefined
+  [SettingsEvents.settings_delete_account_confirm]: undefined
   [SettingsEvents.settings_set_up_keyless_backup]: undefined
   [SettingsEvents.settings_delete_keyless_backup]: undefined
 }
@@ -228,13 +247,13 @@ interface CommonKeylessBackupProps {
 
 interface KeylessBackupEventsProperties {
   [KeylessBackupEvents.wallet_security_primer_get_started]: undefined
-  [KeylessBackupEvents.cab_setup_continue]: undefined
   [KeylessBackupEvents.cab_setup_recovery_phrase]: undefined
   [KeylessBackupEvents.cab_sign_in_with_google]: CommonKeylessBackupProps
   [KeylessBackupEvents.cab_sign_in_with_google_success]: CommonKeylessBackupProps
   [KeylessBackupEvents.cab_sign_in_with_email_screen_cancel]: CommonKeylessBackupProps
   [KeylessBackupEvents.cab_enter_phone_number_continue]: CommonKeylessBackupProps
   [KeylessBackupEvents.cab_enter_phone_number_cancel]: CommonKeylessBackupProps
+  [KeylessBackupEvents.cab_intro_continue]: CommonKeylessBackupProps
   [KeylessBackupEvents.cab_issue_sms_code_start]: CommonKeylessBackupProps
   [KeylessBackupEvents.cab_issue_sms_code_success]: CommonKeylessBackupProps
   [KeylessBackupEvents.cab_issue_sms_code_error]: CommonKeylessBackupProps
@@ -252,17 +271,25 @@ interface KeylessBackupEventsProperties {
   [KeylessBackupEvents.cab_handle_keyless_backup_failed]: CommonKeylessBackupProps
   [KeylessBackupEvents.cab_handle_keyless_backup_success]: CommonKeylessBackupProps
   [KeylessBackupEvents.cab_get_torus_keyshare_failed]: undefined
+  [KeylessBackupEvents.cab_restore_zero_balance_accept]: undefined
+  [KeylessBackupEvents.cab_restore_zero_balance_bail]: undefined
+  [KeylessBackupEvents.cab_restore_completed_continue]: undefined
+  [KeylessBackupEvents.cab_restore_failed_try_again]: { keylessBackupStatus: KeylessBackupStatus }
+  [KeylessBackupEvents.cab_restore_failed_create_new_wallet]: {
+    keylessBackupStatus: KeylessBackupStatus
+  }
+  [KeylessBackupEvents.cab_restore_failed_help]: undefined
+  [KeylessBackupEvents.cab_restore_mnemonic_not_found]: undefined
+  [KeylessBackupEvents.cab_phone_verification_help]: CommonKeylessBackupProps
+  [KeylessBackupEvents.cab_phone_verification_help_skip]: CommonKeylessBackupProps
+  [KeylessBackupEvents.cab_phone_verification_help_go_back]: CommonKeylessBackupProps
+  [KeylessBackupEvents.cab_setup_hashed_keyshares]: {
+    hashedKeysharePhone: string
+    hashedKeyshareEmail: string
+  }
 }
 
 interface OnboardingEventsProperties {
-  [OnboardingEvents.onboarding_education_scroll]: {
-    currentStep: number
-    direction: ScrollDirection
-  }
-  [OnboardingEvents.onboarding_education_step_impression]: {
-    step: number
-  }
-
   [OnboardingEvents.create_account_start]: undefined
 
   [OnboardingEvents.restore_account_start]: undefined
@@ -397,6 +424,8 @@ interface OnboardingEventsProperties {
   [OnboardingEvents.cya_later]: {
     cardOrder: AdventureCardName[]
   }
+  [OnboardingEvents.link_phone_number]: undefined
+  [OnboardingEvents.link_phone_number_later]: undefined
 }
 
 interface PhoneVerificationEventsProperties {
@@ -465,10 +494,7 @@ interface InviteEventsProperties {
     phoneNumberHash: string | null
   }
   [InviteEvents.invite_with_share_dismiss]: undefined
-  [InviteEvents.invite_with_referral_url]: {
-    action: 'sharedAction' | 'dismissedAction'
-    activityType?: string | undefined
-  }
+  [InviteEvents.invite_with_referral_url]: ShareAction
   [InviteEvents.opened_via_invite_url]: {
     inviterAddress: string
   }
@@ -499,30 +525,21 @@ interface SendEventsProperties {
   }
   [SendEvents.send_cancel]: undefined
   [SendEvents.send_amount_back]: undefined
-  [SendEvents.send_amount_continue]:
-    | {
-        origin: SendOrigin
-        isScan: boolean
-        localCurrencyExchangeRate?: string | null
-        localCurrency: LocalCurrencyCode
-        localCurrencyAmount: string | null
-        underlyingCurrency: Currency
-        underlyingAmount: string | null
-      }
-    | {
-        origin: SendOrigin
-        recipientType: RecipientType
-        isScan: boolean
-        localCurrencyExchangeRate?: string | null
-        localCurrency: LocalCurrencyCode
-        localCurrencyAmount: string | null
-        underlyingTokenAddress: string | null
-        underlyingTokenSymbol: string
-        underlyingAmount: string | null
-        amountInUsd: string | null
-        tokenId: string | null
-        networkId: string | null
-      }
+  [SendEvents.send_amount_continue]: {
+    origin: SendOrigin
+    recipientType: RecipientType
+    isScan: boolean
+    localCurrencyExchangeRate?: string | null
+    localCurrency: LocalCurrencyCode
+    localCurrencyAmount: string | null
+    underlyingTokenAddress: string | null
+    underlyingTokenSymbol: string
+    underlyingAmount: string | null
+    amountInUsd: string | null
+    amountEnteredIn: AmountEnteredIn
+    tokenId: string | null
+    networkId: string | null
+  }
   [SendEvents.send_confirm_back]: undefined
   [SendEvents.send_confirm_send]:
     | {
@@ -548,6 +565,7 @@ interface SendEventsProperties {
         networkId: NetworkId | null
         tokenId: string
         commentLength: number
+        isTokenManuallyImported: boolean
       }
 
   [SendEvents.send_secure_start]: {
@@ -575,8 +593,8 @@ interface SendEventsProperties {
     partialAddressValidation: boolean
   }
 
-  [SendEvents.send_tx_start]: Web3LibraryProps
-  [SendEvents.send_tx_complete]: Web3LibraryProps & {
+  [SendEvents.send_tx_start]: undefined
+  [SendEvents.send_tx_complete]: {
     txId: string
     recipientAddress: string
     amount: string
@@ -584,6 +602,7 @@ interface SendEventsProperties {
     tokenAddress: string | undefined
     tokenId: string
     networkId: string
+    isTokenManuallyImported: boolean
   }
   [SendEvents.send_tx_error]: {
     error: string
@@ -592,12 +611,6 @@ interface SendEventsProperties {
     currentTokenId: string
     currentTokenAddress: string | null
     currentNetworkId: NetworkId | null
-  }
-  [SendEvents.token_selected]: {
-    origin: TokenPickerOrigin
-    tokenId: string
-    tokenAddress: string | null
-    networkId: NetworkId | null
   }
   [SendEvents.max_pressed]: {
     tokenId: string
@@ -685,11 +698,9 @@ interface TransactionEventsProperties {
 }
 
 interface CeloExchangeEventsProperties {
-  [CeloExchangeEvents.celo_home_info]: undefined
   [CeloExchangeEvents.celo_withdraw_completed]: {
     amount: string
   }
-  [CeloExchangeEvents.celo_chart_tapped]: undefined
 }
 
 interface FiatExchangeEventsProperties {
@@ -1116,13 +1127,10 @@ interface DappExplorerEventsProperties {
   [DappExplorerEvents.dapp_close]: DappEventProperties
   [DappExplorerEvents.dapp_screen_open]: undefined
   [DappExplorerEvents.dapp_view_all]: { section: DappSection }
-  [DappExplorerEvents.dapp_select]: DappEventProperties
-  [DappExplorerEvents.dapp_bottom_sheet_open]: DappEventProperties
-  [DappExplorerEvents.dapp_bottom_sheet_dismiss]: DappEventProperties
   [DappExplorerEvents.dapp_favorite]: DappEventProperties
   [DappExplorerEvents.dapp_unfavorite]: DappEventProperties
   [DappExplorerEvents.dapp_filter]: {
-    id: string
+    filterId: string
     remove: boolean
   }
   [DappExplorerEvents.dapp_rankings_open]: undefined
@@ -1151,6 +1159,7 @@ interface SwapEvent {
   toToken: string | null | undefined
   toTokenId: string
   toTokenNetworkId: string
+  toTokenIsImported: boolean
   /**
    * Address of the from token
    *
@@ -1159,6 +1168,7 @@ interface SwapEvent {
   fromToken: string | null | undefined
   fromTokenId: string
   fromTokenNetworkId: string
+  fromTokenIsImported: boolean
   /**
    * Starting with v1.74, this amount is always in decimal format
    * Before that it was in token smallest unit or decimal format depending on the event.
@@ -1174,6 +1184,7 @@ type SwapQuoteEvent = SwapEvent & {
    */
   estimatedPriceImpact: string | null
   price: string
+  appFeePercentageIncludedInPrice: string | null | undefined
   provider: string
 }
 
@@ -1240,6 +1251,7 @@ export enum SwapShowInfoType {
   MAX_NETWORK_FEE,
   ESTIMATED_NETWORK_FEE,
   SLIPPAGE,
+  EXCHANGE_RATE,
 }
 interface SwapEventsProperties {
   [SwapEvents.swap_screen_open]: undefined
@@ -1258,6 +1270,8 @@ interface SwapEventsProperties {
     toTokenId: string | undefined
     toTokenNetworkId: string | undefined
     switchedNetworkId: boolean
+    areSwapTokensShuffled: boolean
+    tokenPositionInList: number
   }
   [SwapEvents.swap_screen_max_swap_amount]: {
     tokenSymbol?: string
@@ -1276,6 +1290,8 @@ interface SwapEventsProperties {
       swapApproveTxId: string
       estimatedSellTokenUsdValue?: number
       estimatedBuyTokenUsdValue?: number
+      estimatedAppFeeUsdValue: number | undefined
+      areSwapTokensShuffled: boolean
     }
   [SwapEvents.swap_execute_error]: SwapQuoteEvent &
     SwapTimeMetrics &
@@ -1288,6 +1304,8 @@ interface SwapEventsProperties {
       swapApproveTxId: string
       estimatedSellTokenUsdValue?: number
       estimatedBuyTokenUsdValue?: number
+      estimatedAppFeeUsdValue: number | undefined
+      areSwapTokensShuffled: boolean
     }
   [SwapEvents.swap_learn_more]: undefined
   [SwapEvents.swap_price_impact_warning_displayed]: SwapEvent & {
@@ -1317,6 +1335,25 @@ interface TokenBottomSheetEventsProperties {
     origin: TokenPickerOrigin
     searchInput: string
   }
+  [TokenBottomSheetEvents.toggle_tokens_filter]: {
+    filterId: string
+    isRemoving: boolean
+    isPreSelected: boolean
+  }
+  [TokenBottomSheetEvents.network_filter_updated]: {
+    selectedNetworkIds: NetworkId[]
+    origin: TokenPickerOrigin
+  }
+  [TokenBottomSheetEvents.token_selected]: {
+    origin: TokenPickerOrigin
+    tokenId: string
+    tokenAddress: string | null
+    networkId: NetworkId | null
+    usedSearchTerm: boolean
+    selectedFilters: string[]
+    areSwapTokensShuffled?: boolean
+    tokenPositionInList: number
+  }
 }
 
 export interface TokenProperties {
@@ -1342,7 +1379,7 @@ interface AssetsEventsProperties {
       }
     | {
         assetType: 'position'
-        network: string // Example: 'celo'
+        network: NetworkId // Example: 'celo-mainnet'
         appId: string // Example: 'ubeswap'
         address: string
         title: string // Example: MOO / CELO
@@ -1356,11 +1393,11 @@ interface AssetsEventsProperties {
       } & TokenProperties)
   [AssetsEvents.tap_claim_rewards]: undefined
   [AssetsEvents.tap_token_details_action]: {
-    action: TokenDetailsActionName
+    action: TokenActionName
   } & TokenProperties
   [AssetsEvents.tap_token_details_learn_more]: TokenProperties
   [AssetsEvents.tap_token_details_bottom_sheet_action]: {
-    action: TokenDetailsActionName
+    action: TokenActionName
   } & TokenProperties
   [AssetsEvents.import_token_screen_open]: undefined
   [AssetsEvents.import_token_submit]: {
@@ -1388,9 +1425,6 @@ interface NftsEventsProperties {
     error?: string
     mediaType: 'image' | 'video'
   }
-  [NftEvents.nft_gallery_screen_open]: {
-    numNfts: number
-  }
 }
 
 interface BuilderHooksProperties {
@@ -1409,7 +1443,7 @@ interface DappShortcutClaimRewardEvent {
   rewardId: string
   appName: string
   appId: string
-  network: string
+  network: NetworkId
   shortcutId: string
 }
 
@@ -1449,6 +1483,108 @@ interface TransactionDetailsProperties {
   }
 }
 
+interface JumpstartDepositProperties {
+  amountInUsd: string | null
+  tokenId: string | null
+  networkId: string | null
+}
+interface JumpstartSendProperties extends JumpstartDepositProperties {
+  localCurrency: LocalCurrencyCode
+  localCurrencyExchangeRate: string | null
+  tokenSymbol: string
+  tokenAmount: string | null
+}
+interface JumpstartReclaimProperties {
+  networkId: NetworkId
+  depositTxHash: string
+}
+export enum JumpstartShareOrigin {
+  QrScreen = 'qrScreen',
+  MainScreen = 'mainScreen',
+}
+interface JumpstartEventsProperties {
+  [JumpstartEvents.send_select_recipient_jumpstart]: undefined
+  [JumpstartEvents.jumpstart_send_amount_exceeds_threshold]: JumpstartDepositProperties & {
+    thresholdUsd: number
+  }
+  [JumpstartEvents.jumpstart_send_amount_continue]: JumpstartSendProperties & {
+    amountEnteredIn: AmountEnteredIn
+  }
+  [JumpstartEvents.jumpstart_send_confirm]: JumpstartSendProperties
+  [JumpstartEvents.jumpstart_send_start]: JumpstartSendProperties
+  [JumpstartEvents.jumpstart_send_succeeded]: JumpstartSendProperties
+  [JumpstartEvents.jumpstart_send_failed]: JumpstartSendProperties
+  [JumpstartEvents.jumpstart_send_cancelled]: JumpstartSendProperties
+  [JumpstartEvents.jumpstart_share_link]: JumpstartDepositProperties & {
+    origin: JumpstartShareOrigin
+  }
+  [JumpstartEvents.jumpstart_share_link_result]: JumpstartDepositProperties &
+    (ShareAction | { error: string })
+  [JumpstartEvents.jumpstart_show_QR]: JumpstartDepositProperties
+  [JumpstartEvents.jumpstart_copy_link]: JumpstartDepositProperties & {
+    origin: JumpstartShareOrigin
+  }
+  [JumpstartEvents.jumpstart_share_close]: undefined
+  [JumpstartEvents.jumpstart_share_confirm_close]: undefined
+  [JumpstartEvents.jumpstart_share_dismiss_close]: undefined
+  [JumpstartEvents.jumpstart_claim_succeeded]: undefined
+  [JumpstartEvents.jumpstart_claim_failed]: undefined
+  [JumpstartEvents.jumpstart_claimed_token]: {
+    networkId: NetworkId
+    tokenAddress: string
+    value: number
+  }
+  [JumpstartEvents.jumpstart_claimed_nft]: {
+    networkId: NetworkId
+    contractAddress: string
+    tokenId: string
+  }
+  [JumpstartEvents.jumpstart_claim_loading_dismissed]: undefined
+  [JumpstartEvents.jumpstart_claim_error_dismissed]: undefined
+  [JumpstartEvents.jumpstart_claim_error_contact_support]: undefined
+  [JumpstartEvents.jumpstart_reclaim_press]: JumpstartReclaimProperties
+  [JumpstartEvents.jumpstart_reclaim_start]: JumpstartReclaimProperties
+  [JumpstartEvents.jumpstart_reclaim_failed]: JumpstartReclaimProperties
+  [JumpstartEvents.jumpstart_reclaim_succeeded]: JumpstartReclaimProperties & {
+    reclaimTxHash: string
+  }
+  [JumpstartEvents.jumpstart_reclaim_dismiss_error]: JumpstartReclaimProperties
+  [JumpstartEvents.jumpstart_reclaim_contact_support]: undefined
+  [JumpstartEvents.jumpstart_claim_status_fetch_success]: JumpstartReclaimProperties & {
+    claimed: boolean
+  }
+  [JumpstartEvents.jumpstart_claim_status_fetch_error]: JumpstartReclaimProperties
+}
+
+interface PointsEventsProperties {
+  [PointsEvents.points_screen_open]: undefined
+  [PointsEvents.points_screen_back]: undefined
+  [PointsEvents.points_screen_card_press]: {
+    activityId: PointsActivityId
+  }
+  [PointsEvents.points_screen_card_cta_press]: {
+    activityId: PointsActivityId
+  }
+  [PointsEvents.points_screen_activity_press]: undefined
+  [PointsEvents.points_screen_activity_try_again_press]: {
+    getNextPage: boolean
+  }
+  [PointsEvents.points_screen_activity_fetch_more]: undefined
+  [PointsEvents.points_screen_activity_learn_more_press]: undefined
+}
+
+interface EarnEventsProperties {
+  [EarnEvents.earn_cta_press]: undefined
+  [EarnEvents.earn_add_crypto_action_press]: {
+    action: TokenActionName
+  } & TokenProperties
+  [EarnEvents.earn_deposit_provider_info_press]: undefined
+  [EarnEvents.earn_deposit_terms_and_conditions_press]: undefined
+  [EarnEvents.earn_deposit_complete]: undefined
+  [EarnEvents.earn_deposit_cancel]: undefined
+  [EarnEvents.earn_view_pools_press]: undefined
+}
+
 export type AnalyticsPropertiesList = AppEventsProperties &
   HomeEventsProperties &
   SettingsEventsProperties &
@@ -1459,6 +1595,7 @@ export type AnalyticsPropertiesList = AppEventsProperties &
   AuthenticationEventsProperties &
   InviteEventsProperties &
   SendEventsProperties &
+  JumpstartEventsProperties &
   EscrowEventsProperties &
   FeeEventsProperties &
   TransactionEventsProperties &
@@ -1482,6 +1619,8 @@ export type AnalyticsPropertiesList = AppEventsProperties &
   NftsEventsProperties &
   BuilderHooksProperties &
   DappShortcutsProperties &
-  TransactionDetailsProperties
+  TransactionDetailsProperties &
+  PointsEventsProperties &
+  EarnEventsProperties
 
 export type AnalyticsEventType = keyof AnalyticsPropertiesList

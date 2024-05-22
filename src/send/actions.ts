@@ -1,7 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { FeeInfo } from 'src/fees/saga'
 import { Recipient } from 'src/recipients/recipient'
-import { TransactionDataInput } from 'src/send/SendAmount'
 import { QrCode } from 'src/send/types'
 import { Currency } from 'src/utils/currencies'
 import { SerializableTransactionRequest } from 'src/viem/preparedTransactionSerialization'
@@ -17,7 +15,8 @@ export enum Actions {
   SEND_PAYMENT_SUCCESS = 'SEND/SEND_PAYMENT_SUCCESS',
   SEND_PAYMENT_FAILURE = 'SEND/SEND_PAYMENT_FAILURE',
   UPDATE_LAST_USED_CURRENCY = 'SEND/UPDATE_LAST_USED_CURRENCY',
-  SET_SHOW_WARNING = 'SEND/SHOW_WARNING',
+  ENCRYPT_COMMENT = 'SEND/ENCRYPT_COMMENT',
+  ENCRYPT_COMMENT_COMPLETE = 'SEND/ENCRYPT_COMMENT_COMPLETE',
 }
 
 export interface HandleQRCodeDetectedAction {
@@ -28,7 +27,6 @@ export interface HandleQRCodeDetectedAction {
 export interface HandleQRCodeDetectedSecureSendAction {
   type: Actions.BARCODE_DETECTED_SECURE_SEND
   qrCode: QrCode
-  transactionData?: TransactionDataInput
   requesterAddress?: string
   recipient: Recipient
   forceTokenId?: boolean
@@ -48,8 +46,7 @@ export interface SendPaymentAction {
   comment: string
   recipient: Recipient
   fromModal: boolean
-  feeInfo?: FeeInfo
-  preparedTransaction?: SerializableTransactionRequest
+  preparedTransaction: SerializableTransactionRequest
 }
 
 export interface SendPaymentSuccessAction {
@@ -67,9 +64,16 @@ export interface UpdateLastUsedCurrencyAction {
   currency: Currency
 }
 
-export interface SetShowWarningAction {
-  type: Actions.SET_SHOW_WARNING
-  showWarning: boolean
+export interface EncryptCommentAction {
+  type: Actions.ENCRYPT_COMMENT
+  comment: string
+  fromAddress: string
+  toAddress: string
+}
+
+interface EncryptCommentCompleteAction {
+  type: Actions.ENCRYPT_COMMENT_COMPLETE
+  encryptedComment: string | null
 }
 
 export type ActionTypes =
@@ -80,7 +84,8 @@ export type ActionTypes =
   | SendPaymentSuccessAction
   | SendPaymentFailureAction
   | UpdateLastUsedCurrencyAction
-  | SetShowWarningAction
+  | EncryptCommentAction
+  | EncryptCommentCompleteAction
 
 export const handleQRCodeDetected = (qrCode: QrCode): HandleQRCodeDetectedAction => ({
   type: Actions.BARCODE_DETECTED,
@@ -90,14 +95,12 @@ export const handleQRCodeDetected = (qrCode: QrCode): HandleQRCodeDetectedAction
 export const handleQRCodeDetectedSecureSend = (
   qrCode: QrCode,
   recipient: Recipient,
-  transactionData?: TransactionDataInput,
   requesterAddress?: string,
   forceTokenId?: boolean,
   defaultTokenIdOverride?: string
 ): HandleQRCodeDetectedSecureSendAction => ({
   type: Actions.BARCODE_DETECTED_SECURE_SEND,
   qrCode,
-  transactionData,
   requesterAddress,
   recipient,
   forceTokenId,
@@ -116,8 +119,7 @@ export const sendPayment = (
   comment: string,
   recipient: Recipient,
   fromModal: boolean,
-  feeInfo?: FeeInfo,
-  preparedTransaction?: SerializableTransactionRequest
+  preparedTransaction: SerializableTransactionRequest
 ): SendPaymentAction => ({
   type: Actions.SEND_PAYMENT,
   amount,
@@ -126,7 +128,6 @@ export const sendPayment = (
   comment,
   recipient,
   fromModal,
-  feeInfo,
   preparedTransaction,
 })
 
@@ -151,7 +152,24 @@ export const updateLastUsedCurrency = (currency: Currency): UpdateLastUsedCurren
   currency,
 })
 
-export const setShowWarning = (showWarning: boolean): SetShowWarningAction => ({
-  type: Actions.SET_SHOW_WARNING,
-  showWarning,
+export const encryptComment = ({
+  comment,
+  fromAddress,
+  toAddress,
+}: {
+  comment: string
+  fromAddress: string
+  toAddress: string
+}): EncryptCommentAction => ({
+  type: Actions.ENCRYPT_COMMENT,
+  comment,
+  fromAddress,
+  toAddress,
+})
+
+export const encryptCommentComplete = (
+  encryptedComment: string | null
+): EncryptCommentCompleteAction => ({
+  type: Actions.ENCRYPT_COMMENT_COMPLETE,
+  encryptedComment,
 })

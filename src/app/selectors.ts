@@ -30,7 +30,6 @@ export const numberVerifiedDecentrallySelector = (state: RootState) => state.app
 
 // this can be called with undefined state in the tests
 export const walletConnectEnabledSelector = (state?: RootState) => ({
-  v1: state?.app.walletConnectV1Enabled ?? false,
   v2: state?.app.walletConnectV2Enabled ?? false,
 })
 
@@ -46,28 +45,17 @@ export const rewardsEnabledSelector = createSelector(
 export const logPhoneNumberTypeEnabledSelector = (state: RootState) =>
   state.app.logPhoneNumberTypeEnabled
 
-export const celoEuroEnabledSelector = (state: RootState) => state.app.celoEuroEnabled
-
 export const googleMobileServicesAvailableSelector = (state: RootState) =>
   state.app.googleMobileServicesAvailable
 
 export const huaweiMobileServicesAvailableSelector = (state: RootState) =>
   state.app.huaweiMobileServicesAvailable
 
-export const rewardPillTextSelector = (state: RootState) => state.app.rewardPillText
-
 export const sentryTracesSampleRateSelector = (state: RootState) => state.app.sentryTracesSampleRate
 
 export const sentryNetworkErrorsSelector = (state: RootState) => state.app.sentryNetworkErrors
 
 export const supportedBiometryTypeSelector = (state: RootState) => state.app.supportedBiometryType
-
-export const activeScreenSelector = (state: RootState) => state.app.activeScreen
-
-export const showPriceChangeIndicatorInBalancesSelector = (state: RootState) =>
-  state.app.showPriceChangeIndicatorInBalances
-
-export const skipVerificationSelector = (state: RootState) => state.app.skipVerification
 
 export const fiatConnectCashInEnabledSelector = (state: RootState) =>
   state.app.fiatConnectCashInEnabled
@@ -118,7 +106,7 @@ export const inAppReviewLastInteractionTimestampSelector = (state: RootState) =>
 export const showNotificationSpotlightSelector = (state: RootState) =>
   state.app.showNotificationSpotlight
 
-export const hideHomeBalancesSelector = (state: RootState) => state.app.hideHomeBalances
+export const hideWalletBalancesSelector = (state: RootState) => state.app.hideBalances
 
 export const multichainBetaStatusSelector = (state: RootState) => state.app.multichainBetaStatus
 

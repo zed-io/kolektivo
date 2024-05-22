@@ -25,11 +25,15 @@ function TokenApprovalFeedItem({ transaction }: Props) {
   }
 
   return (
-    <Touchable testID="TokenApprovalFeedItem" onPress={handleOpenTransactionDetails}>
+    <Touchable
+      testID={`TokenApprovalFeedItem/${transaction.transactionHash}`}
+      onPress={handleOpenTransactionDetails}
+    >
       <View style={styles.container}>
         <TransactionFeedItemImage
           status={transaction.status}
           transactionType={transaction.__typename}
+          networkId={transaction.networkId}
         />
         <Text style={styles.title}>{t('transactionFeed.approvalTransactionTitle')}</Text>
       </View>

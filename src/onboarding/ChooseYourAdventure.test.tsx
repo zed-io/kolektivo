@@ -5,14 +5,17 @@ import { Provider } from 'react-redux'
 import { OnboardingEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import { FiatExchangeFlow } from 'src/fiatExchanges/utils'
-import { navigate, navigateHome } from 'src/navigator/NavigationService'
+import {
+  navigate,
+  navigateClearingStack,
+  navigateHome,
+  navigateHomeAndThenToScreen,
+} from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import ChooseYourAdventure from 'src/onboarding/ChooseYourAdventure'
 import { AdventureCardName } from 'src/onboarding/types'
 import { createMockStore } from 'test/utils'
-import { mockAccount, mockAccount2 } from 'test/values'
-
-jest.mock('src/analytics/ValoraAnalytics')
+import { mockAccount, mockAccount2, mockCeloTokenId } from 'test/values'
 
 describe('ChooseYourAdventure', () => {
   const orderOptions = [
@@ -35,6 +38,19 @@ describe('ChooseYourAdventure', () => {
       ],
     },
   ]
+
+  const expectedCardOrder = [
+    AdventureCardName.Dapp,
+    AdventureCardName.Add,
+    AdventureCardName.Learn,
+    AdventureCardName.Profile,
+  ]
+
+  const store = createMockStore({
+    web3: {
+      account: mockAccount,
+    },
+  })
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -59,67 +75,80 @@ describe('ChooseYourAdventure', () => {
     }
   )
 
-  it('navigates to the correct screens when clicking all the elements', () => {
-    const store = createMockStore({
-      web3: {
-        account: mockAccount,
-      },
-    })
+  it('navigates to the correct screen for dapp', () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <ChooseYourAdventure />
       </Provider>
     )
-    const expectedCardOrder = [
-      AdventureCardName.Dapp,
-      AdventureCardName.Add,
-      AdventureCardName.Learn,
-      AdventureCardName.Profile,
-    ]
 
     fireEvent.press(getByTestId('AdventureCard/0/chooseYourAdventure.options.dapp'))
-    expect(navigateHome).toHaveBeenLastCalledWith({
-      params: { initialScreen: Screens.DAppsExplorerScreen },
+    expect(navigateClearingStack).toHaveBeenLastCalledWith(Screens.TabNavigator, {
+      initialScreen: Screens.TabDiscover,
     })
     expect(ValoraAnalytics.track).toHaveBeenLastCalledWith(OnboardingEvents.cya_button_press, {
       position: 1,
       cardName: AdventureCardName.Dapp,
       cardOrder: expectedCardOrder,
     })
+  })
+
+  it('navigates to the correct screen for add', () => {
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <ChooseYourAdventure />
+      </Provider>
+    )
     fireEvent.press(getByTestId('AdventureCard/1/chooseYourAdventure.options.add'))
     expect(navigateHome).toHaveBeenLastCalledWith()
     expect(navigate).toHaveBeenCalledWith(Screens.FiatExchangeCurrencyBottomSheet, {
       flow: FiatExchangeFlow.CashIn,
     })
-
     expect(ValoraAnalytics.track).toHaveBeenLastCalledWith(OnboardingEvents.cya_button_press, {
       position: 2,
       cardName: AdventureCardName.Add,
       cardOrder: expectedCardOrder,
     })
+  })
 
+  it('navigates to the correct screen for learn', () => {
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <ChooseYourAdventure />
+      </Provider>
+    )
     fireEvent.press(getByTestId('AdventureCard/2/chooseYourAdventure.options.learn'))
-    expect(navigateHome).toHaveBeenLastCalledWith({
-      params: { initialScreen: Screens.ExchangeHomeScreen },
+    expect(navigateHomeAndThenToScreen).toHaveBeenLastCalledWith(Screens.TokenDetails, {
+      tokenId: mockCeloTokenId,
     })
     expect(ValoraAnalytics.track).toHaveBeenLastCalledWith(OnboardingEvents.cya_button_press, {
       position: 3,
       cardName: AdventureCardName.Learn,
       cardOrder: expectedCardOrder,
     })
+  })
 
+  it('navigates to the correct screen for profile', () => {
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <ChooseYourAdventure />
+      </Provider>
+    )
     fireEvent.press(getByTestId('AdventureCard/3/chooseYourAdventure.options.profile'))
-    expect(navigateHome).toHaveBeenLastCalledWith()
-    expect(navigate).toHaveBeenLastCalledWith(Screens.Profile)
+    expect(navigateHomeAndThenToScreen).toHaveBeenLastCalledWith(Screens.Profile)
     expect(ValoraAnalytics.track).toHaveBeenLastCalledWith(OnboardingEvents.cya_button_press, {
       position: 4,
       cardName: AdventureCardName.Profile,
       cardOrder: expectedCardOrder,
     })
+  })
 
-    fireEvent.press(getByTestId('AdventureCard/3/chooseYourAdventure.options.profile'))
-    expect(navigateHome).toHaveBeenLastCalledWith()
-
+  it('navigates to the correct screen for later', () => {
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <ChooseYourAdventure />
+      </Provider>
+    )
     fireEvent.press(getByTestId('ChooseYourAdventure/Later'))
     expect(navigateHome).toHaveBeenLastCalledWith()
     expect(ValoraAnalytics.track).toHaveBeenLastCalledWith(OnboardingEvents.cya_later, {

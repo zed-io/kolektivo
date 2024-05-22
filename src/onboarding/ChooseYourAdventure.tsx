@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useSelector } from 'react-redux'
 import { OnboardingEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import Card from 'src/components/Card'
@@ -15,13 +14,20 @@ import GraphSparkle from 'src/icons/GraphSparkle'
 import PlusIcon from 'src/icons/PlusIcon'
 import ProfilePlus from 'src/icons/ProfilePlus'
 import { nuxNavigationOptionsNoBackButton } from 'src/navigator/Headers'
-import { navigate, navigateHome } from 'src/navigator/NavigationService'
+import {
+  navigate,
+  navigateClearingStack,
+  navigateHome,
+  navigateHomeAndThenToScreen,
+} from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { AdventureCardName } from 'src/onboarding/types'
+import { useSelector } from 'src/redux/hooks'
 import colors from 'src/styles/colors'
 import fontStyles from 'src/styles/fonts'
 import { Shadow, Spacing } from 'src/styles/styles'
 import { shuffle } from 'src/utils/random'
+import networkConfig from 'src/web3/networkConfig'
 import { walletAddressSelector } from 'src/web3/selectors'
 
 const DEFAULT_SEED = '0x0'
@@ -61,7 +67,11 @@ function ChooseYourAdventure() {
     {
       text: t('chooseYourAdventure.options.add'),
       goToNextScreen: () => {
-        navigateHome() // navigate home so that back on the fiat exchange currency screen takes the user back to Home screen
+        // navigate home so that closing the fiat exchange currency bottom sheet
+        // takes the user back to Home screen. Can't use
+        // navigateHomeAndThenToScreen here because it doesn't work for bottom
+        // sheets.
+        navigateHome()
         navigate(Screens.FiatExchangeCurrencyBottomSheet, { flow: FiatExchangeFlow.CashIn })
       },
       icon: <PlusIcon />,
@@ -70,7 +80,7 @@ function ChooseYourAdventure() {
     {
       text: t('chooseYourAdventure.options.dapp'),
       goToNextScreen: () => {
-        navigateHome({ params: { initialScreen: Screens.DAppsExplorerScreen } })
+        navigateClearingStack(Screens.TabNavigator, { initialScreen: Screens.TabDiscover })
       },
       icon: <GraphSparkle />,
       name: AdventureCardName.Dapp,
@@ -78,8 +88,7 @@ function ChooseYourAdventure() {
     {
       text: t('chooseYourAdventure.options.profile'),
       goToNextScreen: () => {
-        navigateHome()
-        navigate(Screens.Profile)
+        navigateHomeAndThenToScreen(Screens.Profile)
       },
       icon: <ProfilePlus />,
       name: AdventureCardName.Profile,
@@ -87,7 +96,7 @@ function ChooseYourAdventure() {
     {
       text: t('chooseYourAdventure.options.learn'),
       goToNextScreen: () => {
-        navigateHome({ params: { initialScreen: Screens.ExchangeHomeScreen } })
+        navigateHomeAndThenToScreen(Screens.TokenDetails, { tokenId: networkConfig.celoTokenId })
       },
       icon: <CeloIconNew />,
       name: AdventureCardName.Learn,
@@ -112,7 +121,7 @@ function ChooseYourAdventure() {
         })
         goToNextScreen()
       }
-      return <AdventureCard text={text} onPress={onPress} index={index} icon={icon} />
+      return <AdventureCard key={name} text={text} onPress={onPress} index={index} icon={icon} />
     })
   }
 

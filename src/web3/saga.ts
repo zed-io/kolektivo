@@ -1,4 +1,4 @@
-import { generateMnemonic, MnemonicStrength } from '@celo/cryptographic-utils'
+import { generateMnemonic, MnemonicLanguages, MnemonicStrength } from '@celo/cryptographic-utils'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { UnlockableWallet } from '@celo/wallet-base'
 import { RpcWalletErrors } from '@celo/wallet-rpc/lib/rpc-wallet'
@@ -6,8 +6,7 @@ import * as bip39 from 'react-native-bip39'
 import { setAccountCreationTime } from 'src/account/actions'
 import { generateSignedMessage } from 'src/account/saga'
 import { ErrorMessages } from 'src/app/ErrorMessages'
-import { generateKeysFromMnemonic, getMnemonicLanguage, storeMnemonic } from 'src/backup/utils'
-import { currentLanguageSelector } from 'src/i18n/selectors'
+import { generateKeysFromMnemonic, storeMnemonic } from 'src/backup/utils'
 import {
   CANCELLED_PIN_INPUT,
   getPasswordSaga,
@@ -23,7 +22,6 @@ import { createAccountDek } from 'src/web3/dataEncryptionKey'
 import {
   currentAccountSelector,
   mtwAddressSelector,
-  twelveWordMnemonicEnabledSelector,
   walletAddressSelector,
 } from 'src/web3/selectors'
 import { call, delay, put, select, spawn, take } from 'typed-redux-saga'
@@ -61,11 +59,8 @@ export function* getOrCreateAccount() {
   try {
     Logger.debug(TAG + '@getOrCreateAccount', 'Creating a new account')
 
-    const twelveWordMnemonicEnabled = yield* select(twelveWordMnemonicEnabledSelector)
-    const mnemonicBitLength = twelveWordMnemonicEnabled
-      ? MnemonicStrength.s128_12words
-      : MnemonicStrength.s256_24words
-    const mnemonicLanguage = getMnemonicLanguage(yield* select(currentLanguageSelector))
+    const mnemonicBitLength = MnemonicStrength.s128_12words
+    const mnemonicLanguage = MnemonicLanguages.english
     let mnemonic: string = yield* call(generateMnemonic, mnemonicBitLength, mnemonicLanguage, bip39)
 
     // Ensure no duplicates in mnemonic

@@ -1,12 +1,12 @@
 import { noop } from 'lodash'
 import React, { memo, useMemo, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { useDispatch } from 'react-redux'
 import { AlertTypes, hideAlert } from 'src/alert/actions'
 import { Alert, ErrorDisplayType } from 'src/alert/reducer'
+import { NotificationVariant } from 'src/components/InLineNotification'
 import SmartTopAlert from 'src/components/SmartTopAlert'
-import ToastWithCTA from 'src/components/ToastWithCTA'
-import useSelector from 'src/redux/useSelector'
+import Toast from 'src/components/Toast'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 
 function AlertBanner() {
   const [toastAlert, setToastAlert] = useState<(Alert & { isActive: boolean }) | null>(null)
@@ -56,12 +56,13 @@ function AlertBanner() {
         <SmartTopAlert alert={displayAlert} />
       </View>
 
-      <ToastWithCTA
+      <Toast
         showToast={!!toastAlert?.isActive}
         title={toastAlert?.title || ''}
-        message={toastAlert?.message || ''}
-        labelCTA={toastAlert?.buttonMessage || ''}
-        onPress={toastAlert?.isActive ? onPressToast : noop}
+        variant={NotificationVariant.Warning}
+        description={toastAlert?.message || ''}
+        ctaLabel={toastAlert?.buttonMessage || ''}
+        onPressCta={toastAlert?.isActive ? onPressToast : noop}
       />
     </>
   )

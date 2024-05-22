@@ -2,6 +2,7 @@ import { RehydrateAction } from 'redux-persist'
 import { Actions, ActionTypes } from 'src/home/actions'
 import { CleverTapInboxMessage } from 'src/home/cleverTapInbox'
 import { getRehydratePayload, REHYDRATE } from 'src/redux/persist-helper'
+import { NetworkId } from 'src/transactions/types'
 
 export const DEFAULT_PRIORITY = 20
 
@@ -29,11 +30,28 @@ export interface IdToNotification {
   [id: string]: Notification | undefined
 }
 
+export enum NftCelebrationStatus {
+  celebrationReadyToDisplay = 'celebrationReadyToDisplay',
+  celebrationDisplayed = 'celebrationDisplayed',
+  rewardReadyToDisplay = 'rewardReadyToDisplay',
+  rewardDisplayed = 'rewardDisplayed',
+  reminderReadyToDisplay = 'reminderReadyToDisplay',
+  reminderDisplayed = 'reminderDisplayed',
+}
+
 export interface State {
   loading: boolean
   notifications: IdToNotification
   cleverTapInboxMessages: CleverTapInboxMessage[]
   hasVisitedHome: boolean
+  nftCelebration: {
+    networkId: NetworkId
+    contractAddress: string
+    status: NftCelebrationStatus
+    rewardExpirationDate: string
+    rewardReminderDate: string
+    deepLink: string
+  } | null
 }
 
 export const initialState = {
@@ -41,9 +59,13 @@ export const initialState = {
   notifications: {},
   cleverTapInboxMessages: [],
   hasVisitedHome: false,
+  nftCelebration: null,
 }
 
-export const homeReducer = (state: State = initialState, action: ActionTypes | RehydrateAction) => {
+export const homeReducer = (
+  state: State = initialState,
+  action: ActionTypes | RehydrateAction
+): State => {
   switch (action.type) {
     case REHYDRATE: {
       // Ignore some persisted properties
@@ -109,6 +131,60 @@ export const homeReducer = (state: State = initialState, action: ActionTypes | R
       return {
         ...state,
         hasVisitedHome: true,
+      }
+    case Actions.CELEBRATED_NFT_FOUND:
+      return {
+        ...state,
+        nftCelebration: {
+          networkId: action.networkId,
+          contractAddress: action.contractAddress,
+          deepLink: action.deepLink,
+          rewardExpirationDate: action.rewardExpirationDate,
+          rewardReminderDate: action.rewardReminderDate,
+          status: NftCelebrationStatus.celebrationReadyToDisplay,
+        },
+      }
+    case Actions.NFT_CELEBRATION_DISPLAYED:
+      if (!state.nftCelebration) {
+        return state
+      }
+
+      return {
+        ...state,
+        nftCelebration: {
+          ...state.nftCelebration,
+          status: NftCelebrationStatus.celebrationDisplayed,
+        },
+      }
+    case Actions.NFT_REWARD_READY_TO_DISPLAY:
+      if (!state.nftCelebration) {
+        return state
+      }
+
+      return {
+        ...state,
+        nftCelebration: {
+          ...state.nftCelebration,
+          status: action.showReminder
+            ? NftCelebrationStatus.reminderReadyToDisplay
+            : NftCelebrationStatus.rewardReadyToDisplay,
+          ...action.valuesToSync,
+        },
+      }
+    case Actions.NFT_REWARD_DISPLAYED:
+      if (!state.nftCelebration) {
+        return state
+      }
+
+      return {
+        ...state,
+        nftCelebration: {
+          ...state.nftCelebration,
+          status:
+            state.nftCelebration?.status === NftCelebrationStatus.reminderReadyToDisplay
+              ? NftCelebrationStatus.reminderDisplayed
+              : NftCelebrationStatus.rewardDisplayed,
+        },
       }
     default:
       return state

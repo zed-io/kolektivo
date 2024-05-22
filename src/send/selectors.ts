@@ -15,8 +15,6 @@ export const isSendingSelector = (state: RootState) => {
   return state.send.isSending
 }
 
-export const inviteRewardCusdSelector = (state: RootState) => state.send.inviteRewardCusd
-
 export const inviteRewardsTypeSelector = (state: RootState) => {
   switch (state.send.inviteRewardsVersion) {
     case 'v4':
@@ -41,3 +39,6 @@ export const canSendTokensSelector = createSelector(
     return tokensList.length > 0 && usdExchangeRate !== null
   }
 )
+
+export const encryptedCommentSelector = (state: RootState) => state.send.encryptedComment
+export const isEncryptingCommentSelector = (state: RootState) => state.send.isEncryptingComment

@@ -1,8 +1,10 @@
 import { fireEvent, render, waitFor } from '@testing-library/react-native'
 import * as React from 'react'
 import { Provider } from 'react-redux'
-import BackupQuiz, { BackupQuiz as BackupQuizRaw } from 'src/backup/BackupQuiz'
+import BackupQuiz, { BackupQuiz as BackupQuizRaw, navOptionsForQuiz } from 'src/backup/BackupQuiz'
+import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
+import MockedNavigator from 'test/MockedNavigator'
 import { createMockStore, getMockI18nProps, getMockStackScreenProps } from 'test/utils'
 import { mockAccount, mockMnemonic } from 'test/values'
 
@@ -21,10 +23,9 @@ const mockScreenProps = getMockStackScreenProps(Screens.BackupQuiz)
 
 describe('BackupQuiz', () => {
   const store = createMockStore()
+
   beforeEach(() => {
-    // According to the react-native-testing-library docs, if we're using
-    // fake timers, tests that use async/await will stall.
-    jest.useRealTimers()
+    jest.clearAllMocks()
   })
 
   it('renders correctly', async () => {
@@ -35,6 +36,33 @@ describe('BackupQuiz', () => {
     )
     await waitFor(() => getByTestId('selected-word-0'))
     expect(toJSON()).toMatchSnapshot()
+  })
+
+  it('Cancel navigates correctly when not in account removal', () => {
+    const { getByText, getByTestId } = render(
+      <Provider store={store}>
+        <MockedNavigator component={BackupQuiz} options={navOptionsForQuiz} />
+      </Provider>
+    )
+
+    fireEvent.press(getByTestId('CancelButton'))
+    expect(getByText('cancelDialog.title')).toBeTruthy()
+    expect(getByText('cancelDialog.body')).toBeTruthy()
+  })
+
+  it('Cancel navigates correctly when in account removal', () => {
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <MockedNavigator
+          component={BackupQuiz}
+          params={{ isAccountRemoval: true }}
+          options={navOptionsForQuiz}
+        />
+      </Provider>
+    )
+
+    fireEvent.press(getByTestId('CancelButton'))
+    expect(navigate).toBeCalledWith(Screens.Settings)
   })
 
   describe('when word is pressed', () => {
@@ -72,31 +100,31 @@ describe('BackupQuiz', () => {
     })
   })
 
-  /**
-   * Note(Rossy): Unfortunately I have to skip this test for now.
-   * The test must wait for buttons to be ready, and which takes
-   * in total over 10 seconds for all 24 mnemonic words. Maybe the
-   * test renderer perf will improve at some point and we can enable this.
-   */
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('can complete the quiz correctly', async () => {
-    const mockSetBackupCompleted = jest.fn()
-    const { getByText, getByTestId } = render(
-      <Provider store={store}>
-        <BackupQuizRaw
-          {...mockScreenProps}
-          setBackupCompleted={mockSetBackupCompleted}
-          showError={jest.fn()}
-          account={mockAccount}
-          {...getMockI18nProps()}
-        />
-      </Provider>
-    )
-    for (const word of mockMnemonic.split(' ')) {
-      await waitFor(() => getByText(word))
-      fireEvent.press(getByText(word))
+  it.each([{ isAccountRemoval: false }, { isAccountRemoval: true }])(
+    'can complete the quiz correctly (account removal: $isAccountRemoval)',
+    async ({ isAccountRemoval }) => {
+      jest.useFakeTimers()
+      const mockSetBackupCompleted = jest.fn()
+      const { getByText, getByTestId } = render(
+        <Provider store={store}>
+          <BackupQuizRaw
+            {...getMockStackScreenProps(Screens.BackupQuiz, { isAccountRemoval })}
+            setBackupCompleted={mockSetBackupCompleted}
+            showError={jest.fn()}
+            account={mockAccount}
+            {...getMockI18nProps()}
+          />
+        </Provider>
+      )
+      for (const word of mockMnemonic.split(' ')) {
+        await waitFor(() => getByText(word))
+        fireEvent.press(getByText(word))
+      }
+
+      fireEvent.press(getByTestId('QuizSubmit'))
+      jest.advanceTimersByTime(2000)
+      expect(mockSetBackupCompleted).toHaveBeenCalled()
+      expect(navigate).toHaveBeenCalledWith(Screens.BackupComplete, { isAccountRemoval })
     }
-    fireEvent.press(getByTestId('QuizSubmit'))
-    expect(mockSetBackupCompleted).toHaveBeenCalled()
-  })
+  )
 })

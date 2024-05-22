@@ -14,16 +14,15 @@ export interface PaymentInfo {
   amount: number
 }
 
-export interface State {
+interface State {
   isSending: boolean
   recentRecipients: Recipient[]
   // Keep a list of recent (last 24 hours) payments
   recentPayments: PaymentInfo[]
   inviteRewardsVersion: string
-  inviteRewardCusd: number
-  inviteRewardWeeklyLimit: number
-  showSendToAddressWarning: boolean
   lastUsedTokenId?: string
+  encryptedComment: string | null
+  isEncryptingComment: boolean
 }
 
 const initialState = {
@@ -31,15 +30,14 @@ const initialState = {
   recentRecipients: [],
   recentPayments: [],
   inviteRewardsVersion: REMOTE_CONFIG_VALUES_DEFAULTS.inviteRewardsVersion,
-  inviteRewardCusd: REMOTE_CONFIG_VALUES_DEFAULTS.inviteRewardCusd,
-  inviteRewardWeeklyLimit: REMOTE_CONFIG_VALUES_DEFAULTS.inviteRewardWeeklyLimit,
-  showSendToAddressWarning: true,
+  encryptedComment: null,
+  isEncryptingComment: false,
 }
 
 export const sendReducer = (
   state: State = initialState,
   action: ActionTypes | RehydrateAction | UpdateConfigValuesAction
-) => {
+): State => {
   switch (action.type) {
     case REHYDRATE: {
       // Ignore some persisted properties
@@ -47,6 +45,8 @@ export const sendReducer = (
         ...state,
         ...getRehydratePayload(action, 'send'),
         isSending: false,
+        encryptedComment: null,
+        isEncryptingComment: false,
       }
     }
     case Actions.SEND_PAYMENT:
@@ -66,23 +66,30 @@ export const sendReducer = (
         isSending: false,
         recentPayments: [...paymentsLast24Hours, latestPayment],
         lastUsedTokenId: action.tokenId,
+        encryptedComment: null,
       }
     case Actions.SEND_PAYMENT_FAILURE:
       return {
         ...state,
         isSending: false,
+        encryptedComment: null,
+      }
+    case Actions.ENCRYPT_COMMENT:
+      return {
+        ...state,
+        isEncryptingComment: true,
+        encryptedComment: null,
+      }
+    case Actions.ENCRYPT_COMMENT_COMPLETE:
+      return {
+        ...state,
+        isEncryptingComment: false,
+        encryptedComment: action.encryptedComment,
       }
     case AppActions.UPDATE_REMOTE_CONFIG_VALUES:
       return {
         ...state,
         inviteRewardsVersion: action.configValues.inviteRewardsVersion,
-        inviteRewardCusd: action.configValues.inviteRewardCusd,
-        inviteRewardWeeklyLimit: action.configValues.inviteRewardWeeklyLimit,
-      }
-    case Actions.SET_SHOW_WARNING:
-      return {
-        ...state,
-        showSendToAddressWarning: action.showWarning,
       }
     default:
       return state

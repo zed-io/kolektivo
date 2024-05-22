@@ -5,19 +5,19 @@ import {
   quickOnboarding,
   waitForElementByIdAndTap,
   waitForElementId,
-  dismissCashInBottomSheet,
+  scrollIntoViewByTestId,
 } from '../utils/utils'
 
 async function validateSendFlow(tokenSymbol) {
   // navigate to send amount screen to ensure the expected token symbol is pre-selected
-  await waitForElementId('SendSearchInput')
-  await element(by.id('SearchInput')).tap()
-  await element(by.id('SearchInput')).replaceText(DEFAULT_RECIPIENT_ADDRESS)
-  await element(by.id('SearchInput')).tapReturnKey()
+  await waitForElementByIdAndTap('SendSelectRecipientSearchInput')
+  await element(by.id('SendSelectRecipientSearchInput')).replaceText(DEFAULT_RECIPIENT_ADDRESS)
+  await element(by.id('SendSelectRecipientSearchInput')).tapReturnKey()
   await expect(element(by.text('0xe5f5...8846')).atIndex(0)).toBeVisible()
   await element(by.text('0xe5f5...8846')).atIndex(0).tap()
+  await waitForElementByIdAndTap('SendOrInviteButton')
   await expect(
-    element(by.text(tokenSymbol).withAncestor(by.id('TokenPickerSelector')))
+    element(by.text(tokenSymbol).withAncestor(by.id('SendEnterAmount/TokenSelect')))
   ).toBeVisible()
   await element(by.id('BackChevron')).tap()
   await element(by.id('Times')).tap()
@@ -79,22 +79,17 @@ export default Assets = () => {
       await device.installApp()
       await launchApp({
         newInstance: true,
-        launchArgs: {
-          // NFT flag must also be true, otherwise Collectibles tab show an empty screen
-          statsigGateOverrides: `show_asset_details_screen=true,show_in_app_nft_gallery=true`,
-        },
         permissions: { notifications: 'YES', contacts: 'YES', camera: 'YES' },
       })
       let mnemonic = SAMPLE_BACKUP_KEY
       if (balance === 'zero') {
         mnemonic = await generateMnemonic()
       }
-      await quickOnboarding(mnemonic)
-      await dismissCashInBottomSheet()
+      await quickOnboarding({ mnemonic })
     })
 
-    it('navigates to Assets screen from home', async () => {
-      await waitForElementByIdAndTap('ViewBalances')
+    it('navigates to wallet tab from home', async () => {
+      await waitForElementByIdAndTap('Tab/Wallet')
       await waitForElementId('Assets/TabBar')
     })
 
@@ -161,13 +156,14 @@ export default Assets = () => {
 
       if (learnMore) {
         it('learn more navigates to coingecko page', async () => {
+          await scrollIntoViewByTestId('TokenDetails/LearnMore', 'TokenDetailsScrollView')
           await waitForElementByIdAndTap('TokenDetails/LearnMore')
           await waitForElementId('RNWebView')
           await waitFor(element(by.text('www.coingecko.com')))
             .toBeVisible()
             .withTimeout(10 * 1000)
           await element(by.id('WebViewScreen/CloseButton')).tap()
-          await waitForElementId('TokenDetails/AssetValue')
+          await waitForElementId('TokenBalanceItem')
         })
       }
 

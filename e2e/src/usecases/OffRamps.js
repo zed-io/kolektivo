@@ -15,19 +15,16 @@ export default offRamps = () => {
     await element(by.id('HomeAction-Withdraw')).tap()
   })
 
-  describe('When on Add & Withdraw', () => {
+  describe('When on Withdraw & Spend', () => {
     it('Then should have support link', async () => {
       await element(by.id('FiatExchange/scrollView')).scrollTo('bottom')
       await expect(element(by.id('otherFundingOptions'))).toBeVisible()
     })
 
-    it('Then should display total balance and navigate back', async () => {
+    it('Then should display total balance', async () => {
       await waitForElementId('ViewBalances')
       await element(by.id('ViewBalances')).tap()
       await expect(element(by.id('AssetsTokenBalance'))).toBeVisible()
-      await element(by.id('BackChevron')).tap()
-      await expect(element(by.id('AssetsTokenBalance'))).not.toBeVisible()
-      await waitForElementId('ViewBalances')
     })
   })
 
@@ -60,28 +57,6 @@ export default offRamps = () => {
       await element(by.id('cashOut')).tap()
     })
 
-    it.each`
-      token     | amount | exchanges
-      ${'cUSD'} | ${'2'} | ${{ total: 5, minExpected: 1 }}
-      ${'cEUR'} | ${'2'} | ${{ total: 2, minExpected: 1 }}
-      ${'CELO'} | ${'2'} | ${{ total: 19, minExpected: 5 }}
-    `(
-      'Then should display $token provider(s) for $$amount',
-      async ({ token, amount, exchanges }) => {
-        await waitForElementId(`${token}Symbol`)
-        await element(by.id(`${token}Symbol`)).tap()
-
-        await waitForElementId('FiatExchangeInput')
-        await element(by.id('FiatExchangeInput')).replaceText(`${amount}`)
-        await element(by.id('FiatExchangeNextButton')).tap()
-        await expect(element(by.text('Select Withdraw Method'))).toBeVisible()
-        await waitForElementId('Exchanges')
-        await element(by.id('Exchanges')).tap()
-        // Exchanges start at index 0
-        await waitForElementId(`provider-${exchanges.minExpected - 1}`)
-      }
-    )
-
     // Verify that some exchanges are displayed not the exact total as this could change
     // Maybe use total in the future
     it.each`
@@ -96,7 +71,7 @@ export default offRamps = () => {
         await element(by.id(`${token}Symbol`)).tap()
 
         await waitForElementId('FiatExchangeInput')
-        await element(by.id('FiatExchangeInput')).replaceText('20')
+        await element(by.id('FiatExchangeInput')).replaceText('2')
         await element(by.id('FiatExchangeNextButton')).tap()
         await expect(element(by.text('Select Withdraw Method'))).toBeVisible()
         await waitForElementId('Exchanges')
@@ -118,7 +93,7 @@ export default offRamps = () => {
       await waitForElementId('Exchanges')
       await element(by.id('Exchanges')).tap()
       await element(by.id('SendBar')).tap()
-      await waitFor(element(by.id('SendSearchInput')))
+      await waitFor(element(by.id('SendSelectRecipientSearchInput')))
         .toBeVisible()
         .withTimeout(10 * 1000)
       // Send e2e test should cover the rest of this flow

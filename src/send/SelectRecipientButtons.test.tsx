@@ -3,15 +3,17 @@ import * as React from 'react'
 import { Platform } from 'react-native'
 import { RESULTS, check, request } from 'react-native-permissions'
 import { Provider } from 'react-redux'
-import { SendEvents } from 'src/analytics/Events'
+import { JumpstartEvents, SendEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import SelectRecipientButtons from 'src/send/SelectRecipientButtons'
+import { getDynamicConfigParams, getFeatureGate } from 'src/statsig'
+import { StatsigFeatureGates } from 'src/statsig/types'
 import { navigateToPhoneSettings } from 'src/utils/linking'
 import { createMockStore } from 'test/utils'
 
-jest.mock('react-native-permissions', () => require('react-native-permissions/mock'))
+jest.mock('src/statsig')
 
 const renderComponent = (phoneNumberVerified = false) => {
   const onPermissionsGranted = jest.fn()
@@ -27,6 +29,33 @@ describe('SelectRecipientButtons', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.mocked(check).mockResolvedValue(RESULTS.DENIED)
+    jest.mocked(getDynamicConfigParams).mockReturnValue({
+      showBalances: ['celo-alfajores'],
+      jumpstartContracts: {},
+    })
+  })
+
+  it('renders the jumpstart button if it is enabled', async () => {
+    jest
+      .mocked(getFeatureGate)
+      .mockImplementation((gate) => gate === StatsigFeatureGates.SHOW_JUMPSTART_SEND)
+    jest.mocked(getDynamicConfigParams).mockReturnValue({
+      showBalances: ['celo-alfajores'],
+      jumpstartContracts: {
+        'celo-alfajores': {
+          contractAddress: '0x123',
+        },
+      },
+    })
+    const { getByText, findByTestId } = renderComponent()
+
+    expect(await findByTestId('SelectRecipient/QR')).toBeTruthy()
+    fireEvent.press(getByText('sendSelectRecipient.jumpstart.title'))
+
+    expect(ValoraAnalytics.track).toHaveBeenCalledWith(
+      JumpstartEvents.send_select_recipient_jumpstart
+    )
+    expect(navigate).toHaveBeenCalledWith(Screens.JumpstartEnterAmount)
   })
 
   it('renders QR and contacts button with no check mark on contacts if phone number is not verified', async () => {
@@ -105,7 +134,7 @@ describe('SelectRecipientButtons', () => {
       expect(getByTestId('SelectRecipient/PhoneNumberModal')).not.toBeVisible()
     })
     await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith(Screens.VerificationStartScreen)
+      expect(navigate).toHaveBeenCalledWith(Screens.VerificationStartScreen, { hasOnboarded: true })
     })
   })
 

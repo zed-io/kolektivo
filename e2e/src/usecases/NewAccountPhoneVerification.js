@@ -3,16 +3,17 @@ import {
   TWILIO_AUTH_TOKEN,
   VERIFICATION_PHONE_NUMBER,
 } from 'react-native-dotenv'
-import { EXAMPLE_NAME, EXAMPLE_PHONE_NUMBER } from '../utils/consts'
+import { EXAMPLE_PHONE_NUMBER } from '../utils/consts'
 import { launchApp } from '../utils/retries'
 import { checkBalance, receiveSms } from '../utils/twilio'
 import {
-  dismissCashInBottomSheet,
+  completeProtectWalletScreen,
   enterPinUi,
+  navigateToSettings,
   scrollIntoView,
   sleep,
   waitForElementId,
-  completeProtectWalletScreen,
+  waitForElementByIdAndTap,
 } from '../utils/utils'
 
 import jestExpect from 'expect'
@@ -32,10 +33,6 @@ export default NewAccountPhoneVerification = () => {
     await element(by.id('scrollView')).scrollTo('bottom')
     await expect(element(by.id('AcceptTermsButton'))).toBeVisible()
     await element(by.id('AcceptTermsButton')).tap()
-
-    // Set name
-    await element(by.id('NameEntry')).replaceText(EXAMPLE_NAME)
-    await element(by.id('NameAndPictureContinueButton')).tap()
 
     // Set and verify pin
     await enterPinUi()
@@ -68,6 +65,7 @@ export default NewAccountPhoneVerification = () => {
     // https://github.com/facebook/jest/issues/7245
     // https://github.com/facebook/jest/issues/11489
     // Either fix or move to nightly tests when present
+    // Also needs to be updated to work against tab navigation instead of drawer
     // jest.retryTimes(1)
     it.skip('Then should be able to verify phone number', async () => {
       // Get Date at start
@@ -89,6 +87,9 @@ export default NewAccountPhoneVerification = () => {
           .withTimeout(30 * 1000)
         await element(by.id(`VerificationCode${i}`)).typeText(codes[i])
       }
+
+      // Choose your own adventure (CYA screen)
+      await waitForElementByIdAndTap('ChooseYourAdventure/Later')
 
       // Assert we've arrived at the home screen
       await waitFor(element(by.id('HomeAction-Send')))
@@ -149,6 +150,9 @@ export default NewAccountPhoneVerification = () => {
         await element(by.id(`VerificationCode${i + 1}`)).replaceText(secondCodeSet[i])
       }
 
+      // Choose your own adventure (CYA screen)
+      await waitForElementByIdAndTap('ChooseYourAdventure/Later')
+
       // Assert we've arrived at the home screen
       await waitFor(element(by.id('HomeAction-Send')))
         .toBeVisible()
@@ -178,16 +182,14 @@ export default NewAccountPhoneVerification = () => {
     // Tap 'Skip'
     await element(by.text('Skip')).tap()
 
+    // Choose your own adventure (CYA screen)
+    await waitForElementByIdAndTap('ChooseYourAdventure/Later')
+
     // Assert we've arrived at the home screen
-    await dismissCashInBottomSheet()
     await waitForElementId('HomeAction-Send')
 
     // Assert that 'Connect phone number' is present in settings
-    await waitForElementId('Hamburger')
-    await element(by.id('Hamburger')).tap()
-    await scrollIntoView('Settings', 'SettingsScrollView')
-    await waitForElementId('Settings')
-    await element(by.id('Settings')).tap()
+    await navigateToSettings()
     await waitFor(element(by.text('Connect phone number')))
       .toBeVisible()
       .withTimeout(10 * 1000)

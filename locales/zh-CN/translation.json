@@ -6,6 +6,14 @@
   "licenses": "许可",
   "removeAccountTitle": "重置 Kolektivo",
   "removeAccountDetails": "如果重置，则您的账户将从此设备上删除。您的资金仍保留在账户中，但将只能借助恢复短语才能访问",
+  "deleteAccountTitle": "删除账户",
+  "deleteAccountDetails": "删除账户会将账户从 {{appName}} 中移除。您的资金将保留在账户中，但只能通过恢复短语访问",
+  "deleteAccountWarning": {
+    "title": "您确定吗？",
+    "description": "从 {{appName}} 中删除账户也会移除所有绑定的电话号码。您的资金将保留在账户中，但只能通过恢复短语访问",
+    "buttonLabel": "继续",
+    "buttonLabelRevokingPhoneNumber": "解绑手机号码..."
+  },
   "legal": "法律条款",
   "appPreferences": "应用程序首选项",
   "security": "安全",
@@ -21,7 +29,8 @@
   "dataSaver": "数据保护模式",
   "enableDataSaver": "启用数据保护模式",
   "dataSaverDetail": "数据保护模式允许您通过可信节点与网络通信。您可以随时在应用程序设置中更改该模式。",
-  "keylessBackupSettingsTitle": "电子邮箱和电话恢复",
+  "keylessBackupSettingsTitle": "电子邮件和电话备份",
+  "keylessBackupSettingsDeleteError": "您的备份无法删除，请稍后再试。",
   "setup": "设置",
   "restartModalSwitchOff": {
     "header": "重新启动以关闭数据保护模式",
@@ -55,7 +64,7 @@
   "protectWallet": {
     "title": "保护您的钱包",
     "subtitle": "保护您的钱包",
-    "body": "如果您的手机丢失或被盗，{{mnemonicLength}} 单词恢复短语是您访问资金的唯一方式。",
+    "body": "如果您的手机丢失或被盗，您的 12 个单词恢复短语是您获取资金的唯一途径。",
     "recoveryPhrase": {
       "title": "使用恢复短语",
       "subtitle": "写下您的恢复短语"
@@ -63,7 +72,7 @@
   },
   "recoveryPhrase": {
     "title": "您的恢复短语",
-    "body": "将这些 {{mnemonicLength}} 单词写在某个安全的地方，以防被盗或损坏。",
+    "body": "将这 12 个单词记在某个安全的地方，以防被盗或损坏。",
     "continue": "我已保存好",
     "copy": "复制到剪贴板",
     "mnemonicCopied": "恢复短语已复制到剪贴板",
@@ -77,16 +86,24 @@
     "title": "确保钱包安全",
     "description": "只有您自己才能访问您的钱包。如果您的手机丢失或被盗，Kolektivo 无法协助找回钱包。\n\n您需要设置适当方法来保护钱包及资金的安全。"
   },
-  "setUpKeylessBackup": {
-    "title": "设置钱包备份。",
-    "subtitle": "您将使用以下方法设置备份。",
+  "keylessBackupIntro": {
     "emailAddress": "电子邮件地址",
     "phoneNumber": "手机号码",
-    "useRecoveryPhrase": "使用恢复短语代替。"
+    "setup": {
+      "title": "设置钱包备份。",
+      "description": "您将使用以下功能设置电子邮件和电话号码备份",
+      "useRecoveryPhrase": "改用恢复短语",
+      "reminder": "<0>切记</0>，如果您的设备丢失或被盗，此信息便是访问您钱包的唯一途径。Valora 无法存储您的电子邮件或电话号码。务必妥善保管！"
+    },
+    "restore": {
+      "description": "确保您有以下可用信息来恢复钱包。",
+      "reminder": "<0>请记住</0>，您需要访问备份时使用的同一电子邮件和电话号码"
+    }
   },
   "signInWithEmail": {
     "title": "使用电子邮件登录",
     "subtitle": "使用您的电子邮件登录，以将其设置为备份。\n\n如果您的钱包丢失，系统将提示您重新登录。",
+    "subtitleRestore": "使用您用来设置钱包备份的电子邮件登录。",
     "google": "使用 Google 登录"
   },
   "keylessBackupPhoneInput": {
@@ -109,14 +126,36 @@
         "body": "现在，您可以通过电子邮件地址和电话号码找回钱包。"
       },
       "failed": {
-        "title": "免密钥备份不可用",
-        "body": "您可以稍后设置免密钥备份，也可以立即通过手动备份来保护您的账户。",
-        "later": "我稍后再备份",
-        "manual": "手动备份"
+        "title": "备份不可用",
+        "body": "您可以稍后设置钱包备份，或者立即保存恢复短语，以保护您的账户。",
+        "later": "我稍后会设置备份",
+        "manual": "保存恢复短语"
+      }
+    },
+    "restore": {
+      "inProgress": {
+        "title": "恢复您的钱包"
+      },
+      "completed": {
+        "title": "您的钱包已恢复！",
+        "bodyZeroBalance": "完成设置后，您就可以向钱包添加资金了。",
+        "bodyBalance": "您的余额为 <0></0>"
+      },
+      "failed": {
+        "title": "您的钱包未恢复",
+        "body": "在尝试恢复您的钱包时出现了技术问题。请联系技术支持获取更多信息。",
+        "tryAgain": "再试一次",
+        "createNewWallet": "新建钱包",
+        "help": "帮助"
+      },
+      "notFound": {
+        "title": "未找到钱包",
+        "body": "要恢复钱包，请使用您在设置时使用的<0>相同电子邮件地址和电话号码</0>。\n\n您也可以使用恢复短语恢复钱包。",
+        "tryAgain": "再试一次",
+        "createNewWallet": "新建钱包"
       }
     }
   },
-  "setupKeylessBackupReminder": "<0>切记</0>，如果您的设备丢失或被盗，此信息便是访问您钱包的唯一途径。Valora 无法存储您的电子邮件或电话号码。务必妥善保管！",
   "testFaqLink": "{{appName}} 常见问题",
   "termsOfServiceLink": "服务条款",
   "privacyPolicy": "隐私政策",
@@ -171,6 +210,8 @@
   "completeEducation": "我了解",
   "yourAccountKey": "您的恢复短语",
   "backupKeyNotification2": "保障您的资金安全。马上备份恢复短语。",
+  "keylessBackupCTA": "立即备份",
+  "keylessBackupNotification": "设置您的电子邮件和电话号码，以备份您的种子短语",
   "backupKeyCTA": "立即完成备份",
   "backupKeySummary": "找一个私密地方写下您的恢复短语。请将它存放在另一处安全地点。切勿保存在您的手机上。",
   "backupKeyWarning": "如果丢失恢复短语，您将无法访问您在 Kolektivo 持有的所有资金。",
@@ -178,6 +219,7 @@
   "moreInfo": "更多信息",
   "savedConfirmation": "是的，我已写下了我的短语。",
   "backupQuizWordCount": "您的恢复短语的 <0>{{ordinal}}</0> 单词是什么？",
+  "backupQuizWordCountV1_83": "您的恢复短语的 <0>{{wordNumber}}</0> 单词是什么？",
   "importBackupFailed": "导入钱包失败",
   "backupQuizFailed": "您输入的恢复短语不正确。请再试一次。",
   "invalidBackupPhrase": "恢复短语无效",
@@ -474,6 +516,7 @@
   "to": "至",
   "for": "用于",
   "reclaim": "收回",
+  "claimed": "已领取",
   "celoGold": "CELO",
   "celoEuros": "Celo 欧元",
   "balanceAvailable": "<0></0> 可用",
@@ -634,8 +677,8 @@
     "body": "在他们成功设置 {{appName}} 钱包并关联手机号码后，你们每个人都将获得一个专属 NFT。"
   },
   "inviteRewardsBannerCUSD": {
-    "title": "邀请好友并领取奖励",
-    "body": "在他们成功设置 {{appName}} 钱包并向其转账后，你们都将获得 0.50 cUSD 的奖励。"
+    "title": "邀请朋友最多可获得 12 cUSD",
+    "body": "一旦他们连接了自己的号码并将资金添加到 {{appName}}，你们都将收到 0.50 cUSD。"
   },
   "inviteWithUrl": {
     "title": "邀请朋友",
@@ -665,6 +708,28 @@
     "info": "要使用我们的服务，请阅读我们的<0>用户协议和条款</0>并点击下面的接受按钮接受。",
     "privacy": "加入此网络，即表示您允许我们收集有关您使用该应用程序的匿名信息。此外，如果您关联您的电话号码，将存储它的哈希副本。如果您授予 Kolektivo 访问您的联系人列表的权限，Kolektivo 将导入每个联系人的姓名、电话号码和个人资料照片，以允许用户通过 Kolektivo 应用程序进行关联。要了解我们如何收集和使用这些信息，请查看我们的<0>隐私政策</0>。",
     "goldDisclaimer": "当您使用 Kolektivo 创建一个“账户”时，您创建的是一个只有您拥有密钥的数字钱包。包括 Kolektivo 在内的任何其他个人或实体都无法恢复您的密钥、更改或撤消交易或者追回丢失的资金。请注意，加密货币是新资产类别的一部分，存在财务损失风险。在购买任何资产之前，请仔细考虑您的财务状况和对财务风险的承受能力。"
+  },
+  "termsColloquial": {
+    "title": "让我们从创建钱包开始",
+    "privacyHeading": "您的信息和隐私",
+    "privacy1": "我们收集的使用数据有助于我们改进应用程序和安全性。我们收集的信息类型、使用方式以及您与这些信息相关的权利，请参阅我们的<0>隐私政策</0>。",
+    "privacy2": "如果您决定链接您的电话号码，我们将存储一份加密副本。",
+    "privacy3": "如果您决定连接您的联系人，我们会使用他们的姓名、电话号码和个人资料图片，以方便查找。",
+    "walletHeading": "您的电子钱包",
+    "wallet1": "您即将创建一个数字钱包。只有您才拥有钱包的密钥。如果您丢失了密钥，我们无法恢复您的密钥或您的资产。我们也无法逆转通过 Valora 在区块链上进行的操作。",
+    "wallet2": "数字资产是您与Valora互动的资产，具有独特的风险。通过使用Valora，您接受了这些风险并承担了相应的责任。在做出选择之前，请考虑您的财务状况和风险承受能力。",
+    "fullTerms": "阅读我们的完整<0>条款和条件</0>"
+  },
+  "termsColloquial": {
+    "title": "让我们从创建钱包开始",
+    "privacyHeading": "您的信息和隐私",
+    "privacy1": "我们收集的使用数据有助于我们改进应用程序和安全性。我们收集的信息类型、使用方式以及您与这些信息相关的权利，请参阅我们的<0>隐私政策</0>。",
+    "privacy2": "如果您决定链接您的电话号码，我们将存储一份加密副本。",
+    "privacy3": "如果您决定连接您的联系人，我们会使用他们的姓名、电话号码和个人资料图片，以方便查找。",
+    "walletHeading": "您的电子钱包",
+    "wallet1": "您即将创建一个数字钱包。只有您才拥有钱包的密钥。如果您丢失了密钥，我们无法恢复您的密钥或您的资产。我们也无法逆转通过 Valora 在区块链上进行的操作。",
+    "wallet2": "数字资产是您与Valora互动的资产，具有独特的风险。通过使用Valora，您接受了这些风险并承担了相应的责任。在做出选择之前，请考虑您的财务状况和风险承受能力。",
+    "fullTerms": "阅读我们的完整<0>条款和条件</0>"
   },
   "fullNameOrPsuedonym": "全名或化名",
   "namePlaceholder": "例如：姓名",
@@ -772,7 +837,8 @@
     "restoreWallet": "恢复钱包",
     "hasWallet": "我已有钱包",
     "header": "欢迎使用 {{appName}}！请创建您的加密货币钱包。",
-    "getStarted": "开始使用"
+    "getStarted": "开始使用",
+    "agreeToTerms": "创建钱包即表示您同意我们的<0>条款和条件</0>"
   },
   "accessContacts": {
     "disclosure": {
@@ -873,6 +939,18 @@
       "title": "余额 \n<0></0>"
     }
   },
+  "importSelect": {
+    "title": "恢复您的钱包",
+    "description": "如果您为保护钱包设置了备份，请选择以下选项。",
+    "emailAndPhone": {
+      "title": "从电子邮件和电话备份",
+      "description": "使用之前设置的电话号码和电子邮件恢复钱包"
+    },
+    "recoveryPhrase": {
+      "title": "从恢复短语",
+      "description": "输入您的 12 个单词恢复短语，重新获得访问 Valora 的权限"
+    }
+  },
   "verificationInput": {
     "title": "确认",
     "body": "我们向您发送了三条短信。请将它们复制并粘贴到下方。",
@@ -942,6 +1020,7 @@
   "receivedFrom": "接收自",
   "commentLabel": "消息",
   "amountSent": "已发送金额",
+  "amountReceived": "收到的金额",
   "amountCeloWithdrawn": "金额 (CELO)",
   "feeEducation": "区块链收取交易费用，用以保障网络支持和顺利运营。",
   "reviewPayment": "查看付款",
@@ -1094,6 +1173,10 @@
     "notEnoughBalanceForGas": {
       "title": "手续费代币余额不足",
       "description": "您没有足够的 {{feeCurrencies}} 来支付手续费。请将 {{feeCurrencies}} 加入您的钱包，以完成此次交易。"
+    },
+    "failedToPrepareTransaction": {
+      "title": "准备交易失败",
+      "description": "准备交易时发生错误。详情请查看基本错误。\n\n\"{{errorMessage}}\""
     },
     "session": {
       "failUnsupportedNamespace": {
@@ -1248,6 +1331,9 @@
   "feedItemGoldWithdrawal": "提取到 {{displayName}}",
   "feedItemGoldReceived": "从 {{displayName}} 接收",
   "feedItemSwapPath": "{{token1}} 至 {{token2}}",
+  "feedItemJumpstartTitle": "实时链接",
+  "feedItemJumpstartSentSubtitle": "邀请函",
+  "feedItemJumpstartReceivedSubtitle": "收到的资金",
   "transactionHeaderVerificationFee": "确认",
   "transactionHeaderNetworkFee": "网络",
   "transactionHeaderFaucet": "Faucet",
@@ -1685,10 +1771,11 @@
     "swapTo": "至",
     "insufficientFunds": "{{token}} 余额不足，请尝试使用较小的金额或选择其他资产。",
     "fetchSwapQuoteFailed": "抱歉有所延迟！获取最佳汇率所需时间较往常略长。请在几分钟后重试。",
-    "disclaimer": "网络合作伙伴确定的最佳费率。<0>了解更多信息</0>",
+    "disclaimer": "分散来源确定的最佳费率。<0>了解更多信息</0>",
     "swapFromTokenSelection": "替换自",
     "swapToTokenSelection": "替换至",
     "tokenUsdValueUnknown": "-",
+    "unsupportedSwapTokens": "我们的交换提供商不支持所选令牌。",
     "switchedToNetworkWarning": {
       "title": "您已转至 {{networkName}} 网络",
       "body_swapFrom": "在 {{networkName}} 网络上选择用于交换的代币，然后继续。",
@@ -1743,6 +1830,9 @@
       "slippageToleranceInfo": "滑点调整\n\n您的交换将在滑点调整百分比范围内执行。如果价格变动超过滑点调整，{{appName}} 将阻止交易执行，为您提供保护。",
       "networkFeeInfoDismissButton": "知道了",
       "exchangeRate": "汇率",
+      "exchangeRateInfo": "汇率\n\n我们为您找到了最佳汇率。您的交易将以 {{slippagePercentage}}% 的估算价格完成，否则交易将被取消，资金将退回您的钱包。",
+      "exchangeRateInfo_withAppFee": "汇率\n\n我们为您找到了最佳汇率。您的交易将以 {{slippagePercentage}}% 的估算价格完成，否则交易将被取消，资金将返还到您的钱包。\n\n估算汇率包括 {{appName}} 费用 {{appFeePercentage}}%。",
+      "exchangeRateInfoDismissButton": "知道了",
       "estimatedValue": "估计价值"
     },
     "fundYourWalletBottomSheet": {
@@ -1848,11 +1938,22 @@
   },
   "profileScreen": {
     "generateName": "生成名称",
-    "namePlaceholder": "选择一个名称，例如 {{exampleName}}"
+    "namePlaceholder": "选择一个名称，如 \"{{exampleName}}\"",
+    "profilePictureDisclaimer": "使用您的个人照片自定义 {{appName}} 。您的图片将保持私密，不会被共享或上传。"
   },
   "tokenBottomSheet": {
     "searchAssets": "搜索资产",
-    "noTokenInResult": "没有找到 <0>\"{{searchTerm}}\"</0> 的匹配结果。"
+    "noTokenInResult": "没有找到 <0>\"{{searchTerm}}\"</0> 的匹配结果。",
+    "noFilterSearchResults": "在以下类别中未找到与 \"{{searchTerm}}\" 匹配的资产： {{filterNames}}",
+    "noFilterResults": "未找到与以下类别匹配的资产： {{filterNames}}",
+    "noSearchResults": "未找到与 \"{{searchTerm}}\" 匹配的资产",
+    "filters": {
+      "myTokens": "我的令牌",
+      "popular": "热门",
+      "recentlySwapped": "最近交换",
+      "network": "{{networkName}} 网络",
+      "selectNetwork": "网络"
+    }
   },
   "homeActions": {
     "add": "买入",
@@ -1897,7 +1998,8 @@
       "collectibles": "藏品",
       "dappPositions": "Dapp 持仓"
     },
-    "importToken": "导入"
+    "importToken": "导入",
+    "importTokens": "导入令牌"
   },
   "notificationCenterSpotlight": {
     "message": "我们正在推出一种新方法，让您可在同一个地方领取奖励、查看提醒和更新信息",
@@ -1935,7 +2037,9 @@
       "network": "网络"
     },
     "error": {
-      "invalidToken": "代币无效。请重试或联系支持人员"
+      "invalidAddress": "令牌地址无效。请复查",
+      "invalidToken": "代币无效。请重试或联系支持人员",
+      "tokenAlreadySupported": "已支持此令牌"
     },
     "importSuccess": "成功导入 {{tokenSymbol}} 代币",
     "importButton": "导入"
@@ -1953,7 +2057,11 @@
     },
     "invite": {
       "title": "向朋友发送加密货币",
-      "subtitle": "从联系人列表中邀请朋友"
+      "subtitle": "向联系人发送资金或邀请"
+    },
+    "jumpstart": {
+      "title": "通过实时链接发送",
+      "subtitle": "分享链接，像发送文本一样发送加密货币"
     },
     "getStarted": {
       "title": "在 Kolektivo 上发送资金的方式",
@@ -1969,7 +2077,7 @@
         },
         "three": {
           "title": "ENS",
-          "subtitle": "向某人的 ENS 句柄发送资产"
+          "subtitle": "将资产发送到某人的 ENS 句柄。"
         },
         "four": {
           "title": "个人资料名称",
@@ -2004,9 +2112,11 @@
   "viewOnCeloBlockExplorer": "在 CeloExplorer 上查看",
   "viewOnCeloScan": "在 CeloScan 上查看",
   "viewOnEthereumBlockExplorer": "在 Etherscan 上查看",
-  "viewOnArbiscan": "查看 Arbiscan",
+  "viewOnArbiscan": "在 Arbiscan 上查看。",
   "viewOnOPMainnetExplorer": "在 OP Mainnet Explorer 上查看",
   "viewOnOPSepoliaExplorer": "在 OP Sepolia Explorer 上查看",
+  "viewOnPolygonPoSScan": "在 PolygonScan 上查看",
+  "viewOnBaseScan": "在 BaseScan 上查看",
   "sendEnterAmountScreen": {
     "title": "输入金额",
     "selectToken": "选择代币",
@@ -2019,6 +2129,45 @@
     "notEnoughBalanceForGasWarning": {
       "title": "您需要更多 {{feeTokenSymbol}} 来支付手续费",
       "description": "添加 {{feeTokenSymbol}} 来支付手续费或调整发送金额"
+    },
+    "prepareTransactionError": {
+      "title": "出错了!",
+      "description": "无法为该令牌准备交易。"
+    }
+  },
+  "jumpstartEnterAmountScreen": {
+    "maxAmountWarning": {
+      "title": "您最多可在一个链接中发送 {{amountInLocalCurrency,currency}}",
+      "description": "任何人都可以使用该链接。请确保将链接发送给您信任的人。"
+    }
+  },
+  "jumpstartSendConfirmationScreen": {
+    "title": "创建实时链接",
+    "sendAmountLabel": "实时链接金额",
+    "confirmButton": "发送并创建链接",
+    "info": "创建链接时，资金会从您的钱包中提取。您可以随时收回链接。谨慎分享链接。",
+    "sendError": {
+      "title": "无法创建链接",
+      "description": "您的实时链接未创建。请重试。",
+      "ctaLabel": "忽略"
+    }
+  },
+  "jumpstartShareLinkScreen": {
+    "title": "分享您的实时链接",
+    "description": "复制链接，通过您选择的消息应用程序发送 {{tokenSymbol}} ，或使用二维码。",
+    "linkLabel": "实时链接",
+    "linkCopiedMessage": "复制的实时链接",
+    "navigationWarning": {
+      "title": "您是否分享了您的链接？",
+      "description": "确保分享此实时链接或将其保存在安全的地方。\n\n如果无人认领，也不用担心，您可以轻松地从您的活动提要中收回资金。",
+      "ctaNavigate": "返回主页"
+    },
+    "ctaShare": "共享链接",
+    "ctaScanQRCode": "显示 QR 码",
+    "shareMessage": "你好！我给您发了一个链接，资金来自 {{tokenAmount}} {{tokenSymbol}} ，网址是 {{appName}}。使用此链接下载应用程序，资金就会到账，等着您。 {{link}}",
+    "qrCodeBottomSheet": {
+      "title": "扫描代码接收资金",
+      "description": "在主屏幕上查看资金状态。或者，复制或分享下面的链接。"
     }
   },
   "transactionFeed": {
@@ -2040,7 +2189,203 @@
   },
   "getStartedHome": {
     "title": "购买加密货币或转移代币。",
-    "body": "购买或转让兼容代币，发送加密货币，探索网络3！"
+    "body": "购买或转移兼容的代币，发送加密货币并探索 Web3！"
+  },
+  "nftCelebration": {
+    "bottomSheet": {
+      "title": "恭喜！",
+      "description": "您获得了以太坊早期探索者的独家珍藏品。欢迎访问以太坊网站 {{appName}}。",
+      "cta": "谢谢！"
+    },
+    "notification": {
+      "title": "等待新的 NFT 🎉",
+      "description": "您可以在“收藏品”下找到新的 {{rewardName}} NFT"
+    },
+    "rewardBottomSheet": {
+      "title": "赚取 5 美元 ETH",
+      "description": "在太平洋时间 2024 年 4 月 4 日下午 12:00 之前用任何以太坊代币为您的钱包充值，我们将在太平洋时间 2024 年 4 月 5 日下午 11:59 之前为您提供 5 美元的 ETH。\n\n这是对早期以太坊探索者的独家优惠。",
+      "expirationLabel": "过期 {{expirationLabelText}}",
+      "cta": "使用奖励"
+    },
+    "rewardReminderBottomSheet": {
+      "title": "不要错过，赚取 5 美元 ETH",
+      "description": "在太平洋时间 2024 年 4 月 4 日下午 12:00 之前用任何以太坊代币为您的钱包充值，我们将在太平洋时间 2024 年 4 月 5 日下午 11:59 之前为您提供 5 美元的 ETH。\n\n这是对早期以太坊探索者的独家优惠。",
+      "expirationLabel": "过期 {{expirationLabelText}}",
+      "cta": "使用奖励"
+    }
+  },
+  "pleaseWait": "请稍等",
+  "error": "错误",
+  "linkPhoneNumber": {
+    "title": "将电话号码链接到钱包地址",
+    "description": "不再有杂乱无章的钱包地址！只需一个电话号码即可向其他 Celo 用户发送加密货币",
+    "startButtonLabel": "绑定电话号码",
+    "later": "我稍后再做"
+  },
+  "bottomTabsNavigator": {
+    "wallet": {
+      "tabName": "钱包",
+      "title": "我的钱包"
+    },
+    "home": {
+      "tabName": "主页",
+      "title": "欢迎"
+    },
+    "discover": {
+      "tabName": "探索",
+      "title": "探索"
+    }
+  },
+  "jumpstartStatus": {
+    "loading": {
+      "title": "您的资金正在到账中",
+      "description": "您朋友给您的资金正在汇入。请稍候... "
+    },
+    "error": {
+      "title": "无法领取资金",
+      "description": "再次尝试您的实时链接以尝试接收资金，或请您的朋友尝试发送一个新链接",
+      "contactSupport": "联系支持团队",
+      "dismiss": "忽略"
+    }
+  },
+  "jumpstartReclaim": {
+    "description": "恢复链接需要支付网络气体费用，您是否愿意继续？",
+    "fetchStatusError": {
+      "title": "哎呀，出错了",
+      "description": "我们无法获取该邀请的申请状态，请稍后再试或联系支持人员",
+      "retryCta": "重试"
+    },
+    "reclaimError": {
+      "title": "无法收回资金",
+      "description": "尝试再次回收，或联系支持人员"
+    }
+  },
+  "multiSelect": {
+    "switchNetwork": "交换网络",
+    "allNetworks": "所有网络"
+  },
+  "points": {
+    "title": "瓦洛拉积分",
+    "activity": "活动",
+    "history": {
+      "cards": {
+        "createWallet": {
+          "title": "钱包夹",
+          "subtitle": "{{appName}}成员"
+        },
+        "swap": {
+          "title": "交换",
+          "subtitle": "{{fromToken}} 至 {{toToken}}"
+        }
+      },
+      "title": "我的积分活动",
+      "error": {
+        "title": "无法加载点活动",
+        "subtitle": "哎呀，在加载您的积分活动提要时出了点问题。请重试。",
+        "tryAgain": "再试一次"
+      },
+      "empty": {
+        "title": "尚无积分活动",
+        "subtitle": "看来您还没有获得任何积分。使用 {{appName}} 开始赚取积分！",
+        "gotIt": "知道了"
+      },
+      "pageError": {
+        "title": "无法加载",
+        "subtitle": "哎呀，在尝试完成加载时出了点问题。请重试。",
+        "refresh": "刷新"
+      }
+    },
+    "fetchBalanceError": {
+      "title": "无法加载您的积分",
+      "description": "哎呀，在加载您的积分时出了点问题。本页面上的信息可能已经过时。请刷新。",
+      "retryCta": "刷新"
+    },
+    "loading": {
+      "title": "收集要点",
+      "description": "我们正在统计您的积分，请抓紧时间"
+    },
+    "error": {
+      "title": "无法加载点",
+      "description": "哎呀，在加载您的积分时出了点问题。请重试。",
+      "retryCta": "再试一次"
+    },
+    "infoCard": {
+      "title": "更多赚取积分的方法即将推出 🚀",
+      "body": "我们正在努力增加更多通过使用应用程序赚取积分的方法。请随时查看更新。"
+    },
+    "activitySection": {
+      "title": "如何获得积分？",
+      "body": "非常简单！只需使用该应用程序即可获得积分。"
+    },
+    "noActivities": {
+      "title": "更新以解锁更多积分 🔓",
+      "body": "哎呀！您使用的似乎是旧版本的 {{appName}}。立即更新，了解赚取积分的所有令人兴奋的新方法。"
+    },
+    "activityCards": {
+      "createWallet": {
+        "title": "创建 {{appName}}  钱包"
+      },
+      "swap": {
+        "title": "掉期资产",
+        "bottomSheet": {
+          "title": "掉期资产",
+          "body": "这个空格将用来提供这方面所需的所有细节。也许是交换的最低金额。 \n\n每当您使用 {{appName}}进行资产交换时，都可以赚取 {{pointsValue}} 积分。",
+          "cta": "去交换"
+        }
+      },
+      "moreComing": {
+        "title": "更多内容即将推出！"
+      }
+    }
+  },
+  "earnFlow": {
+    "addCryptoBottomSheet": {
+      "title": "在 {{tokenNetwork}}上添加 {{tokenSymbol}}",
+      "description": "一旦您添加了代币，您就必须回来完成存入池的工作。",
+      "actions": {
+        "add": "买入",
+        "transfer": "转让",
+        "swap": "交换"
+      },
+      "actionDescriptions": {
+        "add": "使用我们值得信赖的供应商之一在 {{tokenNetwork}} 上购买 {{tokenSymbol}}",
+        "transfer": "使用任何与 {{tokenNetwork}} 兼容的钱包或交易所存款 {{tokenSymbol}}",
+        "swap": "从另一个 {{tokenNetwork}} 令牌换入 {{tokenSymbol}}"
+      }
+    },
+    "cta": {
+      "title": "赚取稳定币",
+      "subtitle": "立即存款，赚取回报",
+      "description": "了解您在提供贷款池时能赚多少钱"
+    },
+    "activePools": {
+      "title": "活动泳池",
+      "totalValue": "总价值",
+      "apy": "~{{apy}}% APY",
+      "exitPool": "出口池",
+      "depositMore": "存款 更多",
+      "viewPools": "查看泳池"
+    },
+    "depositBottomSheet": {
+      "title": "审查和存款",
+      "description": "在向 Aave 奖池存款之前，请查看以下交易详情",
+      "amount": "已转入金额",
+      "fee": "估计天然气费",
+      "provider": "收入提供者",
+      "network": "网络",
+      "footer": "向 Aave 池存入加密货币，即表示您接受与使用 Aave 相关的风险。<0>条款和条件</0>",
+      "primaryCta": "完整",
+      "secondaryCta": "取消"
+    },
+    "collect": {
+      "title": "恭喜您查看并领取收益",
+      "total": "总计",
+      "plus": "加",
+      "rate": "比率（估计值）",
+      "apy": "~{{apy}}% APY",
+      "fee": "燃气费",
+      "cta": "收取收益"
+    }
   },
   "celoDollarAmount_0": "&amp;lt;0&amp;gt;&amp;lt;/0&amp;gt; Celo 美元"
 }

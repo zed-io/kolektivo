@@ -1,6 +1,5 @@
-import { fetchDappList, navigateToDappList } from '../utils/dappList'
-import { reloadReactNative } from '../utils/retries'
-import { getElementTextList, sleep, scrollIntoView, waitForElementId } from '../utils/utils'
+import { fetchDappList } from '../utils/dappList'
+import { getElementTextList, scrollIntoView } from '../utils/utils'
 import jestExpect from 'expect'
 
 export default DappListDisplay = () => {
@@ -17,18 +16,9 @@ export default DappListDisplay = () => {
     }
   })
 
-  it('should show dapp bottom sheet when dapp is selected', async () => {
-    await sleep(2000)
+  it('should open internal webview with correct dapp when dapp opened', async () => {
     await scrollIntoView(dappToTest.dapp.name, 'DAppsExplorerScreen/DappsList')
     await element(by.text(dappToTest.dapp.name)).tap()
-    await waitForElementId('ConfirmDappButton')
-    await waitFor(element(by.text(`Go to ${dappToTest.dapp.name}`)))
-      .toBeVisible()
-      .withTimeout(10 * 1000)
-  })
-
-  it('should open internal webview with correct dapp when dapp opened', async () => {
-    await element(by.id('ConfirmDappButton')).tap()
     await waitFor(element(by.id(`WebViewScreen/${dappToTest.dapp.name}`)))
       .toBeVisible()
       .withTimeout(10 * 1000)
@@ -37,15 +27,12 @@ export default DappListDisplay = () => {
     await waitFor(element(by.text(url.hostname)))
       .toBeVisible()
       .withTimeout(10 * 1000)
+    await element(by.id('WebViewScreen/CloseButton')).tap()
   })
 
   it(':ios: should correctly filter dapp list based on user agent', async () => {
-    const iOSDappList = await fetchDappList('Valora/1.0.0 (iOS 14.5; iPhone)')
-    await reloadReactNative()
-    await navigateToDappList()
-    // Give a few seconds for the dapp list to load
-    await sleep(5 * 1000)
-    const dappCards = await getElementTextList('DappCard')
+    const iOSDappList = await fetchDappList('Valora/1.0.0 (iOS 15.0; iPhone)')
+    const dappCards = await getElementTextList('DAppsExplorerScreen/AllSection/DappCard')
     jestExpect(dappCards.length).toEqual(iOSDappList.applications.length)
   })
 }

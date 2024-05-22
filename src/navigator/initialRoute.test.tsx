@@ -71,23 +71,23 @@ describe('initialRoute', () => {
     ).toEqual(Screens.VerificationStartScreen)
   })
 
-  it('returns drawer navigator if all onboarding complete', () => {
-    expect(getInitialRoute(defaultArgs)).toEqual(Screens.DrawerNavigator)
+  it('returns tab navigator if all onboarding complete', () => {
+    expect(getInitialRoute(defaultArgs)).toEqual(Screens.TabNavigator)
   })
 
-  it('returns drawer navigator if all onboarding complete and saved recovery phrase', () => {
+  it('returns tab navigator if all onboarding complete and saved recovery phrase', () => {
     expect(
       getInitialRoute({
         ...defaultArgs,
         recoveryPhraseInOnboardingStatus: RecoveryPhraseInOnboardingStatus.Completed,
       })
-    ).toEqual(Screens.DrawerNavigator)
+    ).toEqual(Screens.TabNavigator)
   })
 
-  it('returns drawer navigator if all onboarding complete, multichain beta is not seen and feature gate is off', () => {
+  it('returns tab navigator if all onboarding complete, multichain beta is not seen and feature gate is off', () => {
     expect(
       getInitialRoute({ ...defaultArgs, multichainBetaStatus: MultichainBetaStatus.NotSeen })
-    ).toEqual(Screens.DrawerNavigator)
+    ).toEqual(Screens.TabNavigator)
   })
 
   it('returns multichain beta if all onboarding complete, multichain beta is not seen and feature gate is on', () => {
@@ -97,17 +97,9 @@ describe('initialRoute', () => {
     ).toEqual(Screens.MultichainBeta)
   })
 
-  it('returns drawer navigator if all onboarding complete, multichain beta is opted in and feature gate is on', () => {
-    jest.mocked(getFeatureGate).mockReturnValue(true)
-    expect(
-      getInitialRoute({ ...defaultArgs, multichainBetaStatus: MultichainBetaStatus.OptedIn })
-    ).toEqual(Screens.DrawerNavigator)
-  })
-
-  it('returns drawer navigator if all onboarding complete, multichain beta is opted out and feature gate is on', () => {
-    jest.mocked(getFeatureGate).mockReturnValue(true)
+  it('returns tab navigator if all onboarding complete, multichain beta is opted out and feature gate is on', () => {
     expect(
       getInitialRoute({ ...defaultArgs, multichainBetaStatus: MultichainBetaStatus.OptedOut })
-    ).toEqual(Screens.DrawerNavigator)
+    ).toEqual(Screens.TabNavigator)
   })
 })

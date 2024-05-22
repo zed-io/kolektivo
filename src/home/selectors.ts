@@ -1,6 +1,8 @@
+import { isPast } from 'date-fns/isPast'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import { createSelector } from 'reselect'
+import { NftCelebrationStatus } from 'src/home/reducers'
 import { userLocationDataSelector } from 'src/networkInfo/selectors'
 import { RootState } from 'src/redux/reducers'
 import { getFeatureGate } from 'src/statsig'
@@ -34,3 +36,40 @@ export const cleverTapInboxMessagesSelector = (state: RootState) =>
   getFeatureGate(StatsigFeatureGates.CLEVERTAP_INBOX) ? state.home.cleverTapInboxMessages : []
 
 export const hasVisitedHomeSelector = (state: RootState) => state.home.hasVisitedHome
+
+export const nftCelebrationSelector = (state: RootState) => {
+  return state.home.nftCelebration
+}
+
+export const showNftCelebrationSelector = (state: RootState) => {
+  const featureGateEnabled = getFeatureGate(StatsigFeatureGates.SHOW_NFT_CELEBRATION)
+  if (!featureGateEnabled) {
+    return false
+  }
+
+  if (!state.home.nftCelebration) {
+    return false
+  }
+
+  return state.home.nftCelebration.status === NftCelebrationStatus.celebrationReadyToDisplay
+}
+
+export const showNftRewardSelector = (state: RootState) => {
+  const featureGateEnabled = getFeatureGate(StatsigFeatureGates.SHOW_NFT_REWARD)
+  if (!featureGateEnabled) {
+    return false
+  }
+
+  if (!state.home.nftCelebration) {
+    return false
+  }
+
+  if (isPast(new Date(state.home.nftCelebration.rewardExpirationDate))) {
+    return false
+  }
+
+  return (
+    state.home.nftCelebration.status === NftCelebrationStatus.rewardReadyToDisplay ||
+    state.home.nftCelebration.status === NftCelebrationStatus.reminderReadyToDisplay
+  )
+}

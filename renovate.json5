@@ -2,7 +2,7 @@
   extends: ['github>valora-inc/renovate-config:default.json5', ':disableDigestUpdates'],
 
   // Limit number of concurrent renovate branches/PRs, to avoid spamming the repo
-  prConcurrentLimit: 2,
+  prConcurrentLimit: 4,
 
   // timezone for automerge schedule
   timezone: 'America/Los_Angeles',
@@ -51,6 +51,9 @@
       // Group updates for @celo packages
       matchPackagePatterns: ['^@celo/'],
       groupName: 'celo',
+      // major upgrade has multiple breaking changes
+      // TODO(ACT-1088): enable once done
+      enabled: false,
     },
     {
       // Group updates for @testing-library packages
@@ -61,6 +64,8 @@
       // Group updates for @react-native-firebase packages
       matchPackagePatterns: ['^@react-native-firebase/'],
       groupName: 'react-native-firebase',
+      // TODO(ENG-105): enable once we have migrated away from react-native-sms-retriever
+      enabled: false,
     },
     {
       // Group updates for @segment packages
@@ -73,16 +78,8 @@
       groupName: 'prettier',
     },
   ],
-
   // A list of dependencies to be ignored by Renovate - "exact match" only
   ignoreDeps: [
-    // avoid upgrading WalletConnect since there is a bug introduced in 2.10.1 that CI does not cover
-    // TODO remove once WC bug resolved. https://linear.app/valora/issue/ACT-962/wallet-connect-no-matching-sessions
-    '@walletconnect/react-native-compat',
-    '@walletconnect/utils',
-    '@walletconnect/web3wallet',
-    '@walletconnect/legacy-types',
-    '@walletconnect/sign-client',
-    '@walletconnect/types',
+    'lottie-react-native', // TODO (act-1187): handle 6.x breaking changes and upgrade
   ],
 }

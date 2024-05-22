@@ -1,18 +1,16 @@
 import BigNumber from 'bignumber.js'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
-import { select } from 'redux-saga-test-plan/matchers'
 import { SendOrigin } from 'src/analytics/types'
 import { LocalCurrencyCode } from 'src/localCurrency/consts'
 import { fetchExchangeRate } from 'src/localCurrency/saga'
-import { usdToLocalCurrencyRateSelector } from 'src/localCurrency/selectors'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { UriData, urlFromUriData } from 'src/qrcode/schema'
 import { RecipientType } from 'src/recipients/recipient'
-import { TransactionDataInput } from 'src/send/SendAmount'
+import { TransactionDataInput } from 'src/send/types'
 import { handlePaymentDeeplink, handleSendPaymentData } from 'src/send/utils'
-import { getDynamicConfigParams, getFeatureGate } from 'src/statsig'
+import { getDynamicConfigParams } from 'src/statsig'
 import { NetworkId } from 'src/transactions/types'
 import { createMockStore } from 'test/utils'
 import {
@@ -30,10 +28,9 @@ import {
 jest.mock('src/statsig')
 
 describe('send/utils', () => {
-  describe('handlePaymentDeeplink', () => {
+  describe('handleSendPaymentData', () => {
     beforeEach(() => {
       jest.clearAllMocks()
-      jest.mocked(getFeatureGate).mockReturnValue(true)
       jest.mocked(getDynamicConfigParams).mockReturnValueOnce({
         showSend: [NetworkId['celo-alfajores']],
       })
@@ -55,20 +52,6 @@ describe('send/utils', () => {
         .run()
       expect(navigate).toHaveBeenCalledWith(
         Screens.SendEnterAmount,
-        expect.objectContaining({
-          origin: SendOrigin.AppSendFlow,
-          recipient: { address: mockData.address, recipientType: RecipientType.Address },
-          forceTokenId: false,
-        })
-      )
-    })
-    it('should navigate to SendAmount screen when no amount nor token is sent and useNewSend is false', async () => {
-      jest.mocked(getFeatureGate).mockReturnValue(false)
-      await expectSaga(handleSendPaymentData, mockData, false, undefined)
-        .withState(createMockStore({}).getState())
-        .run()
-      expect(navigate).toHaveBeenCalledWith(
-        Screens.SendAmount,
         expect.objectContaining({
           origin: SendOrigin.AppSendFlow,
           recipient: { address: mockData.address, recipientType: RecipientType.Address },
@@ -111,26 +94,10 @@ describe('send/utils', () => {
       )
     })
 
-    it('should throw an error when no local currency exchange rate is available', async () => {
-      await expect(
-        expectSaga(handleSendPaymentData, mockData, false, undefined)
-          .withState(
-            createMockStore({
-              localCurrency: {
-                usdToLocalRate: null,
-              },
-            }).getState()
-          )
-          .provide([
-            [matchers.call.fn(fetchExchangeRate), '1'],
-            [select(usdToLocalCurrencyRateSelector), '1'],
-          ])
-          .run()
-      ).rejects.toThrow("Precondition failed: Can't send tokens from payment data")
-      expect(navigate).not.toHaveBeenCalled()
-    })
-
     it('should navigate to SendConfirmation screen when amount and token are sent', async () => {
+      const mockState = createMockStore({}).getState()
+      // 1 PHP in cEUR: 1 (input) / 1.33 (PHP price) / 1.2 (cEUR price)
+      const expectedTokenAmount = new BigNumber('0.62656641604010025063')
       await expectSaga(
         handleSendPaymentData,
         // When currencyCode is not set, the amount is assumed to be in the currently selected local currency.
@@ -139,7 +106,7 @@ describe('send/utils', () => {
         false,
         undefined
       )
-        .withState(createMockStore({}).getState())
+        .withState(mockState)
         .provide([
           [matchers.call.fn(fetchExchangeRate), '1.33'], // USD to PHP
         ])
@@ -152,8 +119,7 @@ describe('send/utils', () => {
             inputAmount: new BigNumber(1), // 1 PHP
             amountIsInLocalCurrency: true,
             tokenAddress: mockCeurAddress,
-            // 1 PHP in cEUR: 1 (input) / 1.33 (PHP price) / 1.2 (cEUR price)
-            tokenAmount: new BigNumber('0.62656641604010025063'),
+            tokenAmount: expectedTokenAmount,
             tokenId: mockCeurTokenId,
           },
           origin: SendOrigin.AppSendFlow,
@@ -162,6 +128,9 @@ describe('send/utils', () => {
     })
 
     it('should navigate to SendConfirmation screen defaulting to cUSD when amount is sent but token isnt', async () => {
+      const mockState = createMockStore({}).getState()
+      // 1 PHP in cUSD: 1 (input) / 1.33 (PHP price)
+      const expectedTokenAmount = new BigNumber('0.75187969924812030075')
       await expectSaga(
         handleSendPaymentData,
         // When currencyCode is not set, the amount is assumed to be in the currently selected local currency.
@@ -171,7 +140,7 @@ describe('send/utils', () => {
         false,
         undefined
       )
-        .withState(createMockStore({}).getState())
+        .withState(mockState)
         .provide([
           [matchers.call.fn(fetchExchangeRate), '1.33'], // USD to PHP
         ])
@@ -185,33 +154,28 @@ describe('send/utils', () => {
             amountIsInLocalCurrency: true,
             tokenAddress: mockCusdAddress,
             tokenId: mockCusdTokenId,
-            // 1 PHP in cUSD: 1 (input) / 1.33 (PHP price)
-            tokenAmount: new BigNumber('0.75187969924812030075'),
+            tokenAmount: expectedTokenAmount,
           },
           origin: SendOrigin.AppSendFlow,
         })
       )
     })
 
-    it('should call handleSendPaymentData with parsed payment data', async () => {
-      const data = {
-        address: '0xf7f551752A78Ce650385B58364225e5ec18D96cB',
-        displayName: 'Super 8',
-        currencyCode: 'PHP' as LocalCurrencyCode,
-        amount: '500',
-        comment: '92a53156-c0f2-11ea-b3de-0242ac13000',
-      }
-
-      const deeplink = urlFromUriData(data)
-      const parsed: UriData = {
-        ...data,
-        e164PhoneNumber: undefined,
-        token: undefined,
-      }
-      await expectSaga(handlePaymentDeeplink, deeplink)
+    it('should navigate to SendEnterAmount screen when an unsupported token is given', async () => {
+      await expectSaga(handleSendPaymentData, mockUriData[2], false, undefined)
         .withState(createMockStore({}).getState())
-        .provide([[matchers.call.fn(handleSendPaymentData), parsed]])
         .run()
+      expect(navigate).toHaveBeenCalledWith(
+        Screens.SendEnterAmount,
+        expect.objectContaining({
+          origin: SendOrigin.AppSendFlow,
+          recipient: {
+            address: mockUriData[2].address.toLowerCase(),
+            recipientType: RecipientType.Address,
+          },
+          forceTokenId: false,
+        })
+      )
     })
 
     describe('deeplinks for sending cUSD', () => {
@@ -332,23 +296,30 @@ describe('send/utils', () => {
           })
         )
       })
+    })
+  })
 
-      it('should navigate to SendEnterAmount screen when an unsupported token is given', async () => {
-        await expectSaga(handleSendPaymentData, mockUriData[2], false, undefined)
-          .withState(createMockStore({}).getState())
-          .run()
-        expect(navigate).toHaveBeenCalledWith(
-          Screens.SendEnterAmount,
-          expect.objectContaining({
-            origin: SendOrigin.AppSendFlow,
-            recipient: {
-              address: mockUriData[2].address.toLowerCase(),
-              recipientType: RecipientType.Address,
-            },
-            forceTokenId: false,
-          })
-        )
-      })
+  describe('handlePaymentDeeplink', () => {
+    it('should call handleSendPaymentData with parsed payment data', async () => {
+      const data = {
+        address: '0xf7f551752A78Ce650385B58364225e5ec18D96cB',
+        displayName: 'Super 8',
+        currencyCode: 'PHP' as LocalCurrencyCode,
+        amount: '500',
+        comment: '92a53156-c0f2-11ea-b3de-0242ac13000',
+      }
+
+      const deeplink = urlFromUriData(data)
+      const parsed: UriData = {
+        ...data,
+        e164PhoneNumber: undefined,
+        token: undefined,
+      }
+      await expectSaga(handlePaymentDeeplink, deeplink)
+        .withState(createMockStore({}).getState())
+        .provide([[matchers.call.fn(handleSendPaymentData), undefined]])
+        .call(handleSendPaymentData, parsed, true)
+        .run()
     })
   })
 })

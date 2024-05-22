@@ -8,7 +8,7 @@ describe('Given PIN', () => {
     await device.uninstallApp()
     await device.installApp()
     await launchApp({
-      newInstance: false,
+      newInstance: true,
       permissions: { notifications: 'YES', contacts: 'YES' },
     })
     await quickOnboarding()

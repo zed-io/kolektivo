@@ -1,7 +1,6 @@
-import { AnyAction } from 'redux'
+import { Action } from '@reduxjs/toolkit'
 import { Actions, ActionTypes, AlertTypes } from 'src/alert/actions'
 import { ErrorMessages } from 'src/app/ErrorMessages'
-import { ActionTypes as ExchangeActionTypes } from 'src/exchange/actions'
 import { RootState } from 'src/redux/reducers'
 
 export enum ErrorDisplayType {
@@ -15,19 +14,16 @@ export interface Alert {
   message: string
   dismissAfter?: number | null
   buttonMessage?: string | null
-  action?: AnyAction | null
+  action?: Action | null
   title?: string | null
   underlyingError?: ErrorMessages | null
 }
 
-export type State = Alert | null
+type State = Alert | null
 
 const initialState = null
 
-export const reducer = (
-  state: State = initialState,
-  action: ActionTypes | ExchangeActionTypes
-): State => {
+export const reducer = (state: State = initialState, action: ActionTypes): State => {
   switch (action.type) {
     case Actions.SHOW:
       return {

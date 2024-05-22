@@ -1,19 +1,27 @@
+import { E2E_TEST_FAUCET } from '../../scripts/consts'
 import { launchApp, reloadReactNative } from '../utils/retries'
-import { inputNumberKeypad, quote } from '../utils/utils'
+import {
+  addComment,
+  confirmTransaction,
+  createCommentText,
+  enterPinUiIfNecessary,
+  quote,
+  waitForElementByIdAndTap,
+  waitForElementId,
+} from '../utils/utils'
 
 const deepLinks = {
-  withAll:
-    'celo://wallet/pay?address=0xC0509a7dcc69a0B28c7Ca73feD2FF06b9d59E5b9&amount=0.1&currencyCode=USD&token=cUSD&displayName=TestFaucet&comment=sending+usd:+0.1+to+my+wallet',
-  withoutAmount:
-    'celo://wallet/pay?address=0xC0509a7dcc69a0B28c7Ca73feD2FF06b9d59E5b9&currencyCode=USD&token=cUSD&displayName=TestFaucet&comment=sending+usd:+0.1+to+my+wallet',
   withoutAddress:
-    'celo://wallet/pay?amount=0.1&currencyCode=USD&token=cUSD&displayName=TestFaucet&comment=sending+usd:+0.1+to+my+wallet',
+    'celo://wallet/pay?amount=0.01&currencyCode=USD&token=cUSD&displayName=TestFaucet&comment=sending+usd:+0.1+to+my+wallet',
 }
 
 // Helper functions
-const launchDeepLink = async (url, newInstance = true) => {
+const launchDeepLink = async ({ url, newInstance = true }) => {
   await device.terminateApp()
-  await launchApp({ url: url, newInstance: newInstance })
+  await launchApp({
+    url,
+    newInstance,
+  })
 }
 
 const openDeepLink = async (payUrl) => {
@@ -23,80 +31,146 @@ const openDeepLink = async (payUrl) => {
 
 export default HandleDeepLinkSend = () => {
   describe('When Launching Deeplink - App Closed', () => {
+    let commentText
     it('Then should handle deeplink with all attributes', async () => {
-      const PAY_URL = quote(deepLinks.withAll)
-      await launchDeepLink(PAY_URL)
+      commentText = createCommentText()
+      await launchDeepLink({
+        url: `celo://wallet/pay?address=${E2E_TEST_FAUCET}&amount=0.01&currencyCode=USD&token=cUSD&displayName=TestFaucet&comment=${commentText}`,
+      })
       await waitFor(element(by.id('SendAmount')))
-        .toHaveText('$0.10')
+        .toHaveText('0.0067 cUSD') // alfajores uses 1.5 as price for all tokens
+        .withTimeout(10 * 1000)
+      await waitFor(element(by.id('SendAmountFiat')))
+        .toHaveText('$0.01')
         .withTimeout(10 * 1000)
       await waitFor(element(by.id('DisplayName')))
         .toHaveText('TestFaucet')
         .withTimeout(10 * 1000)
-      await waitFor(element(by.text('sending usd: 0.1 to my wallet')))
+      await waitFor(element(by.text(commentText)))
         .toBeVisible()
         .withTimeout(10 * 1000)
+
+      // Send Transaction
+      await element(by.id('ConfirmButton')).tap()
+      await enterPinUiIfNecessary()
+
+      // Return to home screen.
+      await waitFor(element(by.id('HomeAction-Send')))
+        .toBeVisible()
+        .withTimeout(30_000)
+
+      await confirmTransaction(commentText)
     })
 
     it('Then should handle deeplink without amount', async () => {
-      const PAY_URL = quote(deepLinks.withoutAmount)
-      await launchDeepLink(PAY_URL)
-      await inputNumberKeypad('0.1')
-      await element(by.id('Review')).tap()
+      commentText = createCommentText()
+      await launchDeepLink({
+        url: `celo://wallet/pay?address=${E2E_TEST_FAUCET}&currencyCode=USD&token=cUSD&displayName=TestFaucet&comment=${commentText}`,
+      })
+      await waitForElementId('SendEnterAmount/TokenSelect', 10_000)
+      await expect(element(by.text('cUSD')).atIndex(0)).toBeVisible()
+      await element(by.id('SendEnterAmount/TokenAmountInput')).replaceText('0.01')
+      await element(by.id('SendEnterAmount/TokenAmountInput')).tapReturnKey()
+      await waitForElementByIdAndTap('SendEnterAmount/ReviewButton', 30_000)
+
+      await addComment(commentText)
+
+      // Send Transaction
+      await element(by.id('ConfirmButton')).tap()
+      await enterPinUiIfNecessary()
+
+      // Return to home screen.
+      await waitFor(element(by.id('HomeAction-Send')))
+        .toBeVisible()
+        .withTimeout(30_000)
+
+      await confirmTransaction(commentText)
     })
 
     it('Then should error if no address provided', async () => {
       // TODO we should maybe throw an error to the user instead of silently failing
-      const PAY_URL = quote(deepLinks.withoutAddress)
-      await launchDeepLink(PAY_URL)
+      await launchDeepLink({
+        url: deepLinks.withoutAddress,
+      })
       await expect(element(by.id('SendAmount'))).not.toBeVisible()
     })
   })
 
   describe(':ios: When Launching Deeplink - App Backgrounded', () => {
+    let commentText
     beforeEach(async () => {
       await reloadReactNative()
       await device.sendToHome()
     })
 
     it('Then should handle deeplink with all attributes', async () => {
-      const PAY_URL = quote(deepLinks.withAll)
-      await launchDeepLink(PAY_URL, false)
+      commentText = createCommentText()
+      const deepLinksWithAll = `celo://wallet/pay?address=${E2E_TEST_FAUCET}&amount=0.01&currencyCode=USD&token=cUSD&displayName=TestFaucet&comment=${commentText}`
+      await launchDeepLink({ url: deepLinksWithAll, newInstance: false })
       await waitFor(element(by.id('SendAmount')))
-        .toHaveText('$0.10')
+        .toHaveText('0.0067 cUSD') // alfajores uses 1.5 as price for all tokens
+        .withTimeout(10 * 1000)
+      await waitFor(element(by.id('SendAmountFiat')))
+        .toHaveText('$0.01')
         .withTimeout(10 * 1000)
       await waitFor(element(by.id('DisplayName')))
         .toHaveText('TestFaucet')
         .withTimeout(10 * 1000)
-      await waitFor(element(by.text('sending usd: 0.1 to my wallet')))
+      await waitFor(element(by.text(commentText)))
         .toBeVisible()
         .withTimeout(10 * 1000)
+
+      // Send Transaction
+      await element(by.id('ConfirmButton')).tap()
+      await enterPinUiIfNecessary()
+
+      // Return to home screen.
+      await waitFor(element(by.id('HomeAction-Send')))
+        .toBeVisible()
+        .withTimeout(30_000)
+
+      await confirmTransaction(commentText)
     })
 
     it('Then should error if no address provided', async () => {
-      const PAY_URL = quote(deepLinks.withoutAddress)
-      await launchDeepLink(PAY_URL, false)
+      await launchDeepLink({ url: deepLinks.withoutAddress, newInstance: false })
       await expect(element(by.id('SendAmount'))).not.toBeVisible()
     })
   })
 
   describe(':ios: When Opening Deeplink - App in Foreground', () => {
+    let commentText
     it('Then should handle deeplink with all attributes', async () => {
-      const PAY_URL = quote(deepLinks.withAll)
-      await openDeepLink(PAY_URL)
+      commentText = createCommentText()
+      const deepLinksWithAll = `celo://wallet/pay?address=${E2E_TEST_FAUCET}&amount=0.01&currencyCode=USD&token=cUSD&displayName=TestFaucet&comment=${commentText}`
+      await openDeepLink(deepLinksWithAll)
       await waitFor(element(by.id('SendAmount')))
-        .toHaveText('$0.10')
+        .toHaveText('0.0067 cUSD') // alfajores uses 1.5 as price for all tokens
+        .withTimeout(10 * 1000)
+      await waitFor(element(by.id('SendAmountFiat')))
+        .toHaveText('$0.01')
         .withTimeout(10 * 1000)
       await waitFor(element(by.id('DisplayName')))
         .toHaveText('TestFaucet')
         .withTimeout(10 * 1000)
-      await waitFor(element(by.text('sending usd: 0.1 to my wallet')))
+      await waitFor(element(by.text(commentText)))
         .toBeVisible()
         .withTimeout(10 * 1000)
+
+      // Send Transaction
+      await element(by.id('ConfirmButton')).tap()
+      await enterPinUiIfNecessary()
+
+      // Return to home screen.
+      await waitFor(element(by.id('HomeAction-Send')))
+        .toBeVisible()
+        .withTimeout(30_000)
+
+      await confirmTransaction(commentText)
     })
 
     it('Then should error if no address provided', async () => {
-      const PAY_URL = quote(deepLinks.withoutAddress)
-      await openDeepLink(PAY_URL)
+      await openDeepLink(deepLinks.withoutAddress)
       await expect(element(by.id('SendAmount'))).not.toBeVisible()
     })
   })

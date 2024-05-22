@@ -4,10 +4,11 @@ on:
   # Run on pushes to main..
   push:
     branches:
-      - main
+      - kolektivo
   # ..and any pull request.
   pull_request:
   workflow_dispatch:
+  merge_group:
   # Cron job to run checks @ 8:30 pm daily on the latest commit on the default branch - main
   schedule:
     - cron: '30 20 * * *'
@@ -15,8 +16,8 @@ on:
 # Cancel any in progress run of the workflow for a given PR
 # This avoids building outdated code
 concurrency:
-  # Fallback used github.head_ref as it only defined on pull_request
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  # Fallback used github.ref_name as it is always defined
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:

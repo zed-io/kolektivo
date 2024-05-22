@@ -6,7 +6,7 @@ import { useNotifications } from 'src/home/NotificationCenter'
 import NotificationBellIcon from 'src/icons/NotificationBellIcon'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
-import { TopBarIconButton } from 'src/navigator/TopBarButton'
+import { TopBarIconButtonV2 } from 'src/navigator/TopBarIconButtonV2'
 import colors from 'src/styles/colors'
 
 interface Props {
@@ -15,23 +15,21 @@ interface Props {
   testID?: string
 }
 
-export default function NotificationBell({ style, size, testID }: Props) {
+export default function NotificationBell({ testID, size, style }: Props) {
   const notifications = useNotifications()
 
   const hasNotifications = notifications.length > 0
   const notificationMark = hasNotifications ? colors.primary : undefined
 
   const onPress = () => {
-    ValoraAnalytics.track(HomeEvents.notification_bell_pressed, {
-      hasNotifications,
-    })
+    ValoraAnalytics.track(HomeEvents.notification_bell_pressed, { hasNotifications })
     navigate(Screens.NotificationCenter)
   }
 
   return (
-    <TopBarIconButton
-      testID={testID}
+    <TopBarIconButtonV2
       icon={<NotificationBellIcon size={size} notificationMark={notificationMark} />}
+      testID={testID}
       onPress={onPress}
       style={style}
     />

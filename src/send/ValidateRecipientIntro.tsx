@@ -3,7 +3,6 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useDispatch } from 'react-redux'
 import { SendEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import CancelButton from 'src/components/CancelButton'
@@ -14,6 +13,7 @@ import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
 import { getDisplayName } from 'src/recipients/recipient'
+import { useDispatch } from 'src/redux/hooks'
 import { handleQRCodeDetectedSecureSend } from 'src/send/actions'
 import { QrCode } from 'src/send/types'
 import fontStyles from 'src/styles/fonts'
@@ -30,21 +30,13 @@ export const validateRecipientIntroScreenNavOptions = () => ({
 const ValidateRecipientIntro = ({ route }: Props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const {
-    transactionData,
-    requesterAddress,
-    origin,
-    recipient,
-    forceTokenId,
-    defaultTokenIdOverride,
-  } = route.params
+  const { requesterAddress, origin, recipient, forceTokenId, defaultTokenIdOverride } = route.params
 
   const onQRCodeDetected = (data: QrCode) => {
     dispatch(
       handleQRCodeDetectedSecureSend(
         data,
         recipient,
-        transactionData,
         requesterAddress,
         forceTokenId,
         defaultTokenIdOverride
@@ -66,7 +58,6 @@ const ValidateRecipientIntro = ({ route }: Props) => {
 
   const onPressConfirmAccount = () => {
     navigate(Screens.ValidateRecipientAccount, {
-      transactionData,
       requesterAddress,
       origin,
       recipient,

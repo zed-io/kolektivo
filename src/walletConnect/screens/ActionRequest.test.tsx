@@ -7,8 +7,6 @@ import * as React from 'react'
 import 'react-native'
 import { Provider } from 'react-redux'
 import { ActiveDapp, DappSection } from 'src/dapps/types'
-import { getFeatureGate } from 'src/statsig'
-import { StatsigFeatureGates } from 'src/statsig/types'
 import { SerializableTransactionRequest } from 'src/viem/preparedTransactionSerialization'
 import {
   acceptRequest as acceptRequestV2,
@@ -16,10 +14,7 @@ import {
 } from 'src/walletConnect/actions'
 import ActionRequest from 'src/walletConnect/screens/ActionRequest'
 import { createMockStore } from 'test/utils'
-import { mockAccount, mockAccount2, mockCusdAddress } from 'test/values'
-import { Address } from 'viem'
-
-jest.mock('src/statsig')
+import { mockAccount, mockAccount2 } from 'test/values'
 
 describe('ActionRequest with WalletConnect V2', () => {
   const v2Session: SessionTypes.Struct = {
@@ -100,6 +95,17 @@ describe('ActionRequest with WalletConnect V2', () => {
     },
   }
 
+  const sendTransactionAction = {
+    ...pendingAction,
+    params: {
+      ...pendingAction.params,
+      request: {
+        ...pendingAction.params.request,
+        method: 'eth_sendTransaction',
+      },
+    },
+  }
+
   const preparedTransaction: SerializableTransactionRequest = {
     from: mockAccount,
     to: mockAccount2,
@@ -112,7 +118,7 @@ describe('ActionRequest with WalletConnect V2', () => {
 
   const supportedChains = ['eip155:44787']
 
-  describe('ActionRequest with viem', () => {
+  describe('eth_sendTransaction', () => {
     const store = createMockStore({
       walletConnect: {
         sessions: [v2Session],
@@ -120,13 +126,7 @@ describe('ActionRequest with WalletConnect V2', () => {
     })
 
     beforeEach(() => {
-      jest.restoreAllMocks()
       store.clearActions()
-      jest
-        .mocked(getFeatureGate)
-        .mockImplementation(
-          (gate) => gate === StatsigFeatureGates.USE_VIEM_FOR_WALLETCONNECT_TRANSACTIONS
-        )
     })
 
     it('should display a dismiss-only bottom sheet if the user has insufficient gas funds', () => {
@@ -134,7 +134,7 @@ describe('ActionRequest with WalletConnect V2', () => {
         <Provider store={store}>
           <ActionRequest
             version={2}
-            pendingAction={pendingAction}
+            pendingAction={sendTransactionAction}
             supportedChains={supportedChains}
             hasInsufficientGasFunds={true}
             feeCurrenciesSymbols={['CELO']}
@@ -152,30 +152,40 @@ describe('ActionRequest with WalletConnect V2', () => {
 
       fireEvent.press(getByText('dismiss'))
       expect(store.getActions()).toEqual([
-        denyRequestV2(pendingAction, getSdkError('USER_REJECTED')),
+        denyRequestV2(sendTransactionAction, getSdkError('USER_REJECTED')),
+      ])
+    })
+
+    it("should display a dismiss-only bottom sheet if the transaction couldn't be prepared", () => {
+      const { getByText, queryByText } = render(
+        <Provider store={store}>
+          <ActionRequest
+            version={2}
+            pendingAction={sendTransactionAction}
+            supportedChains={supportedChains}
+            hasInsufficientGasFunds={false}
+            feeCurrenciesSymbols={['CELO']}
+            preparedTransaction={undefined}
+            prepareTransactionErrorMessage="execution reverted"
+          />
+        </Provider>
+      )
+
+      expect(getByText('walletConnectRequest.failedToPrepareTransaction.title')).toBeTruthy()
+      expect(
+        getByText(
+          'walletConnectRequest.failedToPrepareTransaction.description, {"errorMessage":"execution reverted"}'
+        )
+      ).toBeTruthy()
+      expect(queryByText('allow')).toBeFalsy()
+
+      fireEvent.press(getByText('dismiss'))
+      expect(store.getActions()).toEqual([
+        denyRequestV2(sendTransactionAction, getSdkError('USER_REJECTED')),
       ])
     })
 
     it('should accept the request with the prepared transaction', () => {
-      const preparedTransaction: SerializableTransactionRequest = {
-        type: 'cip42',
-        from: '0xfrom',
-        to: '0xto',
-        data: '0xdata',
-        gas: '2000',
-        maxFeePerGas: '1000000',
-        feeCurrency: mockCusdAddress as Address,
-      }
-      const sendTransactionAction = {
-        ...pendingAction,
-        params: {
-          ...pendingAction.params,
-          request: {
-            ...pendingAction.params.request,
-            method: 'eth_sendTransaction',
-          },
-        },
-      }
       const { getByText, getByTestId } = render(
         <Provider store={store}>
           <ActionRequest
@@ -194,7 +204,12 @@ describe('ActionRequest with WalletConnect V2', () => {
           JSON.stringify(preparedTransaction)
         )
       ).toBeTruthy()
-      expect(getByTestId('EstimatedNetworkFee')).toBeTruthy()
+      expect(
+        getByText('walletConnectRequest.estimatedNetworkFee, {"networkName":"Celo Alfajores"}')
+      ).toBeTruthy()
+      const fee = within(getByTestId('EstimatedNetworkFee'))
+      expect(fee.getByText('0.0012 CELO')).toBeTruthy()
+      expect(fee.getByText('₱0.008')).toBeTruthy()
 
       fireEvent.press(getByText('walletConnectRequest.sendTransactionAction'))
       expect(store.getActions()).toEqual([
@@ -208,9 +223,6 @@ describe('ActionRequest with WalletConnect V2', () => {
       walletConnect: {
         sessions: [v2Session],
       },
-      dapps: {
-        dappsMinimalDisclaimerEnabled: true,
-      },
     })
 
     beforeEach(() => {
@@ -218,7 +230,7 @@ describe('ActionRequest with WalletConnect V2', () => {
     })
 
     it('renders the correct elements', () => {
-      const { getByText, getByTestId } = render(
+      const { getByText, getByTestId, queryByTestId } = render(
         <Provider store={store}>
           <ActionRequest
             version={2}
@@ -226,7 +238,6 @@ describe('ActionRequest with WalletConnect V2', () => {
             supportedChains={supportedChains}
             hasInsufficientGasFunds={false}
             feeCurrenciesSymbols={['CELO']}
-            preparedTransaction={preparedTransaction}
           />
         </Provider>
       )
@@ -242,12 +253,7 @@ describe('ActionRequest with WalletConnect V2', () => {
         )
       ).toBeTruthy()
       expect(getByText('dappsDisclaimerUnlistedDapp')).toBeTruthy()
-      expect(
-        getByText('walletConnectRequest.estimatedNetworkFee, {"networkName":"Celo Alfajores"}')
-      ).toBeTruthy()
-      const fee = within(getByTestId('EstimatedNetworkFee'))
-      expect(fee.getByText('0.0012 CELO')).toBeTruthy()
-      expect(fee.getByText('₱0.008')).toBeTruthy()
+      expect(queryByTestId('EstimatedNetworkFee')).toBeFalsy()
     })
 
     it('copies the request payload', () => {

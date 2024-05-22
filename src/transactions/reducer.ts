@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect'
-import { ActionTypes as ExchangeActionTypes } from 'src/exchange/actions'
 import { NumberToRecipient } from 'src/recipients/recipient'
 import { getRehydratePayload, REHYDRATE, RehydrateAction } from 'src/redux/persist-helper'
 import { RootState } from 'src/redux/reducers'
@@ -23,7 +22,7 @@ export interface InviteTransactions {
 type TransactionsByNetworkId = {
   [networkId in NetworkId]?: TokenTransaction[]
 }
-export interface State {
+interface State {
   // Tracks transactions that have been initiated by the user
   // before they are picked up by the chain explorer and
   // included in the tx feed. Necessary so it shows up in the
@@ -57,7 +56,7 @@ const initialState = {
 
 export const reducer = (
   state: State | undefined = initialState,
-  action: ActionTypes | RehydrateAction | ExchangeActionTypes
+  action: ActionTypes | RehydrateAction
 ): State => {
   switch (action.type) {
     case REHYDRATE: {
@@ -212,10 +211,17 @@ export const transactionsByNetworkIdSelector = (state: RootState) =>
   state.transactions.transactionsByNetworkId
 
 export const transactionsSelector = createSelector(
-  [transactionsByNetworkIdSelector],
-  (transactions) => {
+  [transactionsByNetworkIdSelector, getSupportedNetworkIdsForApprovalTxsInHomefeed],
+  (transactions, supportedNetworkIdsForApprovalTxs) => {
     const transactionsForAllNetworks = Object.values(transactions).flat()
-    return transactionsForAllNetworks.sort((a, b) => b.timestamp - a.timestamp)
+    return transactionsForAllNetworks
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .filter((tx) => {
+        if (tx.__typename === 'TokenApproval') {
+          return supportedNetworkIdsForApprovalTxs.includes(tx.networkId)
+        }
+        return true
+      })
   }
 )
 

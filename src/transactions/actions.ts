@@ -4,6 +4,7 @@ import {
   Fee,
   NetworkId,
   PendingStandbyApproval,
+  PendingStandbyNFTTransfer,
   PendingStandbySwap,
   PendingStandbyTransfer,
   TokenTransaction,
@@ -21,10 +22,11 @@ export enum Actions {
   UPDATE_INVITE_TRANSACTIONS = 'TRANSACTIONS/UPDATE_INVITE_TRANSACTIONS',
 }
 
-type BaseStandbyTransaction =
+export type BaseStandbyTransaction =
   | Omit<PendingStandbyTransfer, 'timestamp' | 'status'>
   | Omit<PendingStandbySwap, 'timestamp' | 'status'>
   | Omit<PendingStandbyApproval, 'timestamp' | 'status'>
+  | Omit<PendingStandbyNFTTransfer, 'timestamp' | 'status'>
 
 export interface AddStandbyTransactionAction {
   type: Actions.ADD_STANDBY_TRANSACTION

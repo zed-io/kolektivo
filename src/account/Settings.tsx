@@ -1,11 +1,9 @@
-import { sleep } from '@celo/utils/lib/async'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import * as Sentry from '@sentry/react-native'
 import locales from 'locales'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,7 +12,7 @@ import {
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useDispatch, useSelector } from 'react-redux'
+import RevokePhoneNumber from 'src/RevokePhoneNumber'
 import {
   clearStoredAccount,
   devModeTriggerClicked,
@@ -27,6 +25,7 @@ import {
   devModeSelector,
   pincodeTypeSelector,
 } from 'src/account/selectors'
+import { showError } from 'src/alert/actions'
 import { SettingsEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import {
@@ -46,8 +45,10 @@ import {
   supportedBiometryTypeSelector,
   walletConnectEnabledSelector,
 } from 'src/app/selectors'
-import { BottomSheetRefType } from 'src/components/BottomSheet'
+import BottomSheet, { BottomSheetRefType } from 'src/components/BottomSheet'
+import Button, { BtnSizes, BtnTypes } from 'src/components/Button'
 import Dialog from 'src/components/Dialog'
+import { NotificationVariant } from 'src/components/InLineNotification'
 import SectionHead from 'src/components/SectionHead'
 import SessionId from 'src/components/SessionId'
 import {
@@ -56,21 +57,31 @@ import {
   SettingsItemSwitch,
   SettingsItemTextValue,
 } from 'src/components/SettingsItem'
+import Toast from 'src/components/Toast'
 import { PRIVACY_LINK, TOS_LINK } from 'src/config'
 import { currentLanguageSelector } from 'src/i18n/selectors'
+import ForwardChevron from 'src/icons/ForwardChevron'
+import LoadingSpinner from 'src/icons/LoadingSpinner'
+import {
+  deleteKeylessBackupStatusSelector,
+  showDeleteKeylessBackupErrorSelector,
+} from 'src/keylessBackup/selectors'
+import { deleteKeylessBackupStarted, hideDeleteKeylessBackupError } from 'src/keylessBackup/slice'
+import { KeylessBackupDeleteStatus } from 'src/keylessBackup/types'
 import { getLocalCurrencyCode } from 'src/localCurrency/selectors'
-import DrawerTopBar from 'src/navigator/DrawerTopBar'
 import { ensurePincode, navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
 import { removeStoredPin, setPincodeWithBiometry } from 'src/pincode/authentication'
-import RevokePhoneNumber from 'src/RevokePhoneNumber'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 import { getFeatureGate } from 'src/statsig/index'
 import { StatsigFeatureGates } from 'src/statsig/types'
 import colors from 'src/styles/colors'
 import fontStyles from 'src/styles/fonts'
-import { navigateToURI } from 'src/utils/linking'
+import { Spacing } from 'src/styles/styles'
 import Logger from 'src/utils/Logger'
+import { navigateToURI } from 'src/utils/linking'
+import { useRevokeCurrentPhoneNumber } from 'src/verify/hooks'
 import { selectSessions } from 'src/walletConnect/selectors'
 import { walletAddressSelector } from 'src/web3/selectors'
 
@@ -82,8 +93,10 @@ export const Account = ({ navigation, route }: Props) => {
   const promptConfirmRemovalModal = route.params?.promptConfirmRemovalModal
 
   const revokeBottomSheetRef = useRef<BottomSheetRefType>(null)
+  const deleteAccountBottomSheetRef = useRef<BottomSheetRefType>(null)
+  const resetAccountBottomSheetRef = useRef<BottomSheetRefType>(null)
 
-  const [showAccountKeyModal, setShowAccountKeyModal] = useState(false)
+  const revokeNumberAsync = useRevokeCurrentPhoneNumber()
 
   const sessionId = useSelector(sessionIdSelector)
   const account = useSelector(walletAddressSelector)
@@ -99,7 +112,8 @@ export const Account = ({ navigation, route }: Props) => {
   const hapticFeedbackEnabled = useSelector(hapticFeedbackEnabledSelector)
   const currentLanguage = useSelector(currentLanguageSelector)
   const cloudBackupCompleted = useSelector(cloudBackupCompletedSelector)
-
+  const deleteKeylessBackupStatus = useSelector(deleteKeylessBackupStatusSelector)
+  const showDeleteKeylessBackupError = useSelector(showDeleteKeylessBackupErrorSelector)
   const walletConnectEnabled = v2
   const connectedApplications = sessions.length
 
@@ -109,6 +123,10 @@ export const Account = ({ navigation, route }: Props) => {
     }
   }, [])
 
+  const onDismissKeylessBackupError = () => {
+    dispatch(hideDeleteKeylessBackupError())
+  }
+
   const goToProfile = () => {
     ValoraAnalytics.track(SettingsEvents.settings_profile_edit)
     navigate(Screens.Profile)
@@ -116,7 +134,7 @@ export const Account = ({ navigation, route }: Props) => {
 
   const goToConfirmNumber = () => {
     ValoraAnalytics.track(SettingsEvents.settings_verify_number)
-    navigate(Screens.VerificationStartScreen)
+    navigate(Screens.VerificationStartScreen, { hasOnboarded: true })
   }
 
   const goToLanguageSetting = () => {
@@ -257,26 +275,37 @@ export const Account = ({ navigation, route }: Props) => {
   }
 
   const onRemoveAccountPress = () => {
-    setShowAccountKeyModal(true)
+    resetAccountBottomSheetRef.current?.snapToIndex(0)
   }
 
-  const hideRemoveAccountModal = () => {
-    setShowAccountKeyModal(false)
+  const onDeleteAccountPress = () => {
+    ValoraAnalytics.track(SettingsEvents.settings_delete_account)
+    deleteAccountBottomSheetRef.current?.snapToIndex(0)
+  }
+
+  const handleDeleteAccount = async () => {
+    ValoraAnalytics.track(SettingsEvents.settings_delete_account_confirm)
+
+    if (numberVerified) {
+      try {
+        await revokeNumberAsync.execute()
+      } catch (error) {
+        dispatch(showError(t('revokePhoneNumber.revokeError')))
+        return
+      }
+    }
+
+    deleteAccountBottomSheetRef.current?.close()
+    return onPressContinueWithAccountRemoval()
   }
 
   const onPressContinueWithAccountRemoval = async () => {
     try {
-      setShowAccountKeyModal(false)
-      // Ugly hack to wait for the modal to close,
-      // otherwise the native modal PIN entry will not show up
-      // TODO: stop using ReactNative modals and switch to react-navigation modals
-      if (Platform.OS === 'ios') {
-        await sleep(500)
-      }
+      resetAccountBottomSheetRef.current?.close()
       const pinIsCorrect = await ensurePincode()
       if (pinIsCorrect) {
         ValoraAnalytics.track(SettingsEvents.start_account_removal)
-        navigate(Screens.BackupPhrase, { navigatedFromSettings: true })
+        navigate(Screens.BackupPhrase, { isAccountRemoval: true })
       }
     } catch (error) {
       Logger.error('SettingsItem@onPress', 'PIN ensure error', error)
@@ -301,7 +330,7 @@ export const Account = ({ navigation, route }: Props) => {
 
   const onPressDeleteKeylessBackup = () => {
     ValoraAnalytics.track(SettingsEvents.settings_delete_keyless_backup)
-    // TODO(ACT-766): invoke API to delete and update status
+    dispatch(deleteKeylessBackupStarted())
   }
 
   const wipeReduxStore = () => {
@@ -348,9 +377,64 @@ export const Account = ({ navigation, route }: Props) => {
 
   const showKeylessBackup = getFeatureGate(StatsigFeatureGates.SHOW_CLOUD_ACCOUNT_BACKUP_SETUP)
 
+  const getKeylessBackupItem = () => {
+    if (!showKeylessBackup) {
+      return null
+    }
+    if (deleteKeylessBackupStatus === KeylessBackupDeleteStatus.InProgress) {
+      return (
+        <SettingsItemCta
+          title={t('keylessBackupSettingsTitle')}
+          onPress={() => {
+            // do nothing
+          }}
+          testID="KeylessBackup"
+          cta={
+            <>
+              <LoadingSpinner width={22} />
+              <Text testID={`KeylessBackup/cta`} style={styles.value}>
+                {t('pleaseWait')}
+              </Text>
+            </>
+          }
+        />
+      )
+    } else if (cloudBackupCompleted) {
+      return (
+        <SettingsItemCta
+          title={t('keylessBackupSettingsTitle')}
+          onPress={onPressDeleteKeylessBackup}
+          testID="KeylessBackup"
+          cta={
+            <>
+              <Text testID={`KeylessBackup/cta`} style={styles.value}>
+                {t('delete')}
+              </Text>
+            </>
+          }
+        />
+      )
+    } else {
+      return (
+        <SettingsItemCta
+          title={t('keylessBackupSettingsTitle')}
+          onPress={onPressSetUpKeylessBackup}
+          testID="KeylessBackup"
+          cta={
+            <>
+              <Text testID={`KeylessBackup/cta`} style={styles.value}>
+                {t('setup')}
+              </Text>
+              <ForwardChevron />
+            </>
+          }
+        />
+      )
+    }
+  }
+
   return (
-    <SafeAreaView style={styles.container}>
-      <DrawerTopBar />
+    <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
       <ScrollView testID="SettingsScrollView">
         <TouchableWithoutFeedback onPress={onDevSettingsTriggerPress}>
           <Text style={styles.title} testID={'SettingsTitle'}>
@@ -392,18 +476,7 @@ export const Account = ({ navigation, route }: Props) => {
             onPress={goToRecoveryPhrase}
             testID="RecoveryPhrase"
           />
-          {showKeylessBackup && (
-            <SettingsItemCta
-              title={t('keylessBackupSettingsTitle')}
-              onPress={
-                cloudBackupCompleted ? onPressDeleteKeylessBackup : onPressSetUpKeylessBackup
-              }
-              testID="KeylessBackup"
-              ctaText={cloudBackupCompleted ? t('delete') : t('setup')}
-              ctaColor={cloudBackupCompleted ? colors.error : colors.primary}
-              showChevron={!cloudBackupCompleted}
-            />
-          )}
+          {getKeylessBackupItem()}
           <SettingsItemTextValue
             title={t('changePin')}
             onPress={goToChangePin}
@@ -458,21 +531,14 @@ export const Account = ({ navigation, route }: Props) => {
             onPress={onRemoveAccountPress}
             testID="ResetAccount"
           />
+          <SettingsExpandedItem
+            title={t('deleteAccountTitle')}
+            details={t('deleteAccountDetails')}
+            onPress={onDeleteAccountPress}
+            testID="DeleteAccount"
+          />
         </View>
         {getDevSettingsComp()}
-        <Dialog
-          isVisible={showAccountKeyModal}
-          title={t('accountKeyModal.header')}
-          actionText={t('continue')}
-          actionPress={onPressContinueWithAccountRemoval}
-          secondaryActionText={t('cancel')}
-          secondaryActionPress={hideRemoveAccountModal}
-          testID="RemoveAccountModal"
-        >
-          {t('accountKeyModal.body1')}
-          {'\n\n'}
-          {t('accountKeyModal.body2')}
-        </Dialog>
         <Dialog
           isVisible={!!promptConfirmRemovalModal}
           title={t('promptConfirmRemovalModal.header')}
@@ -485,8 +551,55 @@ export const Account = ({ navigation, route }: Props) => {
           {t('promptConfirmRemovalModal.body')}
         </Dialog>
       </ScrollView>
-
+      <Toast
+        withBackdrop
+        variant={NotificationVariant.Warning}
+        description={t('keylessBackupSettingsDeleteError')}
+        showToast={showDeleteKeylessBackupError}
+        onPressCta={onDismissKeylessBackupError}
+        onUnmount={onDismissKeylessBackupError}
+        onDismiss={onDismissKeylessBackupError}
+        ctaLabel={t('dismiss')}
+        title={t('error')}
+        testID="KeylessBackupDeleteError"
+      />
       <RevokePhoneNumber forwardedRef={revokeBottomSheetRef} />
+      <BottomSheet
+        forwardedRef={resetAccountBottomSheetRef}
+        title={t('accountKeyModal.header')}
+        description={`${t('accountKeyModal.body1')}\n\n${t('accountKeyModal.body2')}`}
+        testId="ResetAccountBottomSheet"
+      >
+        <Button
+          style={{ marginTop: Spacing.Regular16 }}
+          size={BtnSizes.FULL}
+          type={BtnTypes.SECONDARY}
+          onPress={onPressContinueWithAccountRemoval}
+          text={t('continue')}
+          disabled={revokeNumberAsync.loading}
+          testID="ResetAccountButton"
+        />
+      </BottomSheet>
+      <BottomSheet
+        forwardedRef={deleteAccountBottomSheetRef}
+        title={t('deleteAccountWarning.title')}
+        description={t('deleteAccountWarning.description')}
+        testId="DeleteAccountBottomSheet"
+      >
+        <Button
+          style={styles.bottomSheetButton}
+          size={BtnSizes.FULL}
+          type={BtnTypes.SECONDARY}
+          onPress={handleDeleteAccount}
+          text={
+            revokeNumberAsync.loading
+              ? t('deleteAccountWarning.buttonLabelRevokingPhoneNumber')
+              : t('deleteAccountWarning.buttonLabel')
+          }
+          disabled={revokeNumberAsync.loading}
+          testID="DeleteAccountButton"
+        />
+      </BottomSheet>
     </SafeAreaView>
   )
 }
@@ -520,6 +633,15 @@ const styles = StyleSheet.create({
   },
   spacer: {
     height: 80,
+  },
+  bottomSheetButton: {
+    marginTop: Spacing.Regular16,
+  },
+  value: {
+    ...fontStyles.regular,
+    color: colors.gray4,
+    marginRight: Spacing.Smallest8,
+    marginLeft: 4,
   },
 })
 

@@ -1,15 +1,15 @@
 import { Platform } from 'react-native'
 import { BIOMETRY_TYPE } from 'react-native-keychain'
 import { Actions, ActionTypes, AppState, MultichainBetaStatus } from 'src/app/actions'
+import { CeloNewsConfig } from 'src/celoNews/types'
 import { SuperchargeTokenConfigByToken } from 'src/consumerIncentives/types'
-import { CeloNewsConfig } from 'src/exchange/types'
 import { REMOTE_CONFIG_VALUES_DEFAULTS } from 'src/firebase/remoteConfigValuesDefaults'
 import { Screens } from 'src/navigator/Screens'
 import { getRehydratePayload, REHYDRATE, RehydrateAction } from 'src/redux/persist-helper'
 
 const PERSISTED_DEEP_LINKS = ['https://valoraapp.com/share', 'celo://wallet/jumpstart']
 
-export interface State {
+interface State {
   loggedIn: boolean
   numberVerified: boolean // decentrally verified
   phoneNumberVerified: boolean // centrally verified
@@ -21,9 +21,7 @@ export interface State {
   sessionId: string
   minVersion: string | null
   celoEducationUri: string | null
-  celoEuroEnabled: boolean
   activeScreen: Screens
-  walletConnectV1Enabled: boolean
   walletConnectV2Enabled: boolean
   superchargeApy: number
   superchargeTokenConfigByToken: SuperchargeTokenConfigByToken
@@ -33,18 +31,11 @@ export interface State {
   googleMobileServicesAvailable?: boolean
   huaweiMobileServicesAvailable?: boolean
   pincodeUseExpandedBlocklist: boolean
-  rewardPillText?: {
-    [lang: string]: string
-  }
-  rampCashInButtonExpEnabled: boolean
   sentryTracesSampleRate: number
   sentryNetworkErrors: string[]
   supportedBiometryType: BIOMETRY_TYPE | null
-  skipVerification: boolean
-  showPriceChangeIndicatorInBalances: boolean
   fiatConnectCashInEnabled: boolean
   fiatConnectCashOutEnabled: boolean
-  visualizeNFTsEnabledInHomeAssetsPage: boolean
   coinbasePayEnabled: boolean
   showSwapMenuInDrawerMenu: boolean
   maxSwapSlippagePercentage: number
@@ -56,7 +47,7 @@ export interface State {
   pushNotificationsEnabled: boolean
   inAppReviewLastInteractionTimestamp: number | null
   showNotificationSpotlight: boolean
-  hideHomeBalances: boolean
+  hideBalances: boolean
   multichainBetaStatus: MultichainBetaStatus
   pendingDeepLinks: PendingDeepLink[]
 }
@@ -78,9 +69,7 @@ const initialState = {
   sessionId: '',
   minVersion: null,
   celoEducationUri: null,
-  celoEuroEnabled: REMOTE_CONFIG_VALUES_DEFAULTS.celoEuroEnabled,
   activeScreen: Screens.Main,
-  walletConnectV1Enabled: REMOTE_CONFIG_VALUES_DEFAULTS.walletConnectV1Enabled,
   walletConnectV2Enabled: REMOTE_CONFIG_VALUES_DEFAULTS.walletConnectV2Enabled,
   superchargeApy: REMOTE_CONFIG_VALUES_DEFAULTS.superchargeApy,
   superchargeTokenConfigByToken: JSON.parse(
@@ -90,18 +79,11 @@ const initialState = {
   googleMobileServicesAvailable: undefined,
   huaweiMobileServicesAvailable: undefined,
   pincodeUseExpandedBlocklist: REMOTE_CONFIG_VALUES_DEFAULTS.pincodeUseExpandedBlocklist,
-  rewardPillText: JSON.parse(REMOTE_CONFIG_VALUES_DEFAULTS.rewardPillText),
-  rampCashInButtonExpEnabled: REMOTE_CONFIG_VALUES_DEFAULTS.rampCashInButtonExpEnabled,
   sentryTracesSampleRate: REMOTE_CONFIG_VALUES_DEFAULTS.sentryTracesSampleRate,
   sentryNetworkErrors: REMOTE_CONFIG_VALUES_DEFAULTS.sentryNetworkErrors.split(','),
   supportedBiometryType: null,
-  skipVerification: REMOTE_CONFIG_VALUES_DEFAULTS.skipVerification,
-  showPriceChangeIndicatorInBalances:
-    REMOTE_CONFIG_VALUES_DEFAULTS.showPriceChangeIndicatorInBalances,
   fiatConnectCashInEnabled: REMOTE_CONFIG_VALUES_DEFAULTS.fiatConnectCashInEnabled,
   fiatConnectCashOutEnabled: REMOTE_CONFIG_VALUES_DEFAULTS.fiatConnectCashOutEnabled,
-  visualizeNFTsEnabledInHomeAssetsPage:
-    REMOTE_CONFIG_VALUES_DEFAULTS.visualizeNFTsEnabledInHomeAssetsPage,
   coinbasePayEnabled: REMOTE_CONFIG_VALUES_DEFAULTS.coinbasePayEnabled,
   showSwapMenuInDrawerMenu: REMOTE_CONFIG_VALUES_DEFAULTS.showSwapMenuInDrawerMenu,
   maxSwapSlippagePercentage: REMOTE_CONFIG_VALUES_DEFAULTS.maxSwapSlippagePercentage,
@@ -113,7 +95,7 @@ const initialState = {
   pushNotificationsEnabled: false,
   inAppReviewLastInteractionTimestamp: null,
   showNotificationSpotlight: false,
-  hideHomeBalances: false,
+  hideBalances: false,
   multichainBetaStatus: MultichainBetaStatus.NotSeen,
   pendingDeepLinks: [],
 }
@@ -213,23 +195,15 @@ export const appReducer = (
       return {
         ...state,
         celoEducationUri: action.configValues.celoEducationUri,
-        celoEuroEnabled: action.configValues.celoEuroEnabled,
-        walletConnectV1Enabled: action.configValues.walletConnectV1Enabled,
         walletConnectV2Enabled: action.configValues.walletConnectV2Enabled,
         superchargeApy: action.configValues.superchargeApy,
         superchargeTokenConfigByToken: action.configValues.superchargeTokenConfigByToken,
         logPhoneNumberTypeEnabled: action.configValues.logPhoneNumberTypeEnabled,
         pincodeUseExpandedBlocklist: action.configValues.pincodeUseExpandedBlocklist,
-        rewardPillText: JSON.parse(action.configValues.rewardPillText),
-        rampCashInButtonExpEnabled: action.configValues.rampCashInButtonExpEnabled,
         sentryTracesSampleRate: action.configValues.sentryTracesSampleRate,
         sentryNetworkErrors: action.configValues.sentryNetworkErrors,
-        skipVerification: action.configValues.skipVerification,
-        showPriceChangeIndicatorInBalances: action.configValues.showPriceChangeIndicatorInBalances,
         fiatConnectCashInEnabled: action.configValues.fiatConnectCashInEnabled,
         fiatConnectCashOutEnabled: action.configValues.fiatConnectCashOutEnabled,
-        visualizeNFTsEnabledInHomeAssetsPage:
-          action.configValues.visualizeNFTsEnabledInHomeAssetsPage,
         coinbasePayEnabled: action.configValues.coinbasePayEnabled,
         showSwapMenuInDrawerMenu: action.configValues.showSwapMenuInDrawerMenu,
         maxSwapSlippagePercentage: action.configValues.maxSwapSlippagePercentage,
@@ -291,10 +265,10 @@ export const appReducer = (
         ...state,
         inAppReviewLastInteractionTimestamp: action.inAppReviewLastInteractionTimestamp,
       }
-    case Actions.TOGGLE_HIDE_HOME_BALANCES:
+    case Actions.TOGGLE_HIDE_BALANCES:
       return {
         ...state,
-        hideHomeBalances: !state.hideHomeBalances,
+        hideBalances: !state.hideBalances,
       }
     case Actions.OPT_MULTICHAIN_BETA:
       return {

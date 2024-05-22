@@ -3,7 +3,6 @@ import { AttestationStat, AttestationsWrapper } from '@celo/contractkit/lib/wrap
 import { isValidAddress } from '@celo/utils/lib/address'
 import { isAccountConsideredVerified } from '@celo/utils/lib/attestations'
 import BigNumber from 'bignumber.js'
-import crypto from 'crypto'
 import { Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import { setUserContactDetails } from 'src/account/actions'
@@ -47,10 +46,10 @@ import { SentryTransaction } from 'src/sentry/SentryTransactions'
 import { getFeatureGate } from 'src/statsig'
 import { StatsigFeatureGates } from 'src/statsig/types'
 import Logger from 'src/utils/Logger'
-import { getAllContacts } from 'src/utils/contacts'
+import { getAllContacts, hasGrantedContactsPermission } from 'src/utils/contacts'
 import { ensureError } from 'src/utils/ensureError'
 import { fetchWithTimeout } from 'src/utils/fetchWithTimeout'
-import { checkContactsPermission } from 'src/utils/permissions'
+import { calculateSha256Hash } from 'src/utils/random'
 import { getContractKit } from 'src/web3/contracts'
 import networkConfig from 'src/web3/networkConfig'
 import { getConnectedAccount } from 'src/web3/saga'
@@ -92,8 +91,8 @@ export function* doImportContactsWrapper() {
 }
 
 function* doImportContacts() {
-  const hasGivenContactPermission: boolean = yield* call(checkContactsPermission)
-  if (!hasGivenContactPermission) {
+  const contactPermissionStatusGranted = yield* call(hasGrantedContactsPermission)
+  if (!contactPermissionStatusGranted) {
     Logger.warn(TAG, 'Contact permissions denied. Skipping import.')
     ValoraAnalytics.track(IdentityEvents.contacts_import_permission_denied)
     return true
@@ -420,18 +419,11 @@ export function getAddressFromPhoneNumber(
   return addresses[0]
 }
 
-function calculateHash(str: string) {
-  const hash = crypto.createHash('sha256')
-  hash.update(str)
-  return hash.digest('hex')
-}
-
 export function* saveContacts() {
   try {
     const saveContactsGate = getFeatureGate(StatsigFeatureGates.SAVE_CONTACTS)
     const phoneVerified = yield* select(phoneNumberVerifiedSelector)
-    // TODO(satish): use rn permissions
-    const contactsEnabled: boolean = yield* call(checkContactsPermission)
+    const contactsEnabled = yield* call(hasGrantedContactsPermission)
 
     if (!saveContactsGate || !phoneVerified || !contactsEnabled) {
       Logger.debug(`${TAG}/saveContacts`, "Skipping because pre conditions aren't met", {
@@ -447,7 +439,7 @@ export function* saveContacts() {
     const contacts = Object.keys(recipientCache).sort()
     const lastSavedContactsHash = yield* select(lastSavedContactsHashSelector)
 
-    const hash = calculateHash(`${ownPhoneNumber}:${contacts.join(',')}`)
+    const hash = calculateSha256Hash(`${ownPhoneNumber}:${contacts.join(',')}`)
 
     if (hash === lastSavedContactsHash) {
       Logger.debug(

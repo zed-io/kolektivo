@@ -4,13 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { Platform, StyleSheet, Text, View } from 'react-native'
 import { getFontScaleSync } from 'react-native-device-info'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useDispatch } from 'react-redux'
 import { isAddressFormat } from 'src/account/utils'
 import { SendEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import { SendOrigin } from 'src/analytics/types'
 import Button, { BtnSizes } from 'src/components/Button'
-import InLineNotification, { Severity } from 'src/components/InLineNotification'
+import InLineNotification, { NotificationVariant } from 'src/components/InLineNotification'
 import InviteOptionsModal from 'src/components/InviteOptionsModal'
 import KeyboardAwareScrollView from 'src/components/KeyboardAwareScrollView'
 import CircledIcon from 'src/icons/CircledIcon'
@@ -31,7 +30,7 @@ import { TopBarIconButton } from 'src/navigator/TopBarButton'
 import { StackParamList } from 'src/navigator/types'
 import RecipientPicker from 'src/recipients/RecipientPickerV2'
 import { Recipient, RecipientType, recipientHasNumber } from 'src/recipients/recipient'
-import useSelector from 'src/redux/useSelector'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 import InviteRewardsCard from 'src/send/InviteRewardsCard'
 import PasteAddressButton from 'src/send/PasteAddressButton'
 import SelectRecipientButtons from 'src/send/SelectRecipientButtons'
@@ -402,7 +401,7 @@ function SendSelectRecipient({ route }: Props) {
       )}
       {showUnknownAddressInfo && (
         <InLineNotification
-          severity={Severity.Informational}
+          variant={NotificationVariant.Info}
           description={t('sendSelectRecipient.unknownAddressInfo')}
           testID="UnknownAddressInfo"
           style={styles.unknownAddressInfo}

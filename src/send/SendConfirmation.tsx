@@ -1,10 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import BigNumber from 'bignumber.js'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useDispatch } from 'react-redux'
 import { showError } from 'src/alert/actions'
 import { SendEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
@@ -13,7 +11,6 @@ import BackButton from 'src/components/BackButton'
 import CommentTextInput from 'src/components/CommentTextInput'
 import ContactCircle from 'src/components/ContactCircle'
 import Dialog from 'src/components/Dialog'
-import LegacyFeeDrawer from 'src/components/LegacyFeeDrawer'
 import LineItemRow from 'src/components/LineItemRow'
 import ReviewFrame from 'src/components/ReviewFrame'
 import ShortenedAddress from 'src/components/ShortenedAddress'
@@ -21,37 +18,34 @@ import TokenDisplay from 'src/components/TokenDisplay'
 import TokenTotalLineItem from 'src/components/TokenTotalLineItem'
 import Touchable from 'src/components/Touchable'
 import CustomHeader from 'src/components/header/CustomHeader'
-import { FeeType, estimateFee } from 'src/fees/reducer'
-import { feeEstimatesSelector } from 'src/fees/selectors'
 import InfoIcon from 'src/icons/InfoIcon'
-import { getAddressFromPhoneNumber } from 'src/identity/contactMapping'
-import { getSecureSendAddress } from 'src/identity/secureSend'
 import {
   addressToDataEncryptionKeySelector,
   e164NumberToAddressSelector,
-  secureSendPhoneNumberMappingSelector,
 } from 'src/identity/selectors'
 import { getLocalCurrencyCode } from 'src/localCurrency/selectors'
 import { noHeader } from 'src/navigator/Headers'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
-import { Recipient, RecipientType, getDisplayName } from 'src/recipients/recipient'
-import useSelector from 'src/redux/useSelector'
-import { useInputAmounts } from 'src/send/SendAmount'
-import { sendPayment } from 'src/send/actions'
-import { isSendingSelector } from 'src/send/selectors'
+import { getDisplayName } from 'src/recipients/recipient'
+import { useDispatch, useSelector } from 'src/redux/hooks'
+import { encryptComment, sendPayment } from 'src/send/actions'
+import {
+  encryptedCommentSelector,
+  isEncryptingCommentSelector,
+  isSendingSelector,
+} from 'src/send/selectors'
+import { usePrepareSendTransactions } from 'src/send/usePrepareSendTransactions'
 import DisconnectBanner from 'src/shared/DisconnectBanner'
-import { getFeatureGate } from 'src/statsig'
-import { StatsigFeatureGates } from 'src/statsig/types'
 import colors from 'src/styles/colors'
-import fontStyles, { typeScale } from 'src/styles/fonts'
+import { typeScale } from 'src/styles/fonts'
 import { iconHitslop } from 'src/styles/variables'
-import { useTokenInfo } from 'src/tokens/hooks'
+import { useAmountAsUsd, useTokenInfo, useTokenToLocalAmount } from 'src/tokens/hooks'
+import { feeCurrenciesSelector } from 'src/tokens/selectors'
 import { tokenSupportsComments } from 'src/tokens/utils'
-import { Network } from 'src/transactions/types'
-import networkConfig from 'src/web3/networkConfig'
-import { isDekRegisteredSelector } from 'src/web3/selectors'
-import { getNetworkFromNetworkId } from 'src/web3/utils'
+import { getFeeCurrencyAndAmounts } from 'src/viem/prepareTransactions'
+import { getSerializablePreparedTransaction } from 'src/viem/preparedTransactionSerialization'
+import { walletAddressSelector } from 'src/web3/selectors'
 
 type OwnProps = NativeStackScreenProps<
   StackParamList,
@@ -59,155 +53,139 @@ type OwnProps = NativeStackScreenProps<
 >
 type Props = OwnProps
 
+const DEBOUNCE_TIME_MS = 250
+
 export const sendConfirmationScreenNavOptions = noHeader
-
-export function useRecipientToSendTo(paramRecipient: Recipient) {
-  const secureSendPhoneNumberMapping = useSelector(secureSendPhoneNumberMappingSelector)
-  const e164NumberToAddress = useSelector(e164NumberToAddressSelector)
-  return useMemo(() => {
-    if (!paramRecipient.address && paramRecipient.e164PhoneNumber) {
-      const recipientAddress = getAddressFromPhoneNumber(
-        paramRecipient.e164PhoneNumber,
-        e164NumberToAddress,
-        secureSendPhoneNumberMapping,
-        undefined
-      )
-
-      return {
-        ...paramRecipient,
-        // Setting the phone number explicitly so Typescript doesn't complain
-        e164PhoneNumber: paramRecipient.e164PhoneNumber,
-        address: recipientAddress ?? undefined,
-        recipientType: RecipientType.PhoneNumber,
-      }
-    }
-    return paramRecipient
-  }, [paramRecipient])
-}
 
 function SendConfirmation(props: Props) {
   const { t } = useTranslation()
 
   const {
     origin,
-    transactionData: {
-      recipient: paramRecipient,
-      tokenAmount: inputTokenAmount,
-      amountIsInLocalCurrency,
-      tokenAddress,
-      comment: commentFromParams,
-      tokenId,
-    },
-    feeAmount,
-    feeTokenId,
-    preparedTransaction,
+    transactionData: { recipient, tokenAmount, tokenAddress, comment: commentFromParams, tokenId },
   } = props.route.params
 
-  const newSendScreen = getFeatureGate(StatsigFeatureGates.USE_NEW_SEND_FLOW)
+  const { prepareTransactionsResult, refreshPreparedTransactions, clearPreparedTransactions } =
+    usePrepareSendTransactions()
+
+  const { maxFeeAmount, feeCurrency: feeTokenInfo } =
+    getFeeCurrencyAndAmounts(prepareTransactionsResult)
 
   const [encryptionDialogVisible, setEncryptionDialogVisible] = useState(false)
   const [comment, setComment] = useState(commentFromParams ?? '')
 
   const tokenInfo = useTokenInfo(tokenId)
-  const tokenNetwork = getNetworkFromNetworkId(tokenInfo?.networkId)
-  const isDekRegistered = useSelector(isDekRegisteredSelector) ?? false
   const addressToDataEncryptionKey = useSelector(addressToDataEncryptionKeySelector)
   const isSending = useSelector(isSendingSelector)
   const fromModal = props.route.name === Screens.SendConfirmationModal
   const localCurrencyCode = useSelector(getLocalCurrencyCode)
-  const { localAmount, tokenAmount, usdAmount } = useInputAmounts(
-    inputTokenAmount.toString(),
-    false,
-    tokenId,
-    inputTokenAmount
-  )
+  const localAmount = useTokenToLocalAmount(tokenAmount, tokenId)
+  const usdAmount = useAmountAsUsd(tokenAmount, tokenId)
+
+  const walletAddress = useSelector(walletAddressSelector)
+  const feeCurrencies = useSelector((state) => feeCurrenciesSelector(state, tokenInfo!.networkId))
+  const allowComment = tokenSupportsComments(tokenInfo)
+  const encryptedComment = useSelector(encryptedCommentSelector)
+  const isEncryptingComment = useSelector(isEncryptingCommentSelector)
 
   const dispatch = useDispatch()
 
-  const secureSendPhoneNumberMapping = useSelector(secureSendPhoneNumberMappingSelector)
-  const validatedRecipientAddress = getSecureSendAddress(
-    paramRecipient,
-    secureSendPhoneNumberMapping
-  )
-  const recipient = useRecipientToSendTo(paramRecipient)
-
-  const feeEstimates = useSelector(feeEstimatesSelector)
-  const feeType = FeeType.SEND
-  const feeEstimate = tokenAddress ? feeEstimates[tokenAddress]?.[feeType] : undefined
-
-  // for new send flow, preparedTransaction must be present
-  // for old send flow, feeEstimate must be present if network is celo
-  // when old send flow is cleaned up, we can make preparedTransaction a
-  // required field and remove this check
-  const isFeeAvailable = newSendScreen
-    ? !!preparedTransaction
-    : tokenNetwork !== Network.Celo || !!feeEstimate?.feeInfo
-  const disableSend = isSending || !isFeeAvailable
+  useEffect(() => {
+    if (!walletAddress || !tokenInfo) {
+      return // should never happen
+    }
+    clearPreparedTransactions()
+    if (isEncryptingComment) {
+      return // wait for comment to be encrypted before preparing a tx
+    }
+    const debouncedRefreshTransactions = setTimeout(() => {
+      return refreshPreparedTransactions({
+        amount: tokenAmount,
+        token: tokenInfo,
+        recipientAddress: recipient.address,
+        walletAddress,
+        feeCurrencies,
+        comment: allowComment && comment ? encryptedComment ?? undefined : undefined,
+      })
+    }, DEBOUNCE_TIME_MS)
+    return () => clearTimeout(debouncedRefreshTransactions)
+  }, [
+    encryptedComment,
+    isEncryptingComment,
+    comment,
+    tokenInfo,
+    tokenAmount,
+    recipient,
+    walletAddress,
+    feeCurrencies,
+  ])
 
   useEffect(() => {
-    if (!newSendScreen && !feeEstimate && tokenAddress) {
-      dispatch(estimateFee({ feeType, tokenAddress }))
+    if (!walletAddress || !allowComment) {
+      return
     }
-  }, [feeEstimate, newSendScreen])
+    const debouncedEncryptComment = setTimeout(() => {
+      dispatch(
+        encryptComment({
+          comment: comment.trim(),
+          fromAddress: walletAddress,
+          toAddress: recipient.address,
+        })
+      )
+    }, DEBOUNCE_TIME_MS)
+    return () => clearTimeout(debouncedEncryptComment)
+  }, [comment])
 
-  useEffect(() => {
-    if (!newSendScreen && !isDekRegistered && tokenAddress) {
-      dispatch(estimateFee({ feeType: FeeType.REGISTER_DEK, tokenAddress }))
-    }
-  }, [isDekRegistered, newSendScreen])
+  const e164NumberToAddress = useSelector(e164NumberToAddressSelector)
+  const showAddress =
+    !!recipient.e164PhoneNumber && (e164NumberToAddress[recipient.e164PhoneNumber]?.length ?? 0) > 1
 
-  // old flow fees
-  const securityFeeInUsd = feeEstimate?.usdFee ? new BigNumber(feeEstimate.usdFee) : undefined
-  const storedDekFee = tokenAddress ? feeEstimates[tokenAddress]?.[FeeType.REGISTER_DEK] : undefined
-  const dekFeeInUsd = storedDekFee?.usdFee ? new BigNumber(storedDekFee.usdFee) : undefined
+  const disableSend =
+    isSending || !prepareTransactionsResult || prepareTransactionsResult.type !== 'possible'
 
-  // new flow fee
-  const feeTokenInfo = useTokenInfo(feeTokenId)
   const feeInUsd =
-    feeAmount && feeTokenInfo?.priceUsd
-      ? new BigNumber(feeAmount).times(feeTokenInfo.priceUsd)
-      : undefined
-
-  const totalFeeInUsd = newSendScreen ? feeInUsd : securityFeeInUsd?.plus(dekFeeInUsd ?? 0)
+    maxFeeAmount && feeTokenInfo?.priceUsd ? maxFeeAmount.times(feeTokenInfo.priceUsd) : undefined
 
   const FeeContainer = () => {
     return (
       <View style={styles.feeContainer}>
-        {newSendScreen ? (
-          feeAmount && (
-            <LineItemRow
-              testID="SendConfirmation/fee"
-              title={t('feeEstimate')}
-              amount={
-                <TokenDisplay
-                  amount={new BigNumber(feeAmount)}
-                  tokenId={feeTokenId}
-                  showLocalAmount={false}
-                />
-              }
-            />
-          )
-        ) : (
-          <LegacyFeeDrawer
-            testID={'feeDrawer/SendConfirmation'}
-            isEstimate={true}
-            securityFeeTokenId={networkConfig.cusdTokenId}
-            securityFee={securityFeeInUsd}
-            showDekfee={!isDekRegistered}
-            dekFee={dekFeeInUsd}
-            feeLoading={feeEstimate?.loading || storedDekFee?.loading}
-            feeHasError={feeEstimate?.error || storedDekFee?.error}
-            totalFee={totalFeeInUsd}
-            showLocalAmount={true}
-          />
-        )}
+        <LineItemRow
+          testID="SendConfirmation/fee"
+          title={t('feeEstimate')}
+          textStyle={typeScale.bodyMedium}
+          amount={
+            maxFeeAmount && (
+              <TokenDisplay
+                amount={maxFeeAmount}
+                tokenId={feeTokenInfo?.tokenId}
+                showLocalAmount={false}
+              />
+            )
+          }
+          isLoading={!maxFeeAmount}
+        />
+        <LineItemRow
+          testID="SendConfirmation/localFee"
+          title=""
+          style={styles.subHeading}
+          textStyle={styles.subHeadingText}
+          amount={
+            maxFeeAmount && (
+              <TokenDisplay
+                amount={maxFeeAmount}
+                tokenId={feeTokenInfo?.tokenId}
+                showLocalAmount={true}
+              />
+            )
+          }
+        />
         <TokenTotalLineItem
           tokenAmount={tokenAmount}
           tokenId={tokenId}
-          feeToAddInUsd={totalFeeInUsd}
-          showLocalAmountForTotal={!newSendScreen}
-          showApproxTotalBalance={newSendScreen}
-          showApproxExchangeRate={newSendScreen}
+          feeToAddInUsd={feeInUsd}
+          showLocalAmountForTotal={false}
+          showApproxTotalBalance={true}
+          showApproxExchangeRate={true}
         />
       </View>
     )
@@ -235,11 +213,16 @@ function SendConfirmation(props: Props) {
   }
 
   const onSend = () => {
-    if (!isFeeAvailable) {
+    const preparedTransaction =
+      prepareTransactionsResult &&
+      prepareTransactionsResult.type === 'possible' &&
+      prepareTransactionsResult.transactions[0]
+    if (!preparedTransaction) {
       // This should never happen because the confirm button is disabled if this happens.
       dispatch(showError(ErrorMessages.SEND_PAYMENT_FAILED))
       return
     }
+
     ValoraAnalytics.track(SendEvents.send_confirm_send, {
       origin,
       recipientType: recipient.recipientType,
@@ -253,6 +236,7 @@ function SendConfirmation(props: Props) {
       networkId: tokenInfo?.networkId ?? null,
       tokenId,
       commentLength: comment.length,
+      isTokenManuallyImported: !!tokenInfo?.isManuallyImported,
     })
 
     dispatch(
@@ -260,16 +244,13 @@ function SendConfirmation(props: Props) {
         tokenAmount,
         tokenId,
         usdAmount,
-        comment,
+        comment.trim(),
         recipient,
         fromModal,
-        feeEstimate?.feeInfo,
-        preparedTransaction
+        getSerializablePreparedTransaction(preparedTransaction)
       )
     )
   }
-
-  const allowComment = tokenSupportsComments(tokenInfo)
 
   return (
     <SafeAreaView
@@ -306,9 +287,9 @@ function SendConfirmation(props: Props) {
               <Text testID="DisplayName" style={styles.displayName}>
                 {getDisplayName(recipient, t)}
               </Text>
-              {validatedRecipientAddress && (
-                <View style={styles.addressContainer}>
-                  <ShortenedAddress style={styles.address} address={validatedRecipientAddress} />
+              {showAddress && (
+                <View style={styles.addressContainer} testID="RecipientAddress">
+                  <ShortenedAddress style={styles.address} address={recipient.address} />
                 </View>
               )}
             </View>
@@ -318,17 +299,15 @@ function SendConfirmation(props: Props) {
             style={styles.amount}
             amount={tokenAmount}
             tokenId={tokenId}
-            showLocalAmount={!newSendScreen && amountIsInLocalCurrency}
+            showLocalAmount={false}
           />
-          {newSendScreen && (
-            <TokenDisplay
-              testID="SendAmountFiat"
-              style={styles.amountSubscript}
-              amount={tokenAmount}
-              tokenId={tokenInfo?.tokenId}
-              showLocalAmount={true}
-            />
-          )}
+          <TokenDisplay
+            testID="SendAmountFiat"
+            style={styles.amountSubscript}
+            amount={tokenAmount}
+            tokenId={tokenInfo?.tokenId}
+            showLocalAmount={true}
+          />
           {allowComment && (
             <CommentTextInput
               testID={'send'}
@@ -375,23 +354,25 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   headerText: {
-    ...fontStyles.regular,
+    ...typeScale.labelMedium,
     color: colors.gray4,
   },
   displayName: {
-    ...fontStyles.regular500,
+    ...typeScale.labelMedium,
+    color: colors.black,
   },
   addressContainer: {
     flexDirection: 'row',
   },
   address: {
-    ...fontStyles.small,
+    ...typeScale.labelSmall,
     color: colors.gray5,
     paddingRight: 4,
   },
   amount: {
+    ...typeScale.titleLarge,
     paddingVertical: 8,
-    ...fontStyles.largeNumber,
+    color: colors.black,
   },
   amountSubscript: {
     ...typeScale.bodyMedium,
@@ -405,9 +386,16 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   encryptionWarningLabel: {
-    ...fontStyles.regular,
+    ...typeScale.labelMedium,
     color: colors.infoDark,
     paddingRight: 8,
+  },
+  subHeading: {
+    marginVertical: 0,
+  },
+  subHeadingText: {
+    ...typeScale.labelSmall,
+    color: colors.gray4,
   },
 })
 

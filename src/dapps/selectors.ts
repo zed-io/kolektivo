@@ -19,10 +19,6 @@ function getDappsById(dapps: Dapp[], dappIds: string[]) {
 
 export const dappsListApiUrlSelector = (state: RootState) => state.dapps.dappListApiUrl
 
-export const maxNumRecentDappsSelector = (state: RootState) => state.dapps.maxNumRecentDapps
-
-export const recentDappIdsSelector = (state: RootState) => state.dapps.recentDappIds
-
 export const activeDappSelector = (state: RootState) =>
   state.dapps.dappsWebViewEnabled ? state.dapps.activeDapp : null
 
@@ -77,10 +73,6 @@ export const dappsCategoriesAlphabeticalSelector = createSelector(
   (categories) => categories.slice(0).sort((a, b) => a.name.localeCompare(b.name))
 )
 
-export const dappConnectInfoSelector = (state: RootState) => state.dapps.dappConnectInfo
-
-export const dappFavoritesEnabledSelector = (state: RootState) => state.dapps.dappFavoritesEnabled
-
 const mostPopularDappIdsSelector = (state: RootState) => state.dapps.mostPopularDappIds
 
 export const mostPopularDappsSelector = createSelector(
@@ -91,18 +83,7 @@ export const mostPopularDappsSelector = createSelector(
   }
 )
 
-export const dappsMinimalDisclaimerEnabledSelector = (state: RootState) =>
-  state.dapps.dappsMinimalDisclaimerEnabled
-
-export const recentDappsSelector = createSelector(
-  dappsListSelector,
-  recentDappIdsSelector,
-  (dapps, recentDappIds) => {
-    return getDappsById(dapps, recentDappIds)
-  }
-)
-
-export const favoriteDappsSelector = createSelector(
+const favoriteDappsSelector = createSelector(
   dappsListSelector,
   favoriteDappIdsSelector,
   (dapps, favoriteDappIds) => dapps.filter((dapp) => favoriteDappIds.includes(dapp.id))

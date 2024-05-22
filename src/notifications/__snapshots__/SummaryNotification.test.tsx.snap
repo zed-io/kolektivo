@@ -77,7 +77,7 @@ exports[`SummaryNotification renders correctly 1`] = `
         }
         testID="undefined/Details"
       >
-        someI18nKey, {"context":"moreThan3Items"}
+        someI18nKey
       </Text>
       <View
         style={
@@ -132,7 +132,7 @@ exports[`SummaryNotification renders correctly 1`] = `
                   "color": "#1AB775",
                   "fontFamily": "Inter-SemiBold",
                   "fontSize": 16,
-                  "lineHeight": 22,
+                  "lineHeight": 24,
                 },
                 {
                   "fontSize": 14,

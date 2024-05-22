@@ -12,11 +12,9 @@ import { KeylessBackupFlow } from 'src/keylessBackup/types'
 import { Screens } from 'src/navigator/Screens'
 import { Nft } from 'src/nfts/types'
 import { Recipient } from 'src/recipients/recipient'
-import { TransactionDataInput } from 'src/send/SendAmount'
-import { QrCode } from 'src/send/types'
-import { AssetTabType } from 'src/tokens/Assets'
-import { AssetViewType } from 'src/tokens/TokenBalances'
-import { NetworkId, TokenTransaction } from 'src/transactions/types'
+import { QrCode, TransactionDataInput } from 'src/send/types'
+import { AssetTabType } from 'src/tokens/types'
+import { NetworkId, TokenTransaction, TokenTransfer } from 'src/transactions/types'
 import { Currency } from 'src/utils/currencies'
 import { SerializableTransactionRequest } from 'src/viem/preparedTransactionSerialization'
 import { ActionRequestProps } from 'src/walletConnect/screens/ActionRequest'
@@ -34,12 +32,9 @@ interface SendConfirmationParams {
   origin: SendOrigin
   transactionData: TransactionDataInput
   isFromScan: boolean
-  preparedTransaction?: SerializableTransactionRequest
-  feeAmount?: string
-  feeTokenId?: string
 }
 
-interface SendEnterAmountParams {
+type SendEnterAmountParams = {
   recipient: Recipient & { address: string }
   isFromScan: boolean
   origin: SendOrigin
@@ -48,7 +43,6 @@ interface SendEnterAmountParams {
 }
 
 interface ValidateRecipientParams {
-  transactionData?: TransactionDataInput
   requesterAddress?: string
   origin: SendOrigin
   recipient: Recipient
@@ -58,32 +52,16 @@ interface ValidateRecipientParams {
 
 export type StackParamList = {
   [Screens.ActivityScreen]: undefined
-  [Screens.BackupComplete]:
-    | undefined
-    | {
-        navigatedFromSettings: boolean
-      }
-  [Screens.BackupIntroduction]:
-    | {
-        showDrawerTopBar: boolean
-      }
-    | undefined
+  [Screens.BackupComplete]: { isAccountRemoval?: boolean } | undefined
+  [Screens.BackupIntroduction]: {} | undefined
   [Screens.AccountKeyEducation]:
     | undefined
     | {
         nextScreen: keyof StackParamList
       }
   [Screens.AccounSetupFailureScreen]: undefined
-  [Screens.BackupPhrase]:
-    | undefined
-    | {
-        navigatedFromSettings: boolean
-      }
-  [Screens.BackupQuiz]:
-    | undefined
-    | {
-        navigatedFromSettings: boolean
-      }
+  [Screens.BackupPhrase]: { isAccountRemoval?: boolean } | undefined
+  [Screens.BackupQuiz]: { isAccountRemoval?: boolean } | undefined
   [Screens.FiatDetailsScreen]: {
     quote: FiatConnectQuote
     flow: CICOFlow
@@ -99,21 +77,16 @@ export type StackParamList = {
   [Screens.DappKitSignTxScreen]: {
     dappKitRequest: SignTxRequest
   }
-  [Screens.DAppsExplorerScreen]: undefined
   [Screens.DappShortcutsRewards]: undefined
   [Screens.DappShortcutTransactionRequest]: {
     rewardId: string
   }
   [Screens.Debug]: undefined
-  [Screens.DrawerNavigator]: {
-    initialScreen?: Screens
-    fromModal?: boolean
-  }
+  [Screens.EarnCollectScreen]: undefined
   [Screens.ErrorScreen]: {
     errorMessage?: string
   }
   [Screens.EscrowedPaymentListScreen]: undefined
-  [Screens.ExchangeHomeScreen]: undefined
   [Screens.ExternalExchanges]: {
     tokenId: string
     exchanges: ExternalExchangeProvider[]
@@ -163,6 +136,9 @@ export type StackParamList = {
   [Screens.KeylessBackupProgress]: {
     keylessBackupFlow: KeylessBackupFlow
   }
+  [Screens.KeylessBackupIntro]: {
+    keylessBackupFlow: KeylessBackupFlow
+  }
   [Screens.KycDenied]: {
     flow: CICOFlow
     quote: FiatConnectQuote
@@ -181,6 +157,7 @@ export type StackParamList = {
     tokenId: string
   }
   [Screens.GoldEducation]: undefined
+  [Screens.ImportSelect]: undefined
   [Screens.ImportWallet]:
     | {
         clean: boolean
@@ -188,7 +165,6 @@ export type StackParamList = {
       }
     | undefined
   [Screens.Invite]: undefined
-  [Screens.NameAndPicture]: undefined
   [Screens.EnableBiometry]: undefined
   [Screens.Language]:
     | {
@@ -201,6 +177,10 @@ export type StackParamList = {
       }
     | undefined
   [Screens.Licenses]: undefined
+  [Screens.LinkPhoneNumber]: undefined
+  [Screens.JumpstartTransactionDetailsScreen]: {
+    transaction: TokenTransfer
+  }
   [Screens.Main]: undefined
   [Screens.MainModal]: undefined
   [Screens.MapScreen]:
@@ -210,7 +190,6 @@ export type StackParamList = {
     | undefined
   [Screens.MultichainBeta]: undefined
   [Screens.NotificationCenter]: undefined
-  [Screens.NftGallery]: undefined
   [Screens.NftsInfoCarousel]: { nfts: Nft[]; networkId: NetworkId }
   [Screens.KycLanding]: KycLandingProps
   [Screens.PincodeEnter]: {
@@ -227,9 +206,11 @@ export type StackParamList = {
         showGuidedOnboarding?: boolean
       }
     | undefined
+  [Screens.PointsHome]: undefined
   [Screens.ProtectWallet]: undefined
   [Screens.OnboardingRecoveryPhrase]: undefined
   [Screens.Profile]: undefined
+  [Screens.ProfileMenu]: undefined
   [Screens.QRNavigator]: NestedNavigatorParams<QRTabParamList> | undefined
   [Screens.ReclaimPaymentConfirmationScreen]: {
     reclaimPaymentInput: EscrowedPayment
@@ -251,31 +232,28 @@ export type StackParamList = {
       fiat: number
     }
   }
-  [Screens.Send]:
-    | {
-        skipContactsImport?: boolean
-        forceTokenId?: boolean
-        defaultTokenIdOverride?: string
-      }
-    | undefined
   [Screens.SendSelectRecipient]:
     | {
         forceTokenId?: boolean
         defaultTokenIdOverride?: string
       }
     | undefined
-  [Screens.SendAmount]: {
-    recipient: Recipient
-    isFromScan: boolean
-    origin: SendOrigin
-    forceTokenId?: boolean
-    defaultTokenIdOverride?: string
-  }
   [Screens.SendConfirmation]: SendConfirmationParams
   [Screens.SendConfirmationModal]: SendConfirmationParams
   [Screens.SendEnterAmount]: SendEnterAmountParams
+  [Screens.JumpstartEnterAmount]: undefined
+  [Screens.JumpstartSendConfirmation]: {
+    link: string
+    sendAmount: string
+    tokenId: string
+    serializablePreparedTransactions: SerializableTransactionRequest[]
+  }
+  [Screens.JumpstartShareLink]: {
+    link: string
+    sendAmount: string
+    tokenId: string
+  }
   [Screens.Settings]: { promptConfirmRemovalModal?: boolean } | undefined
-  [Screens.SetUpKeylessBackup]: undefined
   [Screens.SignInWithEmail]: {
     keylessBackupFlow: KeylessBackupFlow
   }
@@ -287,8 +265,18 @@ export type StackParamList = {
         prefilledText: string
       }
     | undefined
-  [Screens.SwapScreenWithBack]: { fromTokenId: string } | undefined
-  [Screens.TabNavigator]: undefined
+  [Screens.SwapScreenWithBack]:
+    | {
+        fromTokenId?: string
+        toTokenId?: string
+      }
+    | undefined
+  [Screens.TabDiscover]: {} | undefined
+  [Screens.TabHome]: {} | undefined
+  [Screens.TabWallet]: { activeAssetTab?: AssetTabType } | undefined
+  [Screens.TabNavigator]: {
+    initialScreen?: Screens.TabHome | Screens.TabWallet | Screens.TabDiscover
+  }
   [Screens.TokenDetails]: { tokenId: string }
   [Screens.TokenImport]: undefined
   [Screens.TransactionDetailsScreen]: {
@@ -299,7 +287,7 @@ export type StackParamList = {
   [Screens.ValidateRecipientAccount]: ValidateRecipientParams
   [Screens.VerificationStartScreen]:
     | {
-        isOnboarding?: boolean
+        hasOnboarded?: boolean
         selectedCountryCodeAlpha2?: string
       }
     | undefined
@@ -319,22 +307,10 @@ export type StackParamList = {
       } & SessionRequestProps)
     | { type: WalletConnectRequestType.TimeOut }
   [Screens.WalletConnectSessions]: undefined
-  [Screens.WalletHome]: undefined
   [Screens.WalletSecurityPrimer]: undefined
-  [Screens.WalletSecurityPrimerDrawer]: { showDrawerTopBar: boolean }
   [Screens.WebViewScreen]: { uri: string; dappkitDeeplink?: string }
   [Screens.Welcome]: undefined
   [Screens.WithdrawSpend]: undefined
-  [Screens.TokenBalances]:
-    | {
-        activeView: AssetViewType
-      }
-    | undefined
-  [Screens.Assets]:
-    | {
-        activeTab: AssetTabType
-      }
-    | undefined
 }
 
 export type QRTabParamList = {

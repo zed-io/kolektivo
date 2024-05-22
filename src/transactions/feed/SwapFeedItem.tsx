@@ -1,16 +1,12 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, Text, View } from 'react-native'
-import { useSelector } from 'react-redux'
 import { HomeEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
-import { hideHomeBalancesSelector } from 'src/app/selectors'
 import TokenDisplay from 'src/components/TokenDisplay'
 import Touchable from 'src/components/Touchable'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
-import { getFeatureGate } from 'src/statsig'
-import { StatsigFeatureGates } from 'src/statsig/types'
 import colors from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
@@ -33,14 +29,14 @@ function SwapFeedItem({ exchange }: Props) {
     ValoraAnalytics.track(HomeEvents.transaction_feed_item_select)
   }
 
-  const hideHomeBalanceState = useSelector(hideHomeBalancesSelector)
-  const hideBalance =
-    getFeatureGate(StatsigFeatureGates.SHOW_HIDE_HOME_BALANCES_TOGGLE) && hideHomeBalanceState
-
   return (
     <Touchable testID="SwapFeedItem" onPress={handleTransferDetails}>
       <View style={styles.container}>
-        <TransactionFeedItemImage status={exchange.status} transactionType={exchange.__typename} />
+        <TransactionFeedItemImage
+          status={exchange.status}
+          transactionType={exchange.__typename}
+          networkId={exchange.networkId}
+        />
         <View style={styles.contentContainer}>
           <Text style={styles.title} testID={'SwapFeedItem/title'} numberOfLines={1}>
             {t('swapScreen.title')}
@@ -52,7 +48,7 @@ function SwapFeedItem({ exchange }: Props) {
             })}
           </Text>
         </View>
-        {!hideBalance && (
+        {
           <View style={styles.tokenAmountContainer}>
             <TokenDisplay
               amount={exchange.inAmount.value}
@@ -74,7 +70,7 @@ function SwapFeedItem({ exchange }: Props) {
               testID={'SwapFeedItem/outgoingAmount'}
             />
           </View>
-        )}
+        }
       </View>
     </Touchable>
   )

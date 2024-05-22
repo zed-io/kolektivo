@@ -1,6 +1,5 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch, useSelector } from 'react-redux'
 import AccountErrorScreen from 'src/account/AccountErrorScreen'
 import { startStoreWipeRecovery } from 'src/account/actions'
 import { recoveringFromStoreWipeSelector } from 'src/account/selectors'
@@ -8,9 +7,7 @@ import { noHeaderGestureDisabled } from 'src/navigator/Headers'
 import { navigate } from 'src/navigator/NavigationService'
 import { firstOnboardingScreen } from 'src/onboarding/steps'
 import { requestPincodeInput } from 'src/pincode/authentication'
-import { getExperimentParams } from 'src/statsig'
-import { ExperimentConfigs } from 'src/statsig/constants'
-import { StatsigExperiments } from 'src/statsig/types'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 import Logger from 'src/utils/Logger'
 import { getWalletAsync } from 'src/web3/contracts'
 
@@ -25,14 +22,10 @@ function StoreWipeRecoveryScreen() {
     try {
       const wallet = await getWalletAsync()
       const account = wallet.getAccounts()[0]
-      const { onboardingNameScreenEnabled } = getExperimentParams(
-        ExperimentConfigs[StatsigExperiments.CHOOSE_YOUR_ADVENTURE]
-      )
       await requestPincodeInput(true, false, account)
       dispatch(startStoreWipeRecovery(account))
       navigate(
         firstOnboardingScreen({
-          onboardingNameScreenEnabled,
           recoveringFromStoreWipe,
         })
       )

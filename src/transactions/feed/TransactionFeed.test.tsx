@@ -16,7 +16,7 @@ import {
 } from 'src/transactions/types'
 import networkConfig from 'src/web3/networkConfig'
 import { createMockStore, RecursivePartial } from 'test/utils'
-import { mockCusdAddress, mockCusdTokenId } from 'test/values'
+import { mockApprovalTransaction, mockCusdAddress, mockCusdTokenId } from 'test/values'
 
 jest.mock('src/statsig', () => ({
   getFeatureGate: jest.fn(),
@@ -24,10 +24,17 @@ jest.mock('src/statsig', () => ({
     showCico: ['celo-alfajores'],
     showBalances: ['celo-alfajores'],
     showTransfers: ['celo-alfajores'],
+    showApprovalTxsInHomefeed: ['celo-alfajores'],
+    jumpstartContracts: {
+      ['celo-alfajores']: { contractAddress: '0x7bf3fefe9881127553d23a8cd225a2c2442c438c' },
+    },
   })),
 }))
 
-const mockTransaction = (transactionHash: string): TokenTransaction => {
+const mockTransaction = (
+  transactionHash: string,
+  status = TransactionStatus.Complete
+): TokenTransaction => {
   return {
     __typename: 'TokenTransferV3',
     networkId: NetworkId['celo-alfajores'],
@@ -43,7 +50,7 @@ const mockTransaction = (transactionHash: string): TokenTransaction => {
     timestamp: 1542306118,
     transactionHash,
     type: TokenTransactionTypeV2.Received,
-    status: TransactionStatus.Complete,
+    status,
   }
 }
 
@@ -76,6 +83,20 @@ const MOCK_EMPTY_RESPONSE: QueryResponse = {
         startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
         endCursor: END_CURSOR,
         hasNextPage: true,
+        hasPreviousPage: false,
+      },
+      transactions: [],
+    },
+  },
+}
+
+const MOCK_EMPTY_RESPONSE_NO_NEXT_PAGE: QueryResponse = {
+  data: {
+    tokenTransactionsV3: {
+      pageInfo: {
+        startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+        endCursor: END_CURSOR,
+        hasNextPage: false,
         hasPreviousPage: false,
       },
       transactions: [],
@@ -129,6 +150,25 @@ const MOCK_RESPONSE_MANY_ITEMS: QueryResponse = {
   },
 }
 
+const MOCK_RESPONSE_FAILED_TRANSACTION: QueryResponse = {
+  data: {
+    tokenTransactionsV3: {
+      pageInfo: {
+        startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+        endCursor: END_CURSOR,
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+      transactions: [
+        mockTransaction(
+          '0x544367eaf2b01622dd1c7b75a6b19bf278d72127aecfb2e5106424c40c268e8b',
+          TransactionStatus.Failed
+        ),
+      ],
+    },
+  },
+}
+
 describe('TransactionFeed', () => {
   const mockFetch = fetch as FetchMock
   beforeEach(() => {
@@ -159,6 +199,33 @@ describe('TransactionFeed', () => {
     // are for the same section / date
     return sectionList.props.data[0].data.length
   }
+
+  it('only renders approval txs from supported networks', async () => {
+    mockFetch.mockResponse(JSON.stringify(MOCK_EMPTY_RESPONSE_NO_NEXT_PAGE))
+
+    const tree = renderScreen({
+      transactions: {
+        transactionsByNetworkId: {
+          [NetworkId['ethereum-sepolia']]: [mockApprovalTransaction],
+          [NetworkId['celo-alfajores']]: [
+            {
+              ...mockApprovalTransaction,
+              networkId: NetworkId['celo-alfajores'],
+              transactionHash: '0xfoo',
+            },
+          ],
+        },
+        standbyTransactions: [],
+      },
+    })
+    await waitFor(() => expect(tree.getByTestId('TransactionList').props.data.length).toBe(1))
+
+    expect(tree.queryByTestId('NoActivity/loading')).toBeNull()
+    expect(tree.queryByTestId('NoActivity/error')).toBeNull()
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+    expect(tree.getAllByTestId(new RegExp('TokenApprovalFeedItem', 'i')).length).toBe(1)
+    expect(tree.queryByTestId(`TokenApprovalFeedItem/0xfoo`)).not.toBeNull()
+  })
 
   it('renders correctly when there is a response', async () => {
     mockFetch.mockResponse(JSON.stringify(MOCK_RESPONSE_NO_NEXT_PAGE))
@@ -260,6 +327,26 @@ describe('TransactionFeed', () => {
       node.children.some((ch) => ch === STAND_BY_TRANSACTION_SUBTITLE_KEY)
     )
     expect(pendingSubtitles.length).toBe(1)
+  })
+
+  it('renders correct status for a complete transaction', async () => {
+    mockFetch.mockResponse(JSON.stringify(MOCK_RESPONSE))
+
+    const { getByTestId, getByText } = renderScreen({})
+
+    await waitFor(() => getByTestId('TransactionList'))
+
+    expect(getByText('feedItemReceivedInfo, {"context":"noComment"}')).toBeTruthy()
+  })
+
+  it('renders correct status for a failed transaction', async () => {
+    mockFetch.mockResponse(JSON.stringify(MOCK_RESPONSE_FAILED_TRANSACTION))
+
+    const { getByTestId, getByText } = renderScreen({})
+
+    await waitFor(() => getByTestId('TransactionList'))
+
+    expect(getByText('feedItemFailedTransaction')).toBeTruthy()
   })
 
   it('tries to fetch 10 transactions, unless the end is reached', async () => {

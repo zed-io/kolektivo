@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly with backup completed 1`] = `
+exports[`BackupPhrase renders correctly with backup completed 1`] = `
 <RNCSafeAreaView
   edges={
     {
@@ -281,7 +281,7 @@ exports[`renders correctly with backup completed 1`] = `
 </RNCSafeAreaView>
 `;
 
-exports[`renders correctly with backup not completed 1`] = `
+exports[`BackupPhrase renders correctly with backup not completed 1`] = `
 <RNCSafeAreaView
   edges={
     {
@@ -696,7 +696,7 @@ exports[`renders correctly with backup not completed 1`] = `
 </RNCSafeAreaView>
 `;
 
-exports[`still renders when mnemonic doesnt show up 1`] = `
+exports[`BackupPhrase still renders when mnemonic doesnt show up 1`] = `
 <RNCSafeAreaView
   edges={
     {

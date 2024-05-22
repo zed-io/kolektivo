@@ -1,40 +1,48 @@
-import { toTransactionObject } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
-import { call, select } from 'redux-saga/effects'
+import { EffectProviders, StaticProvider, throwError } from 'redux-saga-test-plan/providers'
+import { call } from 'redux-saga/effects'
 import { showError } from 'src/alert/actions'
+import { CeloExchangeEvents, SendEvents } from 'src/analytics/Events'
+import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import { ErrorMessages } from 'src/app/ErrorMessages'
 import { encryptComment } from 'src/identity/commentEncryption'
-import { Actions, SendPaymentAction } from 'src/send/actions'
-import { sendPaymentSaga } from 'src/send/saga'
-import { getFeatureGate } from 'src/statsig'
-import { getERC20TokenContract, getStableTokenContract } from 'src/tokens/saga'
-import { addStandbyTransaction } from 'src/transactions/actions'
-import { sendTransactionAsync } from 'src/transactions/contract-utils'
-import { sendAndMonitorTransaction } from 'src/transactions/saga'
+import { navigateBack, navigateHome } from 'src/navigator/NavigationService'
+import {
+  Actions,
+  SendPaymentAction,
+  encryptComment as encryptCommentAction,
+  encryptCommentComplete,
+  sendPaymentFailure,
+  sendPaymentSuccess,
+} from 'src/send/actions'
+import { encryptCommentSaga, sendPaymentSaga } from 'src/send/saga'
+import { Actions as TransactionActions, addStandbyTransaction } from 'src/transactions/actions'
 import { NetworkId, TokenTransactionTypeV2 } from 'src/transactions/types'
-import { sendPayment as viemSendPayment } from 'src/viem/saga'
+import { publicClient } from 'src/viem'
+import { ViemWallet } from 'src/viem/getLockableWallet'
+import { getViemWallet } from 'src/web3/contracts'
+import networkConfig from 'src/web3/networkConfig'
 import {
   UnlockResult,
   getConnectedAccount,
   getConnectedUnlockedAccount,
   unlockAccount,
 } from 'src/web3/saga'
-import { currentAccountSelector } from 'src/web3/selectors'
 import { createMockStore } from 'test/utils'
 import {
   mockAccount,
-  mockContract,
+  mockAccount2,
+  mockCeloAddress,
+  mockCeloTokenId,
   mockCusdAddress,
   mockCusdTokenId,
-  mockFeeInfo,
   mockQRCodeRecipient,
 } from 'test/values'
-import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
+import { getTransactionCount } from 'viem/actions'
 
 jest.mock('@celo/connect')
-jest.mock('src/statsig')
 
 const mockNewTransactionContext = jest.fn()
 
@@ -77,119 +85,198 @@ describe(sendPaymentSaga, () => {
     comment: '',
     recipient: mockQRCodeRecipient,
     fromModal: false,
-    feeInfo: mockFeeInfo,
-  }
-
-  const sendActionWithPreparedTx: SendPaymentAction = {
-    ...sendAction,
     preparedTransaction: {
       from: '0xfrom',
       to: '0xto',
       data: '0xdata',
     },
   }
+  const mockViemWallet = {
+    account: { address: mockAccount },
+    signTransaction: jest.fn(),
+    sendRawTransaction: jest.fn(),
+  } as any as ViemWallet
+  const mockTxHash: `0x${string}` = '0x12345678901234'
+  const mockTxReceipt = {
+    status: 'success',
+    transactionHash: mockTxHash,
+    blockNumber: 123,
+    gasUsed: BigInt(1e6),
+    effectiveGasPrice: BigInt(1e9),
+  }
+  function createDefaultProviders() {
+    const defaultProviders: (EffectProviders | StaticProvider)[] = [
+      [call(getConnectedUnlockedAccount), mockAccount],
+      [matchers.call.fn(getViemWallet), mockViemWallet],
+      [matchers.call.fn(getTransactionCount), 10],
+      [matchers.call.fn(mockViemWallet.signTransaction), '0xsomeSerialisedTransaction'],
+      [matchers.call.fn(mockViemWallet.sendRawTransaction), mockTxHash],
+      [matchers.call.fn(publicClient.celo.waitForTransactionReceipt), mockTxReceipt],
+      [matchers.call.fn(publicClient.celo.getBlock), { timestamp: 1701102971 }],
+    ]
 
-  beforeAll(() => {
-    ;(toTransactionObject as jest.Mock).mockImplementation(() => jest.fn())
-  })
+    return defaultProviders
+  }
 
   beforeEach(() => {
-    jest.mocked(getFeatureGate).mockReturnValue(false)
     jest.clearAllMocks()
   })
 
-  it('sends a payment successfully with contract kit', async () => {
-    await expectSaga(sendPaymentSaga, sendAction)
+  it.each([
+    {
+      testSuffix: 'navigates home when not initiated from modal',
+      fromModal: false,
+      navigateFn: navigateHome,
+    },
+    {
+      testSuffix: 'navigates back when initiated from modal',
+      fromModal: true,
+      navigateFn: navigateBack,
+    },
+  ])(
+    'sends a payment successfully with viem and $testSuffix',
+    async ({ fromModal, navigateFn }) => {
+      await expectSaga(sendPaymentSaga, { ...sendAction, fromModal })
+        .withState(createMockStore({}).getState())
+        .provide(createDefaultProviders())
+        .call(getViemWallet, networkConfig.viemChain.celo)
+        .put(
+          addStandbyTransaction({
+            __typename: 'TokenTransferV3',
+            context: { id: 'mock' },
+            type: TokenTransactionTypeV2.Sent,
+            networkId: NetworkId['celo-alfajores'],
+            amount: {
+              value: BigNumber(10).negated().toString(),
+              tokenAddress: mockCusdAddress,
+              tokenId: mockCusdTokenId,
+            },
+            address: mockQRCodeRecipient.address,
+            metadata: {
+              comment: '',
+            },
+            feeCurrencyId: mockCeloTokenId,
+            transactionHash: mockTxHash,
+          })
+        )
+        .put(sendPaymentSuccess({ amount, tokenId: mockCusdTokenId }))
+        .run()
+
+      expect(navigateFn).toHaveBeenCalledTimes(1)
+      expect(ValoraAnalytics.track).toHaveBeenCalledTimes(2)
+      expect(ValoraAnalytics.track).toHaveBeenCalledWith(SendEvents.send_tx_start)
+      expect(ValoraAnalytics.track).toHaveBeenCalledWith(SendEvents.send_tx_complete, {
+        txId: mockContext.id,
+        recipientAddress: mockQRCodeRecipient.address,
+        amount: '10',
+        usdAmount: '10',
+        tokenAddress: mockCusdAddress,
+        tokenId: mockCusdTokenId,
+        networkId: 'celo-alfajores',
+        isTokenManuallyImported: false,
+      })
+    }
+  )
+
+  it('sends a payment successfully for celo and logs a withdrawal event', async () => {
+    await expectSaga(sendPaymentSaga, { ...sendAction, tokenId: mockCeloTokenId })
       .withState(createMockStore({}).getState())
-      .provide([
-        [call(getConnectedUnlockedAccount), mockAccount],
-        [call(encryptComment, 'asdf', 'asdf', 'asdf', true), 'Asdf'],
-        [call(getERC20TokenContract, mockCusdAddress), mockContract],
-        [call(getStableTokenContract, mockCusdAddress), mockContract],
-        [matchers.call.fn(sendTransactionAsync), undefined],
-      ])
+      .provide(createDefaultProviders())
+      .call(getViemWallet, networkConfig.viemChain.celo)
       .put(
         addStandbyTransaction({
           __typename: 'TokenTransferV3',
-          context: mockContext,
-          networkId: NetworkId['celo-alfajores'],
+          context: { id: 'mock' },
           type: TokenTransactionTypeV2.Sent,
-          metadata: {
-            comment: sendAction.comment,
-          },
+          networkId: NetworkId['celo-alfajores'],
           amount: {
-            value: amount.negated().toString(),
-            tokenAddress: mockCusdAddress,
-            tokenId: mockCusdTokenId,
+            value: BigNumber(10).negated().toString(),
+            tokenAddress: mockCeloAddress,
+            tokenId: mockCeloTokenId,
           },
           address: mockQRCodeRecipient.address,
+          metadata: {
+            comment: '',
+          },
+          feeCurrencyId: mockCeloTokenId,
+          transactionHash: mockTxHash,
         })
       )
-      .call.fn(sendAndMonitorTransaction)
+      .put(sendPaymentSuccess({ amount, tokenId: mockCeloTokenId }))
       .run()
 
-    expect(mockContract.methods.transferWithComment).toHaveBeenCalledWith(
-      mockQRCodeRecipient.address,
-      amount.times(1e18).toFixed(0),
-      expect.any(String)
-    )
-  })
-
-  it('sends a payment successfully with viem', async () => {
-    jest.mocked(getFeatureGate).mockReturnValue(true)
-    await expectSaga(sendPaymentSaga, sendActionWithPreparedTx)
-      .withState(createMockStore({}).getState())
-      .provide([
-        [call(getConnectedUnlockedAccount), mockAccount],
-        [matchers.call.fn(viemSendPayment), undefined],
-      ])
-      .call(viemSendPayment, {
-        context: { id: 'mock' },
-        recipientAddress: sendActionWithPreparedTx.recipient.address,
-        amount: sendActionWithPreparedTx.amount,
-        tokenId: sendActionWithPreparedTx.tokenId,
-        comment: sendActionWithPreparedTx.comment,
-        feeInfo: sendActionWithPreparedTx.feeInfo,
-        preparedTransaction: sendActionWithPreparedTx.preparedTransaction,
-      })
-      .not.call.fn(sendAndMonitorTransaction)
-      .run()
-
-    expect(mockContract.methods.transferWithComment).not.toHaveBeenCalled()
-    expect(mockContract.methods.transfer).not.toHaveBeenCalled()
-    expect(ValoraAnalytics.track).toHaveBeenCalledWith('send_tx_complete', {
+    expect(ValoraAnalytics.track).toHaveBeenCalledTimes(3)
+    expect(ValoraAnalytics.track).toHaveBeenCalledWith(SendEvents.send_tx_start)
+    expect(ValoraAnalytics.track).toHaveBeenCalledWith(SendEvents.send_tx_complete, {
       txId: mockContext.id,
       recipientAddress: mockQRCodeRecipient.address,
       amount: '10',
       usdAmount: '10',
-      tokenAddress: '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1'.toLowerCase(),
-      tokenId: mockCusdTokenId,
-      web3Library: 'viem',
+      tokenAddress: mockCeloAddress,
+      tokenId: mockCeloTokenId,
       networkId: 'celo-alfajores',
+      isTokenManuallyImported: false,
+    })
+    expect(ValoraAnalytics.track).toHaveBeenCalledWith(CeloExchangeEvents.celo_withdraw_completed, {
+      amount: '10',
     })
   })
 
   it('fails if user cancels PIN input', async () => {
     const account = '0x000123'
     await expectSaga(sendPaymentSaga, sendAction)
+      .withState(createMockStore({}).getState())
       .provide([
         [call(getConnectedAccount), account],
         [matchers.call.fn(unlockAccount), UnlockResult.CANCELED],
       ])
       .put(showError(ErrorMessages.PIN_INPUT_CANCELED))
+      .put(sendPaymentFailure())
+      .run()
+    // 1 call for start of send transaction plus 2 calls from showError, one
+    // with the error handler and one with the assertion above
+    expect(ValoraAnalytics.track).toHaveBeenCalledTimes(3)
+  })
+
+  it('fails if sendRawTransaction throws', async () => {
+    await expectSaga(sendPaymentSaga, sendAction)
+      .withState(createMockStore({}).getState())
+      .provide([
+        [matchers.call.fn(mockViemWallet.sendRawTransaction), throwError(new Error('tx failed'))],
+        ...createDefaultProviders(),
+      ])
+      .call(getViemWallet, networkConfig.viemChain.celo)
+      .put(sendPaymentFailure())
+      .put(showError(ErrorMessages.SEND_PAYMENT_FAILED))
+      .not.put.actionType(TransactionActions.ADD_STANDBY_TRANSACTION)
+      .not.put.actionType(TransactionActions.TRANSACTION_CONFIRMED)
+      .run()
+    expect(ValoraAnalytics.track).toHaveBeenCalledWith(SendEvents.send_tx_start)
+    expect(ValoraAnalytics.track).toHaveBeenCalledWith(SendEvents.send_tx_error, {
+      error: 'tx failed',
+    })
+  })
+})
+
+describe('encryptCommentSaga', () => {
+  it('encrypts comment and puts an action', async () => {
+    await expectSaga(
+      encryptCommentSaga,
+      encryptCommentAction({ comment: 'test', fromAddress: mockAccount, toAddress: mockAccount2 })
+    )
+      .provide([[matchers.call.fn(encryptComment), 'enc-test']])
+      .put(encryptCommentComplete('enc-test'))
+      .call(encryptComment, 'test', mockAccount2, mockAccount)
       .run()
   })
 
-  it('uploads symmetric keys if transaction sent successfully', async () => {
-    const account = '0x000123'
-    await expectSaga(sendPaymentSaga, sendAction)
-      .provide([
-        [call(getConnectedUnlockedAccount), mockAccount],
-        [select(currentAccountSelector), account],
-        [call(encryptComment, 'asdf', 'asdf', 'asdf', true), 'Asdf'],
-        [call(getERC20TokenContract, mockCusdAddress), mockContract],
-        [call(getStableTokenContract, mockCusdAddress), mockContract],
-      ])
+  it('puts complete action with null if comment is empty string', async () => {
+    await expectSaga(
+      encryptCommentSaga,
+      encryptCommentAction({ comment: '', fromAddress: mockAccount, toAddress: mockAccount2 })
+    )
+      .put(encryptCommentComplete(null))
+      .not.call.fn(encryptComment)
       .run()
   })
 })

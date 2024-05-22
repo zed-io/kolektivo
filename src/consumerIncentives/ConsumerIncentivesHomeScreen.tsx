@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useDispatch } from 'react-redux'
 import { showError } from 'src/alert/actions'
 import { RewardsEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
@@ -29,14 +28,14 @@ import { claimRewards, fetchAvailableRewards } from 'src/consumerIncentives/slic
 import { SuperchargePendingReward, SuperchargeTokenConfig } from 'src/consumerIncentives/types'
 import { FiatExchangeFlow } from 'src/fiatExchanges/utils'
 import InfoIcon from 'src/icons/InfoIcon'
-import Logo, { LogoTypes } from 'src/icons/Logo'
+import Logo from 'src/icons/Logo'
 import Times from 'src/icons/Times'
 import { boostRewards, earn1, earn2 } from 'src/images/Images'
 import { noHeader } from 'src/navigator/Headers'
 import { navigate, navigateBack } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { userLocationDataSelector } from 'src/networkInfo/selectors'
-import useSelector from 'src/redux/useSelector'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 import { getFeatureGate } from 'src/statsig'
 import { StatsigFeatureGates } from 'src/statsig/types'
 import colors from 'src/styles/colors'
@@ -262,7 +261,7 @@ export default function ConsumerIncentivesHomeScreen() {
         buttonPressed: RewardsScreenCta.CashIn,
       })
     } else {
-      navigate(Screens.VerificationStartScreen)
+      navigate(Screens.VerificationStartScreen, { hasOnboarded: true })
       ValoraAnalytics.track(RewardsEvents.rewards_screen_cta_pressed, {
         buttonPressed: RewardsScreenCta.VerifyPhone,
       })
@@ -316,7 +315,7 @@ export default function ConsumerIncentivesHomeScreen() {
                   ? t('cashIn', { currency: tokenConfigToSupercharge.tokenSymbol })
                   : t('connectNumber')
             }
-            icon={canClaimRewards && <Logo height={24} type={LogoTypes.LIGHT} />}
+            icon={canClaimRewards && <Logo size={24} color={colors.white} />}
             showLoading={showLoadingIndicator || claimRewardsLoading}
             disabled={showLoadingIndicator || claimRewardsLoading}
             onPress={onPressCTA}

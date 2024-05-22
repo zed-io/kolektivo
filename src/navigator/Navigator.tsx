@@ -12,7 +12,9 @@ import AccounSetupFailureScreen from 'src/account/AccountSetupFailureScreen'
 import GoldEducation from 'src/account/GoldEducation'
 import Licenses from 'src/account/Licenses'
 import Profile from 'src/account/Profile'
+import SettingsScreen from 'src/account/Settings'
 import StoreWipeRecoveryScreen from 'src/account/StoreWipeRecoveryScreen'
+import Support from 'src/account/Support'
 import SupportContact from 'src/account/SupportContact'
 import AppLoading from 'src/app/AppLoading'
 import Debug from 'src/app/Debug'
@@ -29,6 +31,7 @@ import DappKitAccountScreen from 'src/dappkit/DappKitAccountScreen'
 import DappKitSignTxScreen from 'src/dappkit/DappKitSignTxScreen'
 import DappShortcutTransactionRequest from 'src/dapps/DappShortcutTransactionRequest'
 import DappShortcutsRewards from 'src/dapps/DappShortcutsRewards'
+import EarnCollectScreen from 'src/earn/EarnCollectScreen'
 import EscrowedPaymentListScreen from 'src/escrow/EscrowedPaymentListScreen'
 import ReclaimPaymentConfirmationScreen from 'src/escrow/ReclaimPaymentConfirmationScreen'
 import BidaliScreen from 'src/fiatExchanges/BidaliScreen'
@@ -56,15 +59,20 @@ import KycPending from 'src/fiatconnect/kyc/KycPending'
 import NotificationCenter from 'src/home/NotificationCenter'
 import { currentLanguageSelector } from 'src/i18n/selectors'
 import ImportWallet from 'src/import/ImportWallet'
+import Invite from 'src/invite/Invite'
+import JumpstartEnterAmount from 'src/jumpstart/JumpstartEnterAmount'
+import JumpstartSendConfirmation from 'src/jumpstart/JumpstartSendConfirmation'
+import JumpstartShareLink from 'src/jumpstart/JumpstartShareLink'
+import JumpstartTransactionDetailsScreen from 'src/jumpstart/JumpstartTransactionDetailsScreen'
+import KeylessBackupIntro from 'src/keylessBackup/KeylessBackupIntro'
 import KeylessBackupPhoneCodeInput from 'src/keylessBackup/KeylessBackupPhoneCodeInput'
 import KeylessBackupPhoneInput from 'src/keylessBackup/KeylessBackupPhoneInput'
 import KeylessBackupProgress from 'src/keylessBackup/KeylessBackupProgress'
-import SetUpKeylessBackup from 'src/keylessBackup/SetUpKeylessBackup'
+import LinkPhoneNumber from 'src/keylessBackup/LinkPhoneNumber'
 import SignInWithEmail from 'src/keylessBackup/SignInWithEmail'
 import WalletSecurityPrimer from 'src/keylessBackup/WalletSecurityPrimer'
 import Language from 'src/language/Language'
 import SelectLocalCurrency from 'src/localCurrency/SelectLocalCurrency'
-import DrawerNavigator from 'src/navigator/DrawerNavigator'
 import {
   emptyHeader,
   headerTransparentWithBack,
@@ -72,14 +80,16 @@ import {
   noHeader,
   nuxNavigationOptions,
 } from 'src/navigator/Headers'
+import ProfileMenu from 'src/navigator/ProfileMenu'
 import QRNavigator from 'src/navigator/QRNavigator'
 import { Screens } from 'src/navigator/Screens'
+import TabNavigator from 'src/navigator/TabNavigator'
 import { getInitialRoute } from 'src/navigator/initialRoute'
 import { StackParamList } from 'src/navigator/types'
 import NftsInfoCarousel from 'src/nfts/NftsInfoCarousel'
 import ChooseYourAdventure from 'src/onboarding/ChooseYourAdventure'
 import EnableBiometry from 'src/onboarding/registration/EnableBiometry'
-import NameAndPicture from 'src/onboarding/registration/NameAndPicture'
+import ImportSelect from 'src/onboarding/registration/ImportSelect'
 import OnboardingRecoveryPhrase from 'src/onboarding/registration/OnboardingRecoveryPhrase'
 import ProtectWallet from 'src/onboarding/registration/ProtectWallet'
 import RegulatoryTerms from 'src/onboarding/registration/RegulatoryTerms'
@@ -88,10 +98,9 @@ import OnboardingSuccessScreen from 'src/onboarding/success/OnboardingSuccessScr
 import Welcome from 'src/onboarding/welcome/Welcome'
 import PincodeEnter from 'src/pincode/PincodeEnter'
 import PincodeSet from 'src/pincode/PincodeSet'
+import PointsHome from 'src/points/PointsHome'
 import { RootState } from 'src/redux/reducers'
 import { store } from 'src/redux/store'
-import Send from 'src/send/Send'
-import SendAmount from 'src/send/SendAmount'
 import SendConfirmation, { sendConfirmationScreenNavOptions } from 'src/send/SendConfirmation'
 import SendEnterAmount from 'src/send/SendEnterAmount'
 import SendSelectRecipient from 'src/send/SendSelectRecipient'
@@ -102,8 +111,6 @@ import ValidateRecipientIntro, {
   validateRecipientIntroScreenNavOptions,
 } from 'src/send/ValidateRecipientIntro'
 import SwapScreen from 'src/swap/SwapScreen'
-import AssetsScreen from 'src/tokens/Assets'
-import TokenBalancesScreen from 'src/tokens/TokenBalances'
 import TokenDetailsScreen from 'src/tokens/TokenDetails'
 import TokenImportScreen from 'src/tokens/TokenImport'
 import TransactionDetailsScreen from 'src/transactions/feed/TransactionDetailsScreen'
@@ -135,11 +142,6 @@ const commonScreens = (Navigator: typeof Stack) => {
         name={Screens.WebViewScreen}
         component={WebViewScreen}
         options={emptyHeader}
-      />
-      <Navigator.Screen
-        name={Screens.TokenBalances}
-        component={TokenBalancesScreen}
-        options={TokenBalancesScreen.navigationOptions}
       />
       <Navigator.Screen
         name={Screens.SanctionedCountryErrorScreen}
@@ -180,11 +182,6 @@ const nuxScreens = (Navigator: typeof Stack) => (
       options={Welcome.navigationOptions}
     />
     <Navigator.Screen
-      name={Screens.NameAndPicture}
-      component={NameAndPicture}
-      options={NameAndPicture.navOptions}
-    />
-    <Navigator.Screen
       name={Screens.ProtectWallet}
       component={ProtectWallet}
       options={ProtectWallet.navOptions}
@@ -198,6 +195,11 @@ const nuxScreens = (Navigator: typeof Stack) => (
       name={Screens.PincodeSet}
       component={PincodeSet}
       options={PincodeSet.navigationOptions}
+    />
+    <Navigator.Screen
+      name={Screens.ImportSelect}
+      component={ImportSelect}
+      options={ImportSelect.navigationOptions}
     />
     <Navigator.Screen
       name={Screens.ImportWallet}
@@ -220,19 +222,9 @@ const nuxScreens = (Navigator: typeof Stack) => (
 const sendScreens = (Navigator: typeof Stack) => (
   <>
     <Navigator.Screen
-      name={Screens.Send}
-      component={Send}
-      options={Send.navigationOptions as NativeStackNavigationOptions}
-    />
-    <Navigator.Screen
       name={Screens.SendSelectRecipient}
       component={SendSelectRecipient}
       options={SendSelectRecipient.navigationOptions as NativeStackNavigationOptions}
-    />
-    <Navigator.Screen
-      name={Screens.SendAmount}
-      component={SendAmount}
-      options={SendAmount.navigationOptions}
     />
     <Navigator.Screen
       name={Screens.SendConfirmation}
@@ -263,6 +255,21 @@ const sendScreens = (Navigator: typeof Stack) => (
       name={Screens.SendEnterAmount}
       component={SendEnterAmount}
       options={noHeader}
+    />
+    <Navigator.Screen
+      name={Screens.JumpstartEnterAmount}
+      component={JumpstartEnterAmount}
+      options={noHeader}
+    />
+    <Navigator.Screen
+      name={Screens.JumpstartSendConfirmation}
+      component={JumpstartSendConfirmation}
+      options={headerWithBackButton}
+    />
+    <Navigator.Screen
+      name={Screens.JumpstartShareLink}
+      component={JumpstartShareLink}
+      options={JumpstartShareLink.navigationOptions}
     />
   </>
 )
@@ -448,9 +455,9 @@ const settingsScreens = (Navigator: typeof Stack) => (
       component={WalletSecurityPrimer}
     />
     <Navigator.Screen
-      name={Screens.SetUpKeylessBackup}
-      options={SetUpKeylessBackup.navigationOptions}
-      component={SetUpKeylessBackup}
+      name={Screens.KeylessBackupIntro}
+      options={KeylessBackupIntro.navigationOptions}
+      component={KeylessBackupIntro}
     />
     <Navigator.Screen
       name={Screens.SignInWithEmail}
@@ -472,6 +479,11 @@ const settingsScreens = (Navigator: typeof Stack) => (
       options={{ headerStyle: {} }}
       component={KeylessBackupProgress}
     />
+    <Navigator.Screen
+      name={Screens.LinkPhoneNumber}
+      options={{ headerStyle: {} }}
+      component={LinkPhoneNumber}
+    />
   </>
 )
 
@@ -488,6 +500,11 @@ const generalScreens = (Navigator: typeof Stack) => (
       options={headerWithBackButton}
     />
     <Navigator.Screen
+      name={Screens.JumpstartTransactionDetailsScreen}
+      component={JumpstartTransactionDetailsScreen}
+      options={noHeader}
+    />
+    <Navigator.Screen
       name={Screens.GoldEducation}
       component={GoldEducation}
       options={GoldEducation.navigationOptions as NativeStackNavigationOptions}
@@ -501,6 +518,28 @@ const generalScreens = (Navigator: typeof Stack) => (
       name={Screens.MultichainBeta}
       component={MultichainBeta}
       options={MultichainBeta.navigationOptions}
+    />
+    <Navigator.Screen
+      name={Screens.ProfileMenu}
+      component={ProfileMenu}
+      options={ProfileMenu.navigationOptions as NativeStackNavigationOptions}
+    />
+    <Navigator.Screen
+      name={Screens.Settings}
+      component={SettingsScreen}
+      options={headerWithBackButton}
+    />
+    <Navigator.Screen name={Screens.Invite} component={Invite} options={noHeader} />
+    <Navigator.Screen name={Screens.Support} component={Support} options={headerWithBackButton} />
+  </>
+)
+
+const earnScreens = (Navigator: typeof Stack) => (
+  <>
+    <Navigator.Screen
+      name={Screens.EarnCollectScreen}
+      component={EarnCollectScreen}
+      options={headerWithBackButton}
     />
   </>
 )
@@ -524,11 +563,6 @@ const nftScreens = (Navigator: typeof Stack) => (
 const assetScreens = (Navigator: typeof Stack) => (
   <>
     <Navigator.Screen
-      name={Screens.Assets}
-      component={AssetsScreen}
-      options={AssetsScreen.navigationOptions}
-    />
-    <Navigator.Screen
       name={Screens.TokenDetails}
       component={TokenDetailsScreen}
       options={TokenDetailsScreen.navigationOptions}
@@ -541,6 +575,11 @@ const assetScreens = (Navigator: typeof Stack) => (
   </>
 )
 
+const pointsScreens = (Navigator: typeof Stack) => (
+  <>
+    <Navigator.Screen name={Screens.PointsHome} component={PointsHome} options={noHeader} />
+  </>
+)
 const mapStateToProps = (state: RootState) => {
   return {
     choseToRestoreAccount: state.account.choseToRestoreAccount,
@@ -596,7 +635,7 @@ export function MainStackScreen() {
 
   return (
     <Stack.Navigator initialRouteName={initialRouteName} screenOptions={emptyHeader}>
-      <Stack.Screen name={Screens.DrawerNavigator} component={DrawerNavigator} options={noHeader} />
+      <Stack.Screen name={Screens.TabNavigator} component={TabNavigator} options={noHeader} />
       {commonScreens(Stack)}
       {sendScreens(Stack)}
       {nuxScreens(Stack)}
@@ -606,8 +645,10 @@ export function MainStackScreen() {
       {settingsScreens(Stack)}
       {generalScreens(Stack)}
       {swapScreens(Stack)}
+      {earnScreens(Stack)}
       {nftScreens(Stack)}
       {assetScreens(Stack)}
+      {pointsScreens(Stack)}
     </Stack.Navigator>
   )
 }
@@ -621,7 +662,6 @@ const modalAnimatedScreens = (Navigator: typeof Stack) => (
     />
     <Navigator.Screen
       name={Screens.RegulatoryTerms}
-      // @ts-expect-error component type in native-stack v6
       component={RegulatoryTerms}
       options={RegulatoryTerms.navigationOptions as NativeStackNavigationOptions}
     />
@@ -648,6 +688,11 @@ const mainScreenNavOptions = () => ({
 })
 
 function nativeBottomSheets(BottomSheet: typeof RootStack) {
+  // Note: scrolling views inside bottom sheet screens should use the relevant
+  // components from react-native-gesture-handler instead of directly from
+  // react-native
+  // https://github.com/osdnk/react-native-reanimated-bottom-sheet/issues/264#issuecomment-674757545
+
   return (
     <>
       <BottomSheet.Screen name={Screens.WalletConnectRequest} component={WalletConnectRequest} />
@@ -693,10 +738,6 @@ function RootStackScreen() {
     []
   )
 
-  // Note: scrolling views inside bottom sheet screens should use the relevant
-  // components from react-native-gesture-handler instead of directly from
-  // react-native
-  // https://github.com/osdnk/react-native-reanimated-bottom-sheet/issues/264#issuecomment-674757545
   return (
     <RootStack.Navigator
       screenOptions={{

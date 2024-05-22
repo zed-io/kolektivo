@@ -2,7 +2,6 @@ import { BottomSheetScreenProps } from '@th3rdwave/react-navigation-bottom-sheet
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, StyleSheet } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
 import { DappShortcutsEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import BottomSheetScrollView from 'src/components/BottomSheetScrollView'
@@ -11,6 +10,7 @@ import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
 import { triggeredShortcutsStatusSelector } from 'src/positions/selectors'
 import { denyExecuteShortcut, executeShortcut } from 'src/positions/slice'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 import { Colors } from 'src/styles/colors'
 import { Spacing } from 'src/styles/styles'
 import Logger from 'src/utils/Logger'
@@ -31,7 +31,7 @@ function DappShortcutTransactionRequest({ route: { params } }: Props) {
     rewardId,
     appName: pendingAcceptShortcut?.appName ?? '',
     appId: pendingAcceptShortcut?.appId ?? '',
-    network: pendingAcceptShortcut?.network ?? '',
+    network: pendingAcceptShortcut?.networkId ?? '',
     shortcutId: pendingAcceptShortcut?.shortcutId ?? '',
   }
 
@@ -77,7 +77,7 @@ function DappShortcutTransactionRequest({ route: { params } }: Props) {
   }
 
   return (
-    <BottomSheetScrollView>
+    <BottomSheetScrollView isScreen>
       {pendingAcceptShortcut?.transactions?.length ? (
         <RequestContent
           type="confirm"

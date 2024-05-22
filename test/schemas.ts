@@ -5,13 +5,13 @@ import {
   RecoveryPhraseInOnboardingStatus,
 } from 'src/account/reducer'
 import { AppState, MultichainBetaStatus } from 'src/app/actions'
-import { Dapp, DappConnectInfo } from 'src/dapps/types'
+import { Dapp } from 'src/dapps/types'
 import { FeeEstimates } from 'src/fees/reducer'
 import { SendingFiatAccountStatus } from 'src/fiatconnect/slice'
-import { KeylessBackupStatus } from 'src/keylessBackup/types'
-import { Position } from 'src/positions/types'
+import { KeylessBackupDeleteStatus, KeylessBackupStatus } from 'src/keylessBackup/types'
+import { LocalCurrencyCode } from 'src/localCurrency/consts'
 import { updateCachedQuoteParams } from 'src/redux/migrations'
-import { RootState } from 'src/redux/reducers'
+import { RootState } from 'src/redux/store'
 import { Network, NetworkId, StandbyTransaction, TokenTransaction } from 'src/transactions/types'
 import { CiCoCurrency, Currency } from 'src/utils/currencies'
 import networkConfig from 'src/web3/networkConfig'
@@ -20,6 +20,8 @@ import {
   mockCeurAddress,
   mockCusdAddress,
   mockPositions,
+  mockPositionsLegacy,
+  mockShortcuts,
   mockTestTokenAddress,
 } from 'test/values'
 
@@ -1363,7 +1365,7 @@ export const v56Schema = {
   },
   dapps: {
     ...v55Schema.dapps,
-    dappConnectInfo: DappConnectInfo.Default,
+    dappConnectInfo: 'default',
   },
 }
 
@@ -1961,7 +1963,7 @@ export const v103Schema = {
 }
 
 export const v104Schema = {
-  ...(_.omit(v103Schema, ['goldToken', 'stableToken']) as any),
+  ..._.omit(v103Schema, ['goldToken', 'stableToken']),
   _persist: {
     ...v103Schema._persist,
     version: 104,
@@ -2207,7 +2209,7 @@ export const v124Schema = {
     version: 124,
   },
   positions: {
-    positions: mockPositions,
+    positions: mockPositionsLegacy,
     status: 'idle',
   },
 }
@@ -2300,14 +2302,7 @@ export const v131Schema = {
         }
       }
     ),
-    activeDapp: v130Schema.dapps.activeDapp
-      ? {
-          ...v130Schema.dapps.activeDapp,
-          categories: v130Schema.dapps.activeDapp.categories ?? [
-            v130Schema.dapps.activeDapp.categoryId,
-          ],
-        }
-      : null,
+    activeDapp: null,
   },
 }
 
@@ -2319,7 +2314,7 @@ export const v132Schema = {
   },
   positions: {
     ...v131Schema.positions,
-    positions: v131Schema.positions.positions.map((position: Position) => ({
+    positions: v131Schema.positions.positions.map((position: any) => ({
       ...position,
       availableShortcutIds: [],
     })),
@@ -2680,7 +2675,7 @@ export const v159Schema = {
 }
 
 export const v160Schema = {
-  ...(_.omit(v159Schema, 'paymentRequest') as any),
+  ..._.omit(v159Schema, 'paymentRequest'),
   _persist: {
     ...v159Schema._persist,
     version: 160,
@@ -2994,6 +2989,326 @@ export const v186Schema = {
   app: { ...v185Schema.app, pendingDeepLinks: [] },
 }
 
+export const v187Schema = {
+  ...v186Schema,
+  _persist: {
+    ...v186Schema._persist,
+    version: 187,
+  },
+  dapps: _.omit(
+    v186Schema.dapps,
+    'dappConnectInfo',
+    'dappFavoritesEnabled',
+    'dappsMinimalDisclaimerEnabled'
+  ),
+}
+
+export const v188Schema = {
+  ...v187Schema,
+  _persist: {
+    ...v187Schema._persist,
+    version: 188,
+  },
+  app: _.omit(v187Schema.app, 'celoEuroEnabled', 'rewardPillText'),
+  send: _.omit(v187Schema.send, 'inviteRewardWeeklyLimit', 'inviteRewardCusd'),
+}
+
+export const v189Schema = {
+  ...v188Schema,
+  _persist: {
+    ...v188Schema._persist,
+    version: 189,
+  },
+  home: { ...v188Schema.home, nftCelebration: null },
+}
+
+const currencyMapping: Record<string, LocalCurrencyCode> = {
+  MYS: LocalCurrencyCode.MYR,
+  SGP: LocalCurrencyCode.SGD,
+  THI: LocalCurrencyCode.THB,
+  TWN: LocalCurrencyCode.TWD,
+  VNM: LocalCurrencyCode.VND,
+}
+export const v190Schema = {
+  ...v189Schema,
+  _persist: {
+    ...v189Schema._persist,
+    version: 190,
+  },
+  localCurrency: {
+    ...v189Schema.localCurrency,
+    preferredCurrencyCode:
+      currencyMapping[v189Schema.localCurrency.preferredCurrencyCode] ??
+      v189Schema.localCurrency.preferredCurrencyCode,
+    fetchedCurrencyCode:
+      currencyMapping[v189Schema.localCurrency.fetchedCurrencyCode] ??
+      v189Schema.localCurrency.fetchedCurrencyCode,
+  },
+}
+
+export const v191Schema = {
+  ...v190Schema,
+  _persist: {
+    ...v190Schema._persist,
+    version: 191,
+  },
+  app: _.omit(v190Schema.app, 'walletConnectV1Enabled'),
+}
+
+export const v192Schema = {
+  ...v191Schema,
+  _persist: {
+    ...v191Schema._persist,
+    version: 192,
+  },
+  app: _.omit(v191Schema.app, [
+    'showPriceChangeIndicatorInBalances',
+    'visualizeNFTsEnabledInHomeAssetsPage',
+  ]),
+}
+
+export const v193Schema = {
+  ...v192Schema,
+  _persist: {
+    ...v192Schema._persist,
+    version: 193,
+  },
+  keylessBackup: {
+    ...v192Schema.keylessBackup,
+    deleteBackupStatus: KeylessBackupDeleteStatus.NotStarted,
+  },
+}
+
+export const v194Schema = {
+  ...v193Schema,
+  _persist: {
+    ...v193Schema._persist,
+    version: 194,
+  },
+  send: {
+    ..._.omit(v193Schema.send, 'showSendToAddressWarning'),
+    encryptedComment: null,
+    isEncryptingComment: false,
+  },
+}
+
+export const v195Schema = {
+  ...v194Schema,
+  _persist: {
+    ...v194Schema._persist,
+    version: 195,
+  },
+  keylessBackup: {
+    ...v194Schema.keylessBackup,
+    showDeleteBackupError: false,
+  },
+}
+
+export const v196Schema = {
+  ...v195Schema,
+  _persist: {
+    ...v195Schema._persist,
+    version: 196,
+  },
+  jumpstart: {
+    claimStatus: 'idle',
+  },
+}
+
+export const v197Schema = {
+  ...v196Schema,
+  _persist: {
+    ...v196Schema._persist,
+    version: 197,
+  },
+  web3: _.omit(v196Schema.web3, 'twelveWordMnemonicEnabled'),
+}
+
+export const v198Schema = {
+  ...v197Schema,
+  _persist: {
+    ...v197Schema._persist,
+    version: 198,
+  },
+  home: {
+    ...v197Schema.home,
+    nftCelebration: null,
+  },
+}
+
+export const v199Schema = {
+  ...v198Schema,
+  _persist: {
+    ...v198Schema._persist,
+    version: 199,
+  },
+  app: _.omit(v198Schema.app, 'rampCashInButtonExpEnabled'),
+}
+
+export const v200Schema = {
+  ...v199Schema,
+  _persist: {
+    ...v199Schema._persist,
+    version: 200,
+  },
+  jumpstart: {
+    ...v199Schema.jumpstart,
+    depositStatus: 'idle',
+  },
+}
+
+export const v201Schema = {
+  ...v200Schema,
+  _persist: {
+    ...v200Schema._persist,
+    version: 201,
+  },
+  app: {
+    ..._.omit(v200Schema.app, 'hideHomeBalances'),
+    hideBalances: false,
+  },
+}
+
+export const v202Schema = {
+  ...v201Schema,
+  _persist: {
+    ...v201Schema._persist,
+    version: 202,
+  },
+  walletConnect: {
+    ...v201Schema.walletConnect,
+    pendingSessions: [],
+  },
+}
+
+export const v203Schema = {
+  ...v202Schema,
+  _persist: {
+    ...v202Schema._persist,
+    version: 203,
+  },
+  jumpstart: {
+    ...v202Schema.jumpstart,
+    reclaimStatus: 'idle',
+  },
+}
+
+export const v204Schema = {
+  ...v203Schema,
+  _persist: {
+    ...v203Schema._persist,
+    version: 204,
+  },
+  positions: {
+    ...v203Schema.positions,
+    positions: mockPositions,
+    shortcuts: mockShortcuts,
+  },
+}
+
+export const v205Schema = {
+  ...v204Schema,
+  _persist: {
+    ...v204Schema._persist,
+    version: 205,
+  },
+  points: {
+    pointsHistory: [],
+    nextPageUrl: null,
+    getHistoryStatus: 'idle',
+  },
+}
+
+export const v206Schema = {
+  ...v205Schema,
+  _persist: {
+    ...v205Schema._persist,
+    version: 206,
+  },
+  app: _.omit(v205Schema.app, 'skipVerification'),
+}
+
+export const v207Schema = {
+  ...v206Schema,
+  _persist: {
+    ...v206Schema._persist,
+    version: 207,
+  },
+  points: {
+    ...v206Schema.points,
+    pointsConfig: { activitiesById: {} },
+    pointsConfigStatus: 'idle',
+  },
+}
+
+export const v208Schema = {
+  ...v207Schema,
+  _persist: {
+    ...v207Schema._persist,
+    version: 208,
+  },
+  identity: {
+    ...v207Schema.identity,
+    shouldRefreshStoredPasswordHash: true,
+  },
+}
+
+export const v209Schema = {
+  ...v208Schema,
+  _persist: {
+    ...v208Schema._persist,
+    version: 209,
+  },
+  points: {
+    ...v208Schema.points,
+    pendingPointsEvents: [],
+  },
+}
+
+export const v210Schema = {
+  ...v209Schema,
+  _persist: {
+    ...v209Schema._persist,
+    version: 210,
+  },
+  points: {
+    ...v209Schema.points,
+    pointsHistory: [],
+  },
+}
+
+export const v211Schema = {
+  ..._.omit(v210Schema, 'exchange'),
+  _persist: {
+    ...v210Schema._persist,
+    version: 211,
+  },
+}
+
+export const v212Schema = {
+  ...v211Schema,
+  _persist: {
+    ...v211Schema._persist,
+    version: 212,
+  },
+  points: {
+    ...v211Schema.points,
+    pointsBalance: '0',
+    pointsBalanceStatus: 'idle',
+  },
+}
+
+export const v213Schema = {
+  ...v212Schema,
+  _persist: {
+    ...v212Schema._persist,
+    version: 213,
+  },
+  earn: {
+    depositStatus: 'idle',
+  },
+}
+
 export function getLatestSchema(): Partial<RootState> {
-  return v186Schema as Partial<RootState>
+  return v213Schema as Partial<RootState>
 }

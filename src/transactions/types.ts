@@ -7,6 +7,8 @@ export enum Network {
   Ethereum = 'ethereum',
   Arbitrum = 'arbitrum',
   Optimism = 'optimism',
+  PolygonPoS = 'polygon-pos',
+  Base = 'base',
 }
 
 export enum NetworkId {
@@ -18,6 +20,10 @@ export enum NetworkId {
   'arbitrum-sepolia' = 'arbitrum-sepolia',
   'op-mainnet' = 'op-mainnet',
   'op-sepolia' = 'op-sepolia',
+  'polygon-pos-mainnet' = 'polygon-pos-mainnet',
+  'polygon-pos-amoy' = 'polygon-pos-amoy',
+  'base-mainnet' = 'base-mainnet',
+  'base-sepolia' = 'base-sepolia',
 }
 
 export type PendingStandbySwap = {
@@ -41,10 +47,18 @@ export type PendingStandbyApproval = {
   feeCurrencyId?: string
 } & Omit<TokenApproval, 'block' | 'fees' | 'transactionHash' | 'status'>
 
+export type PendingStandbyNFTTransfer = {
+  transactionHash?: string
+  context: TransactionContext
+  status: TransactionStatus.Pending
+  feeCurrencyId?: string
+} & Omit<NftTransfer, 'block' | 'fees' | 'transactionHash' | 'status'>
+
 export type ConfirmedStandbyTransaction = (
   | Omit<TokenExchange, 'status'>
   | Omit<TokenTransfer, 'status'>
   | Omit<TokenApproval, 'status'>
+  | Omit<NftTransfer, 'status'>
 ) & {
   status: TransactionStatus.Complete | TransactionStatus.Failed
   context: TransactionContext
@@ -55,6 +69,7 @@ export type StandbyTransaction =
   | PendingStandbySwap
   | PendingStandbyTransfer
   | PendingStandbyApproval
+  | PendingStandbyNFTTransfer
   | ConfirmedStandbyTransaction
 
 // Context used for logging the transaction execution flow.

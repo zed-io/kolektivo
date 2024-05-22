@@ -5,7 +5,7 @@ import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import ScanIcon from 'src/icons/ScanIcon'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
-import { TopBarIconButton } from 'src/navigator/TopBarButton'
+import { TopBarIconButtonV2 } from 'src/navigator/TopBarIconButtonV2'
 
 interface Props {
   style?: StyleProp<ViewStyle>
@@ -13,16 +13,16 @@ interface Props {
   testID?: string
 }
 
-export default function QrScanButton({ style, size, testID }: Props) {
+export default function QrScanButton({ testID, size, style }: Props) {
   const onPress = () => {
     ValoraAnalytics.track(QrScreenEvents.qr_scanner_open)
     navigate(Screens.QRNavigator, { screen: Screens.QRScanner })
   }
 
   return (
-    <TopBarIconButton
-      testID={testID}
+    <TopBarIconButtonV2
       icon={<ScanIcon size={size} />}
+      testID={testID}
       onPress={onPress}
       style={style}
     />

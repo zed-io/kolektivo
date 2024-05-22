@@ -11,15 +11,15 @@ import { navigateBack, navigateHome } from 'src/navigator/NavigationService'
 import { handleQRCodeDefault, handleQRCodeSecureSend, shareSVGImage } from 'src/qrcode/utils'
 import {
   Actions,
+  EncryptCommentAction,
   SendPaymentAction,
   ShareQRCodeAction,
+  encryptCommentComplete,
   sendPaymentFailure,
   sendPaymentSuccess,
 } from 'src/send/actions'
 import { SentryTransactionHub } from 'src/sentry/SentryTransactionHub'
 import { SentryTransaction } from 'src/sentry/SentryTransactions'
-import { getFeatureGate } from 'src/statsig'
-import { StatsigFeatureGates } from 'src/statsig/types'
 import {
   getERC20TokenContract,
   getStableTokenContract,
@@ -27,9 +27,9 @@ import {
   getTokenInfoByAddress,
   tokenAmountInSmallestUnit,
 } from 'src/tokens/saga'
-import { TokenBalance } from 'src/tokens/slice'
+import { TokenBalance, fetchTokenBalances } from 'src/tokens/slice'
 import { getTokenId } from 'src/tokens/utils'
-import { addStandbyTransaction } from 'src/transactions/actions'
+import { BaseStandbyTransaction, addStandbyTransaction } from 'src/transactions/actions'
 import { sendAndMonitorTransaction } from 'src/transactions/saga'
 import {
   TokenTransactionTypeV2,
@@ -39,17 +39,17 @@ import {
 import Logger from 'src/utils/Logger'
 import { ensureError } from 'src/utils/ensureError'
 import { safely } from 'src/utils/safely'
-import { SerializableTransactionRequest } from 'src/viem/preparedTransactionSerialization'
-import { sendPayment as viemSendPayment } from 'src/viem/saga'
+import { publicClient } from 'src/viem'
+import { sendPreparedTransactions } from 'src/viem/saga'
 import { getContractKit } from 'src/web3/contracts'
-import networkConfig from 'src/web3/networkConfig'
+import networkConfig, { networkIdToNetwork } from 'src/web3/networkConfig'
 import { getConnectedUnlockedAccount } from 'src/web3/saga'
 import { call, put, spawn, take, takeEvery, takeLeading } from 'typed-redux-saga'
 import * as utf8 from 'utf8'
 
-const TAG = 'send/saga'
+export const TAG = 'send/saga'
 
-export function* watchQrCodeShare() {
+function* watchQrCodeShare() {
   while (true) {
     const action = (yield* take(Actions.QRCODE_SHARE)) as ShareQRCodeAction
     try {
@@ -163,63 +163,78 @@ export function* buildAndSendPayment(
   return { receipt, error }
 }
 
-/**
- * Sends a payment to an address with an encrypted comment and gives profile
- * access to the recipient
- *
- * @param recipientAddress the address to send the payment to
- * @param amount the crypto amount to send
- * @param usdAmount the amount in usd (nullable, used only for analytics)
- * @param tokenId the id of the token being sent
- * @param comment the comment on the transaction
- * @param feeInfo an object containing the fee information
- * @param preparedTransaction a serialized viem tx request
- */
-function* sendPayment(
-  recipientAddress: string,
-  amount: BigNumber,
-  usdAmount: BigNumber | null,
-  tokenId: string,
-  comment: string,
-  feeInfo?: FeeInfo,
-  preparedTransaction?: SerializableTransactionRequest
-) {
-  const context = newTransactionContext(TAG, 'Send payment')
-  const tokenInfo = yield* call(getTokenInfo, tokenId)
-  if (!tokenInfo) {
-    throw new Error('token info not found')
-  }
-
-  const useViem = getFeatureGate(StatsigFeatureGates.USE_VIEM_FOR_SEND)
-  const web3Library = useViem ? 'viem' : 'contract-kit'
-
+export function* sendPaymentSaga({
+  amount,
+  tokenId,
+  usdAmount,
+  comment,
+  recipient,
+  fromModal,
+  preparedTransaction: serializablePreparedTransaction,
+}: SendPaymentAction) {
   try {
-    ValoraAnalytics.track(SendEvents.send_tx_start, { web3Library })
-
-    if (useViem) {
-      yield* call(viemSendPayment, {
-        context,
-        recipientAddress,
-        amount,
-        tokenId,
-        comment,
-        feeInfo,
-        preparedTransaction,
-      })
-    } else {
-      if (!(feeInfo && tokenInfo.address)) {
-        throw new Error('fee info and token address are required for non-viem sends')
-      }
-      yield* call(
-        buildAndSendPayment,
-        context,
-        recipientAddress,
-        amount,
-        tokenInfo.address,
-        comment,
-        feeInfo
-      )
+    SentryTransactionHub.startTransaction(SentryTransaction.send_payment)
+    const context = newTransactionContext(TAG, 'Send payment')
+    const recipientAddress = recipient.address
+    if (!recipientAddress) {
+      // should never happen. TODO(ACT-1046): ensure recipient type here
+      // includes address
+      throw new Error('No address found on recipient')
     }
+
+    const tokenInfo = yield* call(getTokenInfo, tokenId)
+    if (!tokenInfo) {
+      throw new Error(`Could not find token info for token id: ${tokenId}`)
+    }
+
+    const createStandbyTransaction = (
+      transactionHash: string,
+      feeCurrencyId?: string
+    ): BaseStandbyTransaction => ({
+      __typename: 'TokenTransferV3',
+      type: TokenTransactionTypeV2.Sent,
+      context,
+      networkId: tokenInfo.networkId,
+      amount: {
+        value: amount.negated().toString(),
+        tokenAddress: tokenInfo.address ?? undefined,
+        tokenId,
+      },
+      address: recipientAddress,
+      metadata: {
+        comment,
+      },
+      transactionHash,
+      feeCurrencyId,
+    })
+
+    ValoraAnalytics.track(SendEvents.send_tx_start)
+    Logger.debug(
+      `${TAG}/sendPaymentSaga`,
+      'Executing send transaction',
+      context.description ?? 'No description',
+      context.id,
+      tokenId,
+      amount
+    )
+
+    const [hash] = yield* call(
+      sendPreparedTransactions,
+      [serializablePreparedTransaction],
+      tokenInfo.networkId,
+      [createStandbyTransaction]
+    )
+
+    const receipt = yield* call(
+      [publicClient[networkIdToNetwork[tokenInfo.networkId]], 'waitForTransactionReceipt'],
+      { hash }
+    )
+    Logger.debug(`${TAG}/sendPaymentSaga`, 'Got send transaction receipt', receipt)
+    if (receipt.status === 'reverted') {
+      throw new Error(`Send transaction reverted: ${hash}`)
+    }
+
+    yield* put(fetchTokenBalances({ showLoading: true }))
 
     ValoraAnalytics.track(SendEvents.send_tx_complete, {
       txId: context.id,
@@ -228,51 +243,14 @@ function* sendPayment(
       usdAmount: usdAmount?.toString(),
       tokenAddress: tokenInfo.address ?? undefined,
       tokenId: tokenInfo.tokenId,
-      web3Library,
       networkId: tokenInfo.networkId,
+      isTokenManuallyImported: !!tokenInfo?.isManuallyImported,
     })
-  } catch (err) {
-    const error = ensureError(err)
-    Logger.error(`${TAG}/sendPayment`, 'Could not make token transfer', error.message)
-    ValoraAnalytics.track(SendEvents.send_tx_error, { error: error.message })
-    yield* put(showErrorOrFallback(error, ErrorMessages.TRANSACTION_FAILED))
-    // TODO: Uncomment this when the transaction feed supports multiple tokens.
-    // yield put(removeStandbyTransaction(context.id))
-  }
-}
 
-export function* sendPaymentSaga({
-  amount,
-  tokenId,
-  usdAmount,
-  comment,
-  recipient,
-  fromModal,
-  feeInfo,
-  preparedTransaction,
-}: SendPaymentAction) {
-  try {
-    yield* call(getConnectedUnlockedAccount)
-    SentryTransactionHub.startTransaction(SentryTransaction.send_payment)
-    const tokenInfo: TokenBalance | undefined = yield* call(getTokenInfo, tokenId)
-    if (recipient.address) {
-      yield* call(
-        sendPayment,
-        recipient.address,
-        amount,
-        usdAmount,
-        tokenId,
-        comment,
-        feeInfo,
-        preparedTransaction
-      )
-      if (tokenInfo?.symbol === 'CELO') {
-        ValoraAnalytics.track(CeloExchangeEvents.celo_withdraw_completed, {
-          amount: amount.toString(),
-        })
-      }
-    } else {
-      throw new Error('No address found on recipient')
+    if (tokenInfo?.symbol === 'CELO') {
+      ValoraAnalytics.track(CeloExchangeEvents.celo_withdraw_completed, {
+        amount: amount.toString(),
+      })
     }
 
     if (fromModal) {
@@ -283,14 +261,36 @@ export function* sendPaymentSaga({
 
     yield* put(sendPaymentSuccess({ amount, tokenId }))
     SentryTransactionHub.finishTransaction(SentryTransaction.send_payment)
-  } catch (e) {
-    yield* put(showErrorOrFallback(e, ErrorMessages.SEND_PAYMENT_FAILED))
-    yield* put(sendPaymentFailure())
+  } catch (err) {
+    // for pin cancelled, this will show the pin input canceled message, for any
+    // other error, will fallback to payment failed
+    yield* put(showErrorOrFallback(err, ErrorMessages.SEND_PAYMENT_FAILED))
+    yield* put(sendPaymentFailure()) // resets isSending state
+    const error = ensureError(err)
+    if (error.message === ErrorMessages.PIN_INPUT_CANCELED) {
+      Logger.info(`${TAG}/sendPaymentSaga`, 'Send cancelled by user')
+      return
+    }
+    Logger.error(`${TAG}/sendPaymentSaga`, 'Send payment failed', error)
+    ValoraAnalytics.track(SendEvents.send_tx_error, { error: error.message })
+  } finally {
+    SentryTransactionHub.finishTransaction(SentryTransaction.send_payment)
   }
 }
 
-export function* watchSendPayment() {
+export function* encryptCommentSaga({ comment, fromAddress, toAddress }: EncryptCommentAction) {
+  const encryptedComment = comment
+    ? yield* call(encryptComment, comment, toAddress, fromAddress)
+    : null
+  yield* put(encryptCommentComplete(encryptedComment))
+}
+
+function* watchSendPayment() {
   yield* takeLeading(Actions.SEND_PAYMENT, safely(sendPaymentSaga))
+}
+
+function* watchEncryptComment() {
+  yield* takeLeading(Actions.ENCRYPT_COMMENT, safely(encryptCommentSaga))
 }
 
 function* watchQrCodeDetections() {
@@ -306,4 +306,5 @@ export function* sendSaga() {
   yield* spawn(watchQrCodeDetections)
   yield* spawn(watchQrCodeShare)
   yield* spawn(watchSendPayment)
+  yield* spawn(watchEncryptComment)
 }

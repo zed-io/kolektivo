@@ -3,10 +3,10 @@ import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useSelector } from 'react-redux'
 import { AssetsEvents } from 'src/analytics/Events'
 import { TokenProperties } from 'src/analytics/Properties'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
+import CeloNewsFeed from 'src/celoNews/CeloNewsFeed'
 import BackButton from 'src/components/BackButton'
 import { BottomSheetRefType } from 'src/components/BottomSheet'
 import Button, { BtnSizes } from 'src/components/Button'
@@ -15,8 +15,7 @@ import TokenDisplay from 'src/components/TokenDisplay'
 import TokenIcon, { IconSize } from 'src/components/TokenIcon'
 import Touchable from 'src/components/Touchable'
 import CustomHeader from 'src/components/header/CustomHeader'
-import { TOKEN_MIN_AMOUNT } from 'src/config'
-import CeloGoldHistoryChart from 'src/exchange/CeloGoldHistoryChart'
+import { EarnCardTokenDetails } from 'src/earn/EarnCard'
 import { CICOFlow } from 'src/fiatExchanges/utils'
 import ArrowRightThick from 'src/icons/ArrowRightThick'
 import DataDown from 'src/icons/DataDown'
@@ -33,9 +32,8 @@ import { Screens } from 'src/navigator/Screens'
 import { isAppSwapsEnabledSelector } from 'src/navigator/selectors'
 import { StackParamList } from 'src/navigator/types'
 import PriceHistoryChart from 'src/priceHistory/PriceHistoryChart'
+import { useSelector } from 'src/redux/hooks'
 import { NETWORK_NAMES } from 'src/shared/conts'
-import { getFeatureGate } from 'src/statsig'
-import { StatsigFeatureGates } from 'src/statsig/types'
 import Colors from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
@@ -47,10 +45,10 @@ import {
   useCashOutTokens,
   useSwappableTokens,
   useTokenInfo,
-  useTokensForSend,
 } from 'src/tokens/hooks'
+import { sortedTokensWithBalanceSelector } from 'src/tokens/selectors'
 import { TokenBalance } from 'src/tokens/slice'
-import { TokenDetailsAction, TokenDetailsActionName } from 'src/tokens/types'
+import { TokenAction, TokenActionName } from 'src/tokens/types'
 import {
   getSupportedNetworkIdsForSend,
   getTokenAnalyticsProps,
@@ -70,14 +68,11 @@ export default function TokenDetailsScreen({ route }: Props) {
   const actions = useActions(token)
   const tokenDetailsMoreActionsBottomSheetRef = useRef<BottomSheetRefType>(null)
   const localCurrencySymbol = useSelector(getLocalCurrencySymbol)
-  const usePriceHistoryFromBlockchainApi = getFeatureGate(
-    StatsigFeatureGates.USE_PRICE_HISTORY_FROM_BLOCKCHAIN_API
-  )
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <CustomHeader style={{ paddingHorizontal: variables.contentPadding }} left={<BackButton />} />
-      <ScrollView>
+      <ScrollView testID="TokenDetailsScrollView">
         <View style={styles.titleContainer}>
           <TokenIcon
             token={token}
@@ -97,7 +92,7 @@ export default function TokenDetailsScreen({ route }: Props) {
           errorFallback={(localCurrencySymbol ?? '$').concat(' --')}
         />
         {!token.isStableCoin && <PriceInfo token={token} />}
-        {token.isNative && usePriceHistoryFromBlockchainApi ? (
+        {token.isNative && (
           <PriceHistoryChart
             tokenId={tokenId}
             containerStyle={styles.chartContainer}
@@ -105,15 +100,6 @@ export default function TokenDetailsScreen({ route }: Props) {
             testID={`TokenDetails/Chart/${tokenId}`}
             color={Colors.black}
           />
-        ) : (
-          token.tokenId === networkConfig.celoTokenId && (
-            <CeloGoldHistoryChart
-              color={Colors.black}
-              containerStyle={styles.chartContainer}
-              chartPadding={Spacing.Thick24}
-              testID="TokenDetails/Chart"
-            />
-          )
         )}
         <Actions
           bottomSheetRef={tokenDetailsMoreActionsBottomSheetRef}
@@ -127,6 +113,13 @@ export default function TokenDetailsScreen({ route }: Props) {
             tokenName={token.name}
             infoUrl={token.infoUrl}
             analyticsProps={getTokenAnalyticsProps(token)}
+          />
+        )}
+        {token.tokenId === networkConfig.celoTokenId && <CeloNewsFeed />}
+        {token.tokenId === networkConfig.aaveArbUsdcTokenId && (
+          <EarnCardTokenDetails
+            poolTokenId={networkConfig.aaveArbUsdcTokenId}
+            depositTokenId={networkConfig.arbUsdcTokenId}
           />
         )}
       </ScrollView>
@@ -176,17 +169,19 @@ function PriceInfo({ token }: { token: TokenBalance }) {
 
 export const useActions = (token: TokenBalance) => {
   const { t } = useTranslation()
-  const sendableTokens = useTokensForSend()
+  const supportedNetworkIdsForSend = getSupportedNetworkIdsForSend()
+  const sendableTokensWithBalance = useSelector((state) =>
+    sortedTokensWithBalanceSelector(state, supportedNetworkIdsForSend)
+  )
   const { swappableFromTokens } = useSwappableTokens()
   const cashInTokens = useCashInTokens()
   const cashOutTokens = useCashOutTokens()
   const isSwapEnabled = useSelector(isAppSwapsEnabledSelector)
   const showWithdraw = !!cashOutTokens.find((tokenInfo) => tokenInfo.tokenId === token.tokenId)
 
-  const supportedNetworkIdsForSend = getSupportedNetworkIdsForSend()
   return [
     {
-      name: TokenDetailsActionName.Send,
+      name: TokenActionName.Send,
       title: t('tokenDetails.actions.send'),
       details: t('tokenDetails.actionDescriptions.sendV1_74', {
         supportedNetworkNames: supportedNetworkIdsForSend
@@ -196,17 +191,12 @@ export const useActions = (token: TokenBalance) => {
       }),
       iconComponent: QuickActionsSend,
       onPress: () => {
-        navigate(
-          getFeatureGate(StatsigFeatureGates.USE_NEW_SEND_FLOW)
-            ? Screens.SendSelectRecipient
-            : Screens.Send,
-          { defaultTokenIdOverride: token.tokenId }
-        )
+        navigate(Screens.SendSelectRecipient, { defaultTokenIdOverride: token.tokenId })
       },
-      visible: !!sendableTokens.find((tokenInfo) => tokenInfo.tokenId === token.tokenId),
+      visible: !!sendableTokensWithBalance.find((tokenInfo) => tokenInfo.tokenId === token.tokenId),
     },
     {
-      name: TokenDetailsActionName.Swap,
+      name: TokenActionName.Swap,
       title: t('tokenDetails.actions.swap'),
       details: t('tokenDetails.actionDescriptions.swap'),
       iconComponent: QuickActionsSwap,
@@ -215,11 +205,10 @@ export const useActions = (token: TokenBalance) => {
       },
       visible:
         isSwapEnabled &&
-        !!swappableFromTokens.find((tokenInfo) => tokenInfo.tokenId === token.tokenId) &&
-        token.balance.gt(TOKEN_MIN_AMOUNT),
+        !!swappableFromTokens.find((tokenInfo) => tokenInfo.tokenId === token.tokenId),
     },
     {
-      name: TokenDetailsActionName.Add,
+      name: TokenActionName.Add,
       title: t('tokenDetails.actions.add'),
       details: t('tokenDetails.actionDescriptions.add'),
       iconComponent: QuickActionsAdd,
@@ -233,7 +222,7 @@ export const useActions = (token: TokenBalance) => {
       visible: !!cashInTokens.find((tokenInfo) => tokenInfo.tokenId === token.tokenId),
     },
     {
-      name: TokenDetailsActionName.Withdraw,
+      name: TokenActionName.Withdraw,
       title: t('tokenDetails.actions.withdraw'),
       details: t('tokenDetails.actionDescriptions.withdraw'),
       iconComponent: QuickActionsWithdraw,
@@ -252,14 +241,14 @@ function Actions({
 }: {
   token: TokenBalance
   bottomSheetRef: React.RefObject<BottomSheetRefType>
-  actions: TokenDetailsAction[]
+  actions: TokenAction[]
 }) {
   const { t } = useTranslation()
   const cashOutTokens = useCashOutTokens()
   const showWithdraw = !!cashOutTokens.find((tokenInfo) => tokenInfo.tokenId === token.tokenId)
 
   const moreAction = {
-    name: TokenDetailsActionName.More,
+    name: TokenActionName.More,
     title: t('tokenDetails.actions.more'),
     iconComponent: QuickActionsMore,
     onPress: () => {

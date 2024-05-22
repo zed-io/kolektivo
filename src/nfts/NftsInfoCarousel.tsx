@@ -100,17 +100,6 @@ function NftImageCarousel({ nfts, handleOnPress, activeNft }: NftImageCarouselPr
   )
 }
 
-const EXPLORER_LINK_TRANSLATION_STRINGS: Record<NetworkId, string> = {
-  [NetworkId['celo-mainnet']]: 'nftInfoCarousel.viewOnCeloExplorer',
-  [NetworkId['celo-alfajores']]: 'nftInfoCarousel.viewOnCeloExplorer',
-  [NetworkId['ethereum-mainnet']]: 'viewOnEthereumBlockExplorer',
-  [NetworkId['ethereum-sepolia']]: 'viewOnEthereumBlockExplorer',
-  [NetworkId['arbitrum-one']]: 'viewOnArbiscan',
-  [NetworkId['arbitrum-sepolia']]: 'viewOnArbiscan',
-  [NetworkId['op-mainnet']]: 'viewOnOPMainnetExplorer',
-  [NetworkId['op-sepolia']]: 'viewOnOPSepoliaExplorer',
-}
-
 type Props = NativeStackScreenProps<StackParamList, Screens.NftsInfoCarousel>
 
 export default function NftsInfoCarousel({ route }: Props) {
@@ -133,8 +122,11 @@ export default function NftsInfoCarousel({ route }: Props) {
       case NetworkId['celo-mainnet']:
       case NetworkId['celo-alfajores']:
         return `${blockExplorerUrls[networkId].baseNftUrl}${activeNft.contractAddress}/instance/${tokenId}/metadata`
-      default:
+      case NetworkId['ethereum-mainnet']:
+      case NetworkId['ethereum-sepolia']:
         return `${blockExplorerUrls[networkId].baseNftUrl}${activeNft.contractAddress}/${tokenId}`
+      default:
+        return `${blockExplorerUrls[networkId].baseNftUrl}${activeNft.contractAddress}?a=${tokenId}`
     }
   }, [activeNft, networkId])
 
@@ -151,6 +143,21 @@ export default function NftsInfoCarousel({ route }: Props) {
   // Full page error screen shown when ntfs === []
   if (!activeNft) {
     return <NftsLoadError testID="NftsInfoCarousel/NftsLoadErrorScreen" />
+  }
+
+  const networkIdToExplorerString: Record<NetworkId, string> = {
+    [NetworkId['celo-mainnet']]: t('nftInfoCarousel.viewOnCeloExplorer'),
+    [NetworkId['celo-alfajores']]: t('nftInfoCarousel.viewOnCeloExplorer'),
+    [NetworkId['ethereum-mainnet']]: t('viewOnEthereumBlockExplorer'),
+    [NetworkId['ethereum-sepolia']]: t('viewOnEthereumBlockExplorer'),
+    [NetworkId['arbitrum-one']]: t('viewOnArbiscan'),
+    [NetworkId['arbitrum-sepolia']]: t('viewOnArbiscan'),
+    [NetworkId['op-mainnet']]: t('viewOnOPMainnetExplorer'),
+    [NetworkId['op-sepolia']]: t('viewOnOPSepoliaExplorer'),
+    [NetworkId['polygon-pos-mainnet']]: t('viewOnPolygonPoSScan'),
+    [NetworkId['polygon-pos-amoy']]: t('viewOnPolygonPoSScan'),
+    [NetworkId['base-mainnet']]: t('viewOnBaseScan'),
+    [NetworkId['base-sepolia']]: t('viewOnBaseScan'),
   }
 
   return (
@@ -215,9 +222,7 @@ export default function NftsInfoCarousel({ route }: Props) {
           <View style={[styles.sectionContainer, styles.sectionContainerLast]}>
             <Touchable onPress={pressExplorerLink} testID="ViewOnExplorer">
               <View style={styles.explorerLinkContainer}>
-                <Text style={styles.explorerLink}>
-                  {t(EXPLORER_LINK_TRANSLATION_STRINGS[networkId])}
-                </Text>
+                <Text style={styles.explorerLink}>{networkIdToExplorerString[networkId]}</Text>
                 <OpenLinkIcon color={colors.successDark} />
               </View>
             </Touchable>

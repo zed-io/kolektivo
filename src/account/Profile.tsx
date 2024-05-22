@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet, Text, View } from 'react-native'
 import * as RNFS from 'react-native-fs'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useDispatch, useSelector } from 'react-redux'
 import { saveNameAndPicture } from 'src/account/actions'
 import { nameSelector, pictureSelector } from 'src/account/selectors'
 import { showError, showMessage } from 'src/alert/actions'
@@ -13,6 +12,7 @@ import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import { ErrorMessages } from 'src/app/ErrorMessages'
 import Button from 'src/components/Button'
 import CancelButton from 'src/components/CancelButton'
+import InLineNotification, { NotificationVariant } from 'src/components/InLineNotification'
 import KeyboardAwareScrollView from 'src/components/KeyboardAwareScrollView'
 import KeyboardSpacer from 'src/components/KeyboardSpacer'
 import TextInput from 'src/components/TextInput'
@@ -23,10 +23,12 @@ import { emptyHeader } from 'src/navigator/Headers'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
 import PictureInput from 'src/onboarding/registration/PictureInput'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 import colors from 'src/styles/colors'
 import fontStyles from 'src/styles/fonts'
-import { saveProfilePicture } from 'src/utils/image'
+import { Spacing } from 'src/styles/styles'
 import Logger from 'src/utils/Logger'
+import { saveProfilePicture } from 'src/utils/image'
 
 type Props = NativeStackScreenProps<StackParamList, Screens.Profile>
 
@@ -106,6 +108,12 @@ function Profile({ navigation, route }: Props) {
             <Text style={styles.saveButton}>{t('save')}</Text>
           </Touchable>
         </View>
+        <View style={styles.disclaimerContainer}>
+          <InLineNotification
+            variant={NotificationVariant.Info}
+            description={t('profileScreen.profilePictureDisclaimer')}
+          />
+        </View>
       </KeyboardAwareScrollView>
       <KeyboardSpacer />
     </SafeAreaView>
@@ -152,5 +160,8 @@ const styles = StyleSheet.create({
   saveButton: {
     ...fontStyles.regular,
     color: colors.primary,
+  },
+  disclaimerContainer: {
+    margin: Spacing.Thick24,
   },
 })

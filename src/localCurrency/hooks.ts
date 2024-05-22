@@ -1,13 +1,9 @@
 import BigNumber from 'bignumber.js'
 import { LocalCurrencyCode } from 'src/localCurrency/consts'
 import { convertDollarsToLocalAmount } from 'src/localCurrency/convert'
-import {
-  getLocalCurrencyCode,
-  getLocalCurrencySymbol,
-  usdToLocalCurrencyRateSelector,
-} from 'src/localCurrency/selectors'
+import { getLocalCurrencyCode, usdToLocalCurrencyRateSelector } from 'src/localCurrency/selectors'
 import { CurrencyInfo } from 'src/localCurrency/types'
-import useSelector from 'src/redux/useSelector'
+import { useSelector } from 'src/redux/hooks'
 import { useTokenInfoWithAddressBySymbol } from 'src/tokens/hooks'
 import { convertTokenToLocalAmount } from 'src/tokens/utils'
 import { Currency } from 'src/utils/currencies'
@@ -48,8 +44,4 @@ export function useDollarsToLocalAmount(amount: BigNumber.Value | null) {
 
 export function useLocalCurrencyCode() {
   return useSelector(getLocalCurrencyCode)
-}
-
-export function useLocalCurrencySymbol() {
-  return useSelector(getLocalCurrencySymbol)
 }

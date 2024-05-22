@@ -2,12 +2,12 @@ import { BottomSheetScreenProps } from '@th3rdwave/react-navigation-bottom-sheet
 import React, { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, Text } from 'react-native'
-import { useDispatch } from 'react-redux'
 import BottomSheetScrollView from 'src/components/BottomSheetScrollView'
 import { fetchFiatConnectProviders } from 'src/fiatconnect/slice'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
+import { useDispatch } from 'src/redux/hooks'
 import { typeScale } from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
 import { TokenBalanceItem } from 'src/tokens/TokenBalanceItem'
@@ -58,10 +58,14 @@ function FiatExchangeCurrencyBottomSheet({ route }: Props) {
     }
 
   return (
-    <BottomSheetScrollView containerStyle={{ padding: undefined }}>
+    <BottomSheetScrollView
+      isScreen
+      containerStyle={{ padding: undefined }}
+      testId="FiatExchangeCurrencyBottomSheet"
+    >
       {/* padding undefined to prevent android ripple bug */}
       <Text style={styles.selectDigitalCurrency}>{t('sendEnterAmountScreen.selectToken')}</Text>
-      {tokenList.length &&
+      {!!tokenList.length &&
         tokenList.map((tokenInfo) => {
           return (
             <React.Fragment key={`token-${tokenInfo.tokenId}`}>

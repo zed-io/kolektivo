@@ -33,22 +33,24 @@ export enum AppEvents {
 }
 
 export enum HomeEvents {
-  hamburger_tapped = 'hamburger_tapped',
-  drawer_navigation = 'drawer_navigation',
-  drawer_address_copy = 'drawer_address_copy',
+  account_circle_tapped = 'account_circle_tapped',
+  profile_address_copy = 'profile_address_copy',
   notification_scroll = 'notification_scroll',
   notification_impression = 'notification_impression',
   notification_select = 'notification_select',
   transaction_feed_item_select = 'transaction_feed_item_select',
   transaction_feed_address_copy = 'transaction_feed_address_copy',
   view_token_balances = 'view_token_balances',
-  view_nft_home_assets = 'view_nft_home_assets',
   home_action_pressed = 'home_action_pressed',
   notification_bell_pressed = 'notification_bell_pressed',
   notification_center_opened = 'notification_center_opened',
   notification_center_spotlight_dismiss = 'notification_center_spotlight_dismiss',
   hide_balances = 'hide_balances',
   show_balances = 'show_balances',
+  nft_celebration_displayed = 'nft_celebration_displayed',
+  nft_celebration_animation_displayed = 'nft_celebration_animation_displayed',
+  nft_reward_accept = 'nft_reward_accept',
+  nft_reward_dismiss = 'nft_reward_dismiss',
 }
 
 export enum SettingsEvents {
@@ -83,6 +85,8 @@ export enum SettingsEvents {
 
   settings_revoke_phone_number = 'settings_revoke_phone_number',
   settings_revoke_phone_number_confirm = 'settings_revoke_phone_number_confirm',
+  settings_delete_account = 'settings_delete_account',
+  settings_delete_account_confirm = 'settings_delete_account_confirm',
 
   settings_set_up_keyless_backup = 'settings_set_up_keyless_backup',
   settings_delete_keyless_backup = 'settings_delete_keyless_backup',
@@ -90,7 +94,6 @@ export enum SettingsEvents {
 
 export enum KeylessBackupEvents {
   wallet_security_primer_get_started = 'wallet_security_primer_get_started',
-  cab_setup_continue = 'cab_setup_continue',
   cab_setup_recovery_phrase = 'cab_setup_recovery_phrase',
   cab_sign_in_with_google = 'cab_sign_in_with_google',
   cab_sign_in_with_google_success = 'cab_sign_in_with_google_success',
@@ -98,6 +101,7 @@ export enum KeylessBackupEvents {
   cab_get_torus_keyshare_failed = 'cab_get_torus_keyshare_failed',
   cab_enter_phone_number_continue = 'cab_enter_phone_number_continue',
   cab_enter_phone_number_cancel = 'cab_enter_phone_number_cancel',
+  cab_intro_continue = 'cab_intro_continue',
   cab_issue_sms_code_start = 'cab_issue_sms_code_start',
   cab_issue_sms_code_success = 'cab_issue_sms_code_success',
   cab_issue_sms_code_error = 'cab_issue_sms_code_error',
@@ -112,12 +116,20 @@ export enum KeylessBackupEvents {
   cab_torus_keyshare_timeout = 'cab_torus_keyshare_timeout',
   cab_handle_keyless_backup_failed = 'cab_handle_keyless_backup_failed',
   cab_handle_keyless_backup_success = 'cab_handle_keyless_backup_success',
+  cab_restore_zero_balance_accept = 'cab_restore_zero_balance_accept',
+  cab_restore_zero_balance_bail = 'cab_restore_zero_balance_bail',
+  cab_restore_completed_continue = 'cab_restore_completed_continue',
+  cab_restore_failed_try_again = 'cab_restore_failed_try_again',
+  cab_restore_failed_create_new_wallet = 'cab_restore_failed_create_new_wallet',
+  cab_restore_failed_help = 'cab_restore_failed_help',
+  cab_restore_mnemonic_not_found = 'cab_restore_mnemonic_not_found',
+  cab_phone_verification_help = 'cab_phone_verification_help',
+  cab_phone_verification_help_skip = 'cab_phone_verification_help_skip',
+  cab_phone_verification_help_go_back = 'cab_phone_verification_help_go_back',
+  cab_setup_hashed_keyshares = 'cab_setup_hashed_keyshares',
 }
 
 export enum OnboardingEvents {
-  onboarding_education_scroll = 'onboarding_education_scroll',
-  onboarding_education_step_impression = 'onboarding_education_step_impression',
-
   create_account_start = 'create_account_start',
 
   restore_account_start = 'restore_account_start',
@@ -191,6 +203,9 @@ export enum OnboardingEvents {
 
   cya_button_press = 'cya_button_press',
   cya_later = 'cya_later',
+
+  link_phone_number = 'link_phone_number',
+  link_phone_number_later = 'link_phone_number_later',
 }
 
 // Events emitted in the CPV flow
@@ -290,7 +305,6 @@ export enum SendEvents {
   send_tx_error = 'send_tx_error',
 
   token_dropdown_opened = 'token_dropdown_opened',
-  token_selected = 'token_selected',
   max_pressed = 'max_pressed',
   swap_input_pressed = 'swap_input_pressed',
 
@@ -337,11 +351,7 @@ export enum TransactionEvents {
 }
 
 export enum CeloExchangeEvents {
-  celo_home_info = 'celo_home_info',
-
   celo_withdraw_completed = 'celo_withdraw_completed',
-
-  celo_chart_tapped = 'celo_chart_tapped',
 }
 
 export enum FiatExchangeEvents {
@@ -527,9 +537,6 @@ export enum DappExplorerEvents {
   dapp_open = 'dapp_open',
   dapp_close = 'dapp_close',
   dapp_screen_open = 'dapp_screen_open',
-  dapp_select = 'dapp_select',
-  dapp_bottom_sheet_open = 'dapp_bottom_sheet_open',
-  dapp_bottom_sheet_dismiss = 'dapp_bottom_sheet_dismiss',
   dapp_view_all = 'dapp_view_all',
   dapp_favorite = 'dapp_favorite',
   dapp_unfavorite = 'dapp_unfavorite',
@@ -572,6 +579,9 @@ export enum CeloNewsEvents {
 
 export enum TokenBottomSheetEvents {
   search_token = 'search_token',
+  token_selected = 'token_selected',
+  toggle_tokens_filter = 'toggle_tokens_filter',
+  network_filter_updated = 'network_filter_updated',
 }
 
 export enum AssetsEvents {
@@ -593,7 +603,6 @@ export enum AssetsEvents {
 export enum NftEvents {
   nft_error_screen_open = 'nft_error_screen_open',
   nft_media_load = 'nft_media_load',
-  nft_gallery_screen_open = 'nft_gallery_screen_open',
 }
 
 export enum BuilderHooksEvents {
@@ -620,4 +629,58 @@ export enum TransactionDetailsEvents {
   transaction_details_tap_check_status = 'transaction_details_tap_check_status',
   transaction_details_tap_retry = 'transaction_details_tap_retry',
   transaction_details_tap_block_explorer = 'transaction_details_tap_block_explorer',
+}
+
+export enum JumpstartEvents {
+  send_select_recipient_jumpstart = 'send_select_recipient_jumpstart',
+  jumpstart_send_amount_exceeds_threshold = 'jumpstart_send_amount_exceeds_threshold',
+  jumpstart_send_amount_continue = 'jumpstart_send_amount_continue',
+  jumpstart_send_confirm = 'jumpstart_send_confirm',
+  jumpstart_send_start = 'jumpstart_send_start',
+  jumpstart_send_succeeded = 'jumpstart_send_succeeded',
+  jumpstart_send_failed = 'jumpstart_send_failed',
+  jumpstart_send_cancelled = 'jumpstart_send_cancelled',
+  jumpstart_share_link = 'jumpstart_share_link',
+  jumpstart_share_link_result = 'jumpstart_share_link_result',
+  jumpstart_show_QR = 'jumpstart_show_QR',
+  jumpstart_copy_link = 'jumpstart_copy_link',
+  jumpstart_share_close = 'jumpstart_share_close',
+  jumpstart_share_confirm_close = 'jumpstart_share_confirm_close',
+  jumpstart_share_dismiss_close = 'jumpstart_share_dismiss_close',
+  jumpstart_claim_succeeded = 'jumpstart_claim_succeeded',
+  jumpstart_claim_failed = 'jumpstart_claim_failed',
+  jumpstart_claimed_token = 'jumpstart_claimed_token',
+  jumpstart_claimed_nft = 'jumpstart_claimed_nft',
+  jumpstart_claim_loading_dismissed = 'jumpstart_claim_loading_dismissed',
+  jumpstart_claim_error_dismissed = 'jumpstart_claim_error_dismissed',
+  jumpstart_claim_error_contact_support = 'jumpstart_claim_error_contact_support',
+  jumpstart_reclaim_press = 'jumpstart_reclaim_press',
+  jumpstart_reclaim_start = 'jumpstart_reclaim_start',
+  jumpstart_reclaim_failed = 'jumpstart_reclaim_failed',
+  jumpstart_reclaim_succeeded = 'jumpstart_reclaim_succeeded',
+  jumpstart_reclaim_dismiss_error = 'jumpstart_reclaim_dismiss_error',
+  jumpstart_reclaim_contact_support = 'jumpstart_reclaim_contact_support',
+  jumpstart_claim_status_fetch_success = 'jumpstart_claim_status_fetch_success',
+  jumpstart_claim_status_fetch_error = 'jumpstart_claim_status_fetch_error',
+}
+
+export enum PointsEvents {
+  points_screen_open = 'points_screen_open',
+  points_screen_back = 'points_screen_back',
+  points_screen_card_press = 'points_screen_card_press',
+  points_screen_card_cta_press = 'points_screen_card_cta_press',
+  points_screen_activity_press = 'points_screen_activity_press',
+  points_screen_activity_try_again_press = 'points_screen_activity_try_again_press',
+  points_screen_activity_fetch_more = 'points_screen_activity_fetch_more',
+  points_screen_activity_learn_more_press = 'points_screen_activity_learn_more_press',
+}
+
+export enum EarnEvents {
+  earn_cta_press = 'earn_cta_press',
+  earn_add_crypto_action_press = 'earn_add_crypto_action_press',
+  earn_deposit_provider_info_press = 'earn_deposit_provider_info_press',
+  earn_deposit_terms_and_conditions_press = 'earn_deposit_terms_and_conditions_press',
+  earn_deposit_complete = 'earn_deposit_complete',
+  earn_deposit_cancel = 'earn_deposit_cancel',
+  earn_view_pools_press = 'earn_view_pools_press',
 }

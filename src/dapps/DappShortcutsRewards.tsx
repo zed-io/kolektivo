@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useDispatch, useSelector } from 'react-redux'
 import { DappShortcutsEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import Button, { BtnSizes } from 'src/components/Button'
@@ -17,11 +16,12 @@ import {
 } from 'src/positions/selectors'
 import { triggerShortcut } from 'src/positions/slice'
 import { ClaimablePosition } from 'src/positions/types'
+import { useDispatch, useSelector } from 'src/redux/hooks'
 import Colors from 'src/styles/colors'
 import fontStyles from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
-import { Currency } from 'src/utils/currencies'
 import Logger from 'src/utils/Logger'
+import { Currency } from 'src/utils/currencies'
 import { walletAddressSelector } from 'src/web3/selectors'
 
 function DappShortcutsRewards() {
@@ -82,7 +82,7 @@ function DappShortcutsRewards() {
         shortcutId: claimableShortcut.id,
         rewardId,
         appId,
-        network: 'celo',
+        network: position.networkId,
         rewardTokens: claimableShortcut.claimableTokens.map((token) => token.symbol).join(', '),
         rewardAmounts: claimableShortcut.claimableTokens.map((token) => token.balance).join(', '),
         claimableValueUsd: claimableValueUsd.toString(),
@@ -96,7 +96,7 @@ function DappShortcutsRewards() {
           data: {
             address,
             appId,
-            network: 'celo',
+            networkId: position.networkId,
             positionAddress: position.address,
             shortcutId: claimableShortcut.id,
           },

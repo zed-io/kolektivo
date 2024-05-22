@@ -1,29 +1,23 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
-import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
+import { EffectProviders, StaticProvider, dynamic } from 'redux-saga-test-plan/providers'
 import { SwapEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
-import { navigate } from 'src/navigator/NavigationService'
-import { Screens } from 'src/navigator/Screens'
+import { navigate, navigateHome } from 'src/navigator/NavigationService'
 import { getDynamicConfigParams } from 'src/statsig'
 import { swapSubmitSaga } from 'src/swap/saga'
 import { swapCancel, swapError, swapStart, swapSuccess } from 'src/swap/slice'
 import { Field, SwapInfo } from 'src/swap/types'
-import { Actions, addStandbyTransaction, transactionConfirmed } from 'src/transactions/actions'
-import {
-  Network,
-  NetworkId,
-  TokenTransactionTypeV2,
-  TransactionStatus,
-} from 'src/transactions/types'
+import { Actions, addStandbyTransaction } from 'src/transactions/actions'
+import { Network, NetworkId, TokenTransactionTypeV2 } from 'src/transactions/types'
 import Logger from 'src/utils/Logger'
 import { publicClient } from 'src/viem'
 import { ViemWallet } from 'src/viem/getLockableWallet'
 import { getSerializablePreparedTransactions } from 'src/viem/preparedTransactionSerialization'
 import { getViemWallet } from 'src/web3/contracts'
 import networkConfig from 'src/web3/networkConfig'
-import { UnlockResult, unlockAccount } from 'src/web3/saga'
+import { getConnectedUnlockedAccount } from 'src/web3/saga'
 import { createMockStore } from 'test/utils'
 import {
   mockAccount,
@@ -34,6 +28,8 @@ import {
   mockCrealAddress,
   mockCrealTokenId,
   mockEthTokenId,
+  mockTestTokenAddress,
+  mockTestTokenTokenId,
   mockTokenBalances,
   mockUSDCAddress,
   mockUSDCTokenId,
@@ -63,7 +59,7 @@ jest.mock('src/transactions/types', () => {
 const mockAllowanceTarget = '0xdef1c0ded9bec7f1a1670819833240f027b25eff'
 const mockQuoteReceivedTimestamp = 1_000_000_000_000
 
-const mockSwapWithFeeCurrency = (feeCurrency?: Address): PayloadAction<SwapInfo> => {
+const mockSwapFromParams = (toTokenId: string, feeCurrency?: Address): PayloadAction<SwapInfo> => {
   return {
     type: swapStart.type,
     payload: {
@@ -71,7 +67,7 @@ const mockSwapWithFeeCurrency = (feeCurrency?: Address): PayloadAction<SwapInfo>
       userInput: {
         updatedField: Field.TO,
         fromTokenId: mockCeurTokenId,
-        toTokenId: mockCeloTokenId,
+        toTokenId,
         swapAmount: {
           [Field.FROM]: '100',
           [Field.TO]: '200',
@@ -101,16 +97,19 @@ const mockSwapWithFeeCurrency = (feeCurrency?: Address): PayloadAction<SwapInfo>
           },
         ]),
         price: '1',
+        appFeePercentageIncludedInPrice: '0.6',
         provider: '0x',
         estimatedPriceImpact: '0.1',
         allowanceTarget: mockAllowanceTarget,
         receivedAt: mockQuoteReceivedTimestamp,
       },
+      areSwapTokensShuffled: false,
     },
   }
 }
 
-const mockSwap = mockSwapWithFeeCurrency()
+const mockSwap = mockSwapFromParams(mockCeloTokenId)
+const mockSwapToImportedToken = mockSwapFromParams(mockTestTokenTokenId)
 
 const mockSwapEthereum: PayloadAction<SwapInfo> = {
   type: swapStart.type,
@@ -147,11 +146,13 @@ const mockSwapEthereum: PayloadAction<SwapInfo> = {
         },
       ]),
       price: '1',
+      appFeePercentageIncludedInPrice: '0.6',
       provider: '0x',
       estimatedPriceImpact: '0.1',
       allowanceTarget: mockAllowanceTarget,
       receivedAt: mockQuoteReceivedTimestamp,
     },
+    areSwapTokensShuffled: false,
   },
 }
 
@@ -230,6 +231,18 @@ const store = createMockStore({
         priceUsd: '0.5',
         balance: '10',
       },
+      [mockTestTokenTokenId]: {
+        ...mockTokenBalances[mockTestTokenTokenId],
+        priceUsd: '0.1',
+        address: mockTestTokenAddress,
+        tokenId: mockTestTokenTokenId,
+        networkId: NetworkId['celo-alfajores'],
+        symbol: 'TT',
+        name: 'Imported Token',
+        decimals: 18,
+        balance: '5',
+        isManuallyImported: true,
+      },
     },
   },
 })
@@ -270,12 +283,18 @@ describe(swapSubmitSaga, () => {
   }
 
   function createDefaultProviders(network: Network) {
+    let callCount = 0
     const defaultProviders: (EffectProviders | StaticProvider)[] = [
       [matchers.call(getViemWallet, networkConfig.viemChain[network]), mockViemWallet],
       [matchers.call.fn(getTransactionCount), 10],
-      [matchers.call.fn(unlockAccount), UnlockResult.SUCCESS],
-      [matchers.call.fn(publicClient[network].waitForTransactionReceipt), mockSwapTxReceipt],
-      [matchers.call.fn(publicClient[network].getTransactionReceipt), mockApproveTxReceipt],
+      [matchers.call.fn(getConnectedUnlockedAccount), mockAccount],
+      [
+        matchers.call.fn(publicClient[network].waitForTransactionReceipt),
+        dynamic(() => {
+          callCount += 1
+          return callCount > 1 ? mockSwapTxReceipt : mockApproveTxReceipt
+        }),
+      ],
       [matchers.call.fn(publicClient[network].getBlock), { timestamp: 1701102971 }],
       [
         matchers.call.fn(decodeFunctionData),
@@ -304,15 +323,6 @@ describe(swapSubmitSaga, () => {
       feeCurrencyId: mockCeloTokenId,
       feeCurrencySymbol: 'CELO',
       swapPrepared: mockSwap,
-      expectedFees: [
-        {
-          type: 'SECURITY_FEE',
-          amount: {
-            value: '0.00185837',
-            tokenId: mockCeloTokenId,
-          },
-        },
-      ],
     },
     {
       network: Network.Celo,
@@ -324,16 +334,7 @@ describe(swapSubmitSaga, () => {
       feeCurrencyAddress: mockCrealAddress,
       feeCurrencyId: mockCrealTokenId,
       feeCurrencySymbol: 'cREAL',
-      swapPrepared: mockSwapWithFeeCurrency(mockCrealAddress as Address),
-      expectedFees: [
-        {
-          type: 'SECURITY_FEE',
-          amount: {
-            value: '0.00185837',
-            tokenId: mockCrealTokenId,
-          },
-        },
-      ],
+      swapPrepared: mockSwapFromParams(mockCeloTokenId, mockCrealAddress as Address),
     },
     {
       network: Network.Ethereum,
@@ -345,15 +346,6 @@ describe(swapSubmitSaga, () => {
       feeCurrencyId: mockEthTokenId,
       feeCurrencySymbol: 'ETH',
       swapPrepared: mockSwapEthereum,
-      expectedFees: [
-        {
-          type: 'SECURITY_FEE',
-          amount: {
-            value: '0.00185837',
-            tokenId: mockEthTokenId,
-          },
-        },
-      ],
     },
   ]
 
@@ -370,7 +362,6 @@ describe(swapSubmitSaga, () => {
       feeCurrencyId,
       feeCurrencySymbol,
       swapPrepared,
-      expectedFees,
     }) => {
       jest
         .spyOn(Date, 'now')
@@ -419,37 +410,29 @@ describe(swapSubmitSaga, () => {
             feeCurrencyId,
           })
         )
-        .put(
-          transactionConfirmed(
-            'id-swap/saga-Swap/Execute',
-            {
-              transactionHash: mockSwapTxReceipt.transactionHash,
-              block: mockSwapTxReceipt.blockNumber.toString(),
-              status: TransactionStatus.Complete,
-              fees: expectedFees,
-            },
-            1701102971000 // milliseconds
-          )
-        )
+        .call([publicClient[network], 'waitForTransactionReceipt'], { hash: '0x1' })
         .call([publicClient[network], 'waitForTransactionReceipt'], { hash: '0x2' })
         .run()
 
       expect(mockViemWallet.signTransaction).toHaveBeenCalledTimes(2)
       expect(mockViemWallet.sendRawTransaction).toHaveBeenCalledTimes(2)
       expect(loggerErrorSpy).not.toHaveBeenCalled()
-      expect(navigate).toHaveBeenCalledWith(Screens.WalletHome)
+      expect(navigateHome).toHaveBeenCalledWith()
 
       expect(ValoraAnalytics.track).toHaveBeenCalledTimes(1)
       expect(ValoraAnalytics.track).toHaveBeenCalledWith(SwapEvents.swap_execute_success, {
         toToken: toTokenAddress,
         toTokenId: toTokenId,
         toTokenNetworkId: networkId,
+        toTokenIsImported: false,
         fromToken: fromTokenAddress,
         fromTokenId: fromTokenId,
         fromTokenNetworkId: networkId,
+        fromTokenIsImported: false,
         amount: swapPrepared.payload.userInput.swapAmount[Field.TO],
         amountType: 'buyAmount',
         price: '1',
+        appFeePercentageIncludedInPrice: '0.6',
         allowanceTarget: '0xdef1c0ded9bec7f1a1670819833240f027b25eff',
         estimatedPriceImpact: '0.1',
         provider: '0x',
@@ -460,6 +443,7 @@ describe(swapSubmitSaga, () => {
         quoteToTransactionElapsedTimeInMs: 10_000,
         estimatedBuyTokenUsdValue: 100,
         estimatedSellTokenUsdValue: 100,
+        estimatedAppFeeUsdValue: 0.6,
         web3Library: 'viem',
         gas: 1384480,
         maxGasFee: 0.01661376,
@@ -498,6 +482,7 @@ describe(swapSubmitSaga, () => {
         swapTxGasFee: 0.00185837,
         swapTxGasFeeUsd: 0.000929185,
         swapTxHash: '0x2',
+        areSwapTokensShuffled: false,
       })
 
       const analyticsProps = (ValoraAnalytics.track as jest.Mock).mock.calls[0][1]
@@ -575,7 +560,7 @@ describe(swapSubmitSaga, () => {
     expect(mockViemWallet.signTransaction).toHaveBeenCalledTimes(1)
     expect(mockViemWallet.sendRawTransaction).toHaveBeenCalledTimes(1)
     expect(loggerErrorSpy).not.toHaveBeenCalled()
-    expect(navigate).toHaveBeenCalledWith(Screens.WalletHome)
+    expect(navigateHome).toHaveBeenCalledWith()
   })
 
   it('should display the correct standby values for a swap with different decimals', async () => {
@@ -623,6 +608,36 @@ describe(swapSubmitSaga, () => {
       .run()
   })
 
+  it('should track correctly the imported tokens', async () => {
+    jest
+      .spyOn(Date, 'now')
+      .mockReturnValueOnce(mockQuoteReceivedTimestamp + 2_500) // swap submitted timestamp
+      .mockReturnValue(mockQuoteReceivedTimestamp + 10_000) // before send swap timestamp
+
+    await expectSaga(swapSubmitSaga, mockSwapToImportedToken)
+      .withState(store.getState())
+      .provide(createDefaultProviders(Network.Celo))
+      .put(
+        swapSuccess({
+          swapId: 'test-swap-id',
+          fromTokenId: mockCeurTokenId,
+          toTokenId: mockTestTokenTokenId,
+        })
+      )
+      .run()
+
+    expect(mockViemWallet.signTransaction).toHaveBeenCalledTimes(2)
+    expect(mockViemWallet.sendRawTransaction).toHaveBeenCalledTimes(2)
+    expect(loggerErrorSpy).not.toHaveBeenCalled()
+    expect(navigateHome).toHaveBeenCalledWith()
+
+    expect(ValoraAnalytics.track).toHaveBeenCalledTimes(1)
+    expect(ValoraAnalytics.track).toHaveBeenLastCalledWith(
+      SwapEvents.swap_execute_success,
+      expect.objectContaining({ fromTokenIsImported: false, toTokenIsImported: true })
+    )
+  })
+
   it('should set swap state correctly on error', async () => {
     jest
       .spyOn(Date, 'now')
@@ -644,12 +659,15 @@ describe(swapSubmitSaga, () => {
       toToken: mockCeloAddress,
       toTokenId: mockCeloTokenId,
       toTokenNetworkId: NetworkId['celo-alfajores'],
+      toTokenIsImported: false,
       fromToken: mockCeurAddress,
       fromTokenId: mockCeurTokenId,
       fromTokenNetworkId: NetworkId['celo-alfajores'],
+      fromTokenIsImported: false,
       amount: mockSwap.payload.userInput.swapAmount[Field.TO],
       amountType: 'buyAmount',
       price: '1',
+      appFeePercentageIncludedInPrice: '0.6',
       allowanceTarget: '0xdef1c0ded9bec7f1a1670819833240f027b25eff',
       estimatedPriceImpact: '0.1',
       provider: '0x',
@@ -660,6 +678,7 @@ describe(swapSubmitSaga, () => {
       quoteToTransactionElapsedTimeInMs: 10_000,
       estimatedBuyTokenUsdValue: 100,
       estimatedSellTokenUsdValue: 100,
+      estimatedAppFeeUsdValue: 0.6,
       web3Library: 'viem',
       gas: 1384480,
       maxGasFee: 0.01661376,
@@ -699,6 +718,7 @@ describe(swapSubmitSaga, () => {
       swapTxGasFee: undefined,
       swapTxGasFeeUsd: undefined,
       swapTxHash: undefined,
+      areSwapTokensShuffled: false,
     })
     const analyticsProps = (ValoraAnalytics.track as jest.Mock).mock.calls[0][1]
     expect(analyticsProps.gas).toBeCloseTo(
@@ -728,5 +748,37 @@ describe(swapSubmitSaga, () => {
       .run()
     expect(navigate).not.toHaveBeenCalled()
     expect(ValoraAnalytics.track).not.toHaveBeenCalled()
+  })
+
+  it('should track swap result for a user in the swap tokens order holdout group', async () => {
+    jest.mocked(mockViemWallet.sendRawTransaction).mockImplementationOnce(() => {
+      throw new Error('some error')
+    })
+
+    await expectSaga(swapSubmitSaga, {
+      ...mockSwap,
+      payload: { ...mockSwap.payload, areSwapTokensShuffled: true },
+    })
+      .withState(store.getState())
+      .provide(createDefaultProviders(Network.Celo))
+      .run()
+
+    expect(ValoraAnalytics.track).toHaveBeenLastCalledWith(
+      SwapEvents.swap_execute_error,
+      expect.objectContaining({ areSwapTokensShuffled: true })
+    )
+
+    await expectSaga(swapSubmitSaga, {
+      ...mockSwap,
+      payload: { ...mockSwap.payload, areSwapTokensShuffled: true },
+    })
+      .withState(store.getState())
+      .provide(createDefaultProviders(Network.Celo))
+      .run()
+
+    expect(ValoraAnalytics.track).toHaveBeenLastCalledWith(
+      SwapEvents.swap_execute_success,
+      expect.objectContaining({ areSwapTokensShuffled: true })
+    )
   })
 })

@@ -2,7 +2,7 @@ import { SessionTypes } from '@walletconnect/types'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { Actions, UserActions, WalletConnectActions } from 'src/walletConnect/actions'
 
-export interface State {
+interface State {
   pendingActions: Web3WalletTypes.EventArguments['session_request'][]
   sessions: SessionTypes.Struct[]
   pendingSessions: Web3WalletTypes.EventArguments['session_proposal'][]
@@ -87,7 +87,7 @@ export const reducer = (
             .includes(pendingAction.topic)
         ),
         pendingSessions: state.pendingSessions.filter(
-          (pendingSession) => pendingSession.params.expiry > action.dateInSeconds
+          (pendingSession) => pendingSession.params.expiryTimestamp > action.dateInSeconds
         ),
       }
     }

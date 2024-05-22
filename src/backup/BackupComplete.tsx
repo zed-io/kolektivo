@@ -10,7 +10,7 @@ import Checkmark from 'src/icons/Checkmark'
 import { navigate, navigateHome } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
-import useSelector from 'src/redux/useSelector'
+import { useSelector } from 'src/redux/hooks'
 import fontStyles from 'src/styles/fonts'
 
 /**
@@ -22,13 +22,13 @@ import fontStyles from 'src/styles/fonts'
 type Props = NativeStackScreenProps<StackParamList, Screens.BackupComplete>
 
 function BackupComplete({ route }: Props) {
-  const navigatedFromSettings = route.params?.navigatedFromSettings ?? false
+  const isAccountRemoval = route.params?.isAccountRemoval ?? false
   const backupCompleted = useSelector(backupCompletedSelector)
   const { t } = useTranslation()
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (navigatedFromSettings) {
+      if (isAccountRemoval) {
         navigate(Screens.Settings, { promptConfirmRemovalModal: true })
       } else if (backupCompleted) {
         ValoraAnalytics.track(OnboardingEvents.backup_complete)

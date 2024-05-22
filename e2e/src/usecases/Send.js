@@ -21,16 +21,11 @@ export default Send = () => {
     await quickOnboarding()
   })
 
-  describe('When multi-token send flow to address (new flow)', () => {
+  describe('When multi-token send flow to address', () => {
     let commentText
     beforeAll(async () => {
       commentText = `${new Date().getTime()}-${parseInt(Math.random() * 100000)}`
-      await launchApp({
-        newInstance: true,
-        launchArgs: {
-          statsigGateOverrides: `use_new_send_flow=true,use_viem_for_send=true`,
-        },
-      })
+      await launchApp({ newInstance: true })
     })
 
     it('Then should navigate to send search input from home action', async () => {
@@ -52,7 +47,7 @@ export default Send = () => {
 
     it('Then tapping send button should navigate to Send Enter Amount screen', async () => {
       await element(by.id('SendOrInviteButton')).tap()
-      await waitForElementId('SendEnterAmount/Input', 30_000)
+      await waitForElementId('SendEnterAmount/TokenAmountInput', 30_000)
     })
 
     it('Then should be able to change token', async () => {
@@ -68,9 +63,9 @@ export default Send = () => {
     })
 
     it('Then should be able to enter amount and navigate to review screen', async () => {
-      await waitForElementByIdAndTap('SendEnterAmount/Input', 30_000)
-      await element(by.id('SendEnterAmount/Input')).replaceText('0.01')
-      await element(by.id('SendEnterAmount/Input')).tapReturnKey()
+      await waitForElementByIdAndTap('SendEnterAmount/TokenAmountInput', 30_000)
+      await element(by.id('SendEnterAmount/TokenAmountInput')).replaceText('0.01')
+      await element(by.id('SendEnterAmount/TokenAmountInput')).tapReturnKey()
       await waitForElementByIdAndTap('SendEnterAmount/ReviewButton', 30_000)
       await isElementVisible('ConfirmButton')
     })
@@ -88,10 +83,10 @@ export default Send = () => {
     it('Then should be able to edit amount', async () => {
       await element(by.id('BackChevron')).tap()
       await isElementVisible('SendEnterAmount/ReviewButton')
-      await element(by.id('SendEnterAmount/Input')).tap()
-      await waitForElementByIdAndTap('SendEnterAmount/Input', 30_000)
-      await element(by.id('SendEnterAmount/Input')).replaceText('0.01')
-      await element(by.id('SendEnterAmount/Input')).tapReturnKey()
+      await element(by.id('SendEnterAmount/TokenAmountInput')).tap()
+      await waitForElementByIdAndTap('SendEnterAmount/TokenAmountInput', 30_000)
+      await element(by.id('SendEnterAmount/TokenAmountInput')).replaceText('0.01')
+      await element(by.id('SendEnterAmount/TokenAmountInput')).tapReturnKey()
       await waitForElementByIdAndTap('SendEnterAmount/ReviewButton', 30_000)
       let amount = await element(by.id('SendAmount')).getAttributes()
       jestExpect(amount.text).toEqual('0.01 cEUR')
@@ -111,14 +106,11 @@ export default Send = () => {
     })
   })
 
-  describe('When multi-token send flow to recent recipient (new flow)', () => {
+  describe('When multi-token send flow to recent recipient', () => {
     let commentText
     beforeAll(async () => {
       commentText = `${new Date().getTime()}`
-      await launchApp({
-        newInstance: true,
-        launchArgs: { statsigGateOverrides: `use_new_send_flow=true,use_viem_for_send=true` },
-      })
+      await launchApp({ newInstance: true })
     })
 
     it('Then should navigate to send search input from home action', async () => {
@@ -130,7 +122,7 @@ export default Send = () => {
 
     it('Then should be able to click on recent recipient', async () => {
       await element(by.text('0xe5f5...8846')).atIndex(0).tap()
-      await waitForElementId('SendEnterAmount/Input', 30_000)
+      await waitForElementId('SendEnterAmount/TokenAmountInput', 30_000)
     })
 
     it('Then should be able to choose token', async () => {
@@ -140,9 +132,9 @@ export default Send = () => {
     })
 
     it('Then should be able to enter amount and navigate to review screen', async () => {
-      await waitForElementByIdAndTap('SendEnterAmount/Input', 30_000)
-      await element(by.id('SendEnterAmount/Input')).replaceText('0.01')
-      await element(by.id('SendEnterAmount/Input')).tapReturnKey()
+      await waitForElementByIdAndTap('SendEnterAmount/TokenAmountInput', 30_000)
+      await element(by.id('SendEnterAmount/TokenAmountInput')).replaceText('0.01')
+      await element(by.id('SendEnterAmount/TokenAmountInput')).tapReturnKey()
       await waitForElementByIdAndTap('SendEnterAmount/ReviewButton', 30_000)
       await isElementVisible('ConfirmButton')
     })
@@ -166,17 +158,14 @@ export default Send = () => {
     })
   })
 
-  describe('When multi-token send flow to phone number with one address (new flow)', () => {
+  describe('When multi-token send flow to phone number with one address', () => {
     let commentText
     beforeAll(async () => {
       commentText = `${new Date().getTime()}`
       await device.uninstallApp()
       await device.installApp()
-      await launchApp({
-        newInstance: true,
-        launchArgs: { statsigGateOverrides: `use_new_send_flow=true,use_viem_for_send=true` },
-      })
-      await quickOnboarding(SAMPLE_BACKUP_KEY_VERIFIED)
+      await launchApp({ newInstance: true })
+      await quickOnboarding({ mnemonic: SAMPLE_BACKUP_KEY_VERIFIED })
     })
 
     it('Then should navigate to send search input from home action', async () => {
@@ -200,7 +189,7 @@ export default Send = () => {
 
     it('Then tapping send button should navigate to Send Enter Amount screen', async () => {
       await element(by.id('SendOrInviteButton')).tap()
-      await waitForElementId('SendEnterAmount/Input', 30_000)
+      await waitForElementId('SendEnterAmount/TokenAmountInput', 30_000)
     })
 
     it('Then should be able to select token', async () => {
@@ -210,9 +199,9 @@ export default Send = () => {
     })
 
     it('Then should be able to enter amount and navigate to review screen', async () => {
-      await waitForElementByIdAndTap('SendEnterAmount/Input', 30_000)
-      await element(by.id('SendEnterAmount/Input')).replaceText('0.01')
-      await element(by.id('SendEnterAmount/Input')).tapReturnKey()
+      await waitForElementByIdAndTap('SendEnterAmount/TokenAmountInput', 30_000)
+      await element(by.id('SendEnterAmount/TokenAmountInput')).replaceText('0.01')
+      await element(by.id('SendEnterAmount/TokenAmountInput')).tapReturnKey()
       await waitForElementByIdAndTap('SendEnterAmount/ReviewButton', 30_000)
       await isElementVisible('ConfirmButton')
     })

@@ -14,7 +14,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import BigNumber from 'bignumber.js'
 import { range } from 'lodash'
 import { MinimalContact } from 'react-native-contacts'
-import { Dapp, DappV2WithCategoryNames } from 'src/dapps/types'
+import { Dapp, DappWithCategoryNames } from 'src/dapps/types'
 import { EscrowedPayment } from 'src/escrow/actions'
 import { FeeType } from 'src/fees/reducer'
 import { ExternalExchangeProvider } from 'src/fiatExchanges/ExternalExchanges'
@@ -31,10 +31,11 @@ import {
   GetFiatConnectQuotesResponse,
 } from 'src/fiatconnect'
 import { CleverTapInboxMessage } from 'src/home/cleverTapInbox'
+import { NftCelebrationStatus } from 'src/home/reducers'
 import { AddressToE164NumberType, E164NumberToAddressType } from 'src/identity/reducer'
 import { LocalCurrencyCode } from 'src/localCurrency/consts'
 import { StackParamList } from 'src/navigator/types'
-import { Nft } from 'src/nfts/types'
+import { Nft, NftWithMetadata } from 'src/nfts/types'
 import { Position, Shortcut } from 'src/positions/types'
 import { PriceHistoryStatus } from 'src/priceHistory/slice'
 import { UriData } from 'src/qrcode/schema'
@@ -47,7 +48,7 @@ import {
   RecipientInfo,
   RecipientType,
 } from 'src/recipients/recipient'
-import { TransactionDataInput } from 'src/send/SendAmount'
+import { TransactionDataInput } from 'src/send/types'
 import { NativeTokenBalance, StoredTokenBalance, TokenBalance } from 'src/tokens/slice'
 import {
   NetworkId,
@@ -125,6 +126,7 @@ export const mockTestTokenAddress = '0x048F47d358EC521a6cf384461d674750a3cB58C8'
 export const mockCrealAddress = '0xE4D517785D091D3c54818832dB6094bcc2744545'.toLowerCase()
 export const mockWBTCAddress = '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'.toLowerCase()
 export const mockUSDCAddress = '0x94a9d9ac8a22534e3faca9f4e7f2e2cf85d5e4c8'.toLowerCase()
+export const mockAaveArbUsdcAddress = '0x460b97BD498E1157530AEb3086301d5225b91216'.toLowerCase()
 
 export const mockCusdTokenId = `celo-alfajores:${mockCusdAddress}`
 export const mockCeurTokenId = `celo-alfajores:${mockCeurAddress}`
@@ -135,6 +137,8 @@ export const mockCrealTokenId = `celo-alfajores:${mockCrealAddress}`
 export const mockWBTCTokenId = `celo-alfajores:${mockWBTCAddress}`
 export const mockEthTokenId = 'ethereum-sepolia:native'
 export const mockUSDCTokenId = `ethereum-sepolia:${mockUSDCAddress}`
+export const mockARBTokenId = `arbitrum-sepolia:native`
+export const mockOPTokenId = `op-sepolia:native`
 
 export const mockQrCodeData2 = {
   address: mockAccount2Invite,
@@ -198,13 +202,6 @@ export const mockTransactionData = {
   tokenId: mockCusdTokenId,
 }
 
-export const mockTransactionDataLegacy = {
-  recipient: mockInvitableRecipient2,
-  amount: new BigNumber(1),
-  currency: Currency.Dollar,
-  type: TokenTransactionTypeV2.Sent,
-}
-
 export const mockInvitableRecipient3: ContactRecipient = {
   name: mockName2Invite,
   displayNumber: mockDisplayNumber2Invite,
@@ -215,15 +212,6 @@ export const mockInvitableRecipient3: ContactRecipient = {
 
 export const mockTokenTransactionData: TransactionDataInput = {
   recipient: { address: mockAccount, recipientType: RecipientType.Address },
-  inputAmount: new BigNumber(1),
-  amountIsInLocalCurrency: false,
-  tokenAddress: mockCusdAddress,
-  tokenId: mockCusdTokenId,
-  tokenAmount: new BigNumber(1),
-}
-
-export const mockTokenInviteTransactionData: TransactionDataInput = {
-  recipient: mockInvitableRecipient,
   inputAmount: new BigNumber(1),
   amountIsInLocalCurrency: false,
   tokenAddress: mockCusdAddress,
@@ -547,10 +535,39 @@ export const mockTokenBalances: Record<string, StoredTokenBalance> = {
     tokenId: mockUSDCTokenId,
     address: mockUSDCAddress,
     symbol: 'USDC',
-    decimals: 18,
+    decimals: 6,
     imageUrl: '',
     balance: '0',
     priceUsd: '1',
+    priceFetchedAt: Date.now(),
+  },
+  [mockARBTokenId]: {
+    name: 'Ethereum',
+    networkId: NetworkId['arbitrum-sepolia'],
+    tokenId: mockARBTokenId,
+    address: null,
+    symbol: 'ETH',
+    decimals: 18,
+    imageUrl:
+      'https://raw.githubusercontent.com/valora-inc/address-metadata/main/assets/tokens/ETH.png',
+    balance: '0',
+    priceUsd: '1500',
+    isNative: true,
+    priceFetchedAt: Date.now(),
+  },
+  [mockOPTokenId]: {
+    name: 'Ethereum',
+    networkId: NetworkId['op-sepolia'],
+    tokenId: mockOPTokenId,
+    address: null,
+    symbol: 'ETH',
+    decimals: 18,
+    imageUrl:
+      'https://raw.githubusercontent.com/valora-inc/address-metadata/main/assets/tokens/ETH.png',
+    balance: '0',
+    priceUsd: '1500',
+    isNative: true,
+    priceFetchedAt: Date.now(),
   },
 }
 
@@ -559,6 +576,13 @@ export const mockCeloTokenBalance: TokenBalance = {
   priceUsd: new BigNumber(0.5),
   lastKnownPriceUsd: new BigNumber(0.4),
   balance: new BigNumber(5),
+}
+
+export const mockCusdTokenBalance: TokenBalance = {
+  ...mockTokenBalances[mockCusdTokenId],
+  priceUsd: new BigNumber(1.001),
+  lastKnownPriceUsd: new BigNumber(1.001),
+  balance: new BigNumber(0),
 }
 
 export const mockEthTokenBalance: NativeTokenBalance = {
@@ -1060,10 +1084,8 @@ export const mockOnboardingProps = {
   supportedBiometryType: null,
   skipVerification: true,
   numberAlreadyVerifiedCentrally: false,
-  chooseAdventureEnabled: false,
   showRecoveryPhrase: false,
-  onboardingNameScreenEnabled: true,
-  cashInBottomSheetEnabled: true,
+  showCloudAccountBackupRestore: false,
 }
 
 export const mockDappList: Dapp[] = [
@@ -1085,7 +1107,7 @@ export const mockDappList: Dapp[] = [
   },
 ]
 
-export const mockDappListWithCategoryNames: DappV2WithCategoryNames[] = [
+export const mockDappListWithCategoryNames: DappWithCategoryNames[] = [
   {
     name: 'Dapp 1',
     id: 'dapp1',
@@ -1141,7 +1163,8 @@ export const priceHistory = {
   prices,
 }
 
-export const mockPositions: Position[] = [
+export const mockPositionsLegacy = [
+  // positions before hooks API update from 4/2/2024 and wallet redux migration 204
   {
     type: 'app-token',
     network: 'celo',
@@ -1288,11 +1311,169 @@ export const mockPositions: Position[] = [
   },
 ]
 
-export const mockShortcuts: Shortcut[] = [
+export const mockPositions: Position[] = [
+  {
+    type: 'app-token',
+    networkId: NetworkId['celo-mainnet'],
+    address: '0x19a75250c5a3ab22a8662e55a2b90ff9d3334b00',
+    appId: 'ubeswap',
+    symbol: 'ULP',
+    decimals: 18,
+    appName: 'Ubeswap',
+    displayProps: {
+      title: 'MOO / CELO',
+      description: 'Pool',
+      imageUrl: '',
+    },
+    tokens: [
+      {
+        type: 'base-token',
+        networkId: NetworkId['celo-mainnet'],
+        address: '0x17700282592d6917f6a73d0bf8accf4d578c131e',
+        symbol: 'MOO',
+        decimals: 18,
+        priceUsd: '0.006945061569050171',
+        balance: '180.868419020792201216',
+      },
+      {
+        type: 'base-token',
+        networkId: NetworkId['celo-mainnet'],
+        address: '0x471ece3750da237f93b8e339c536989b8978a438',
+        symbol: 'CELO',
+        decimals: 18,
+        priceUsd: '0.6959536890241361',
+        balance: '1.801458498251141632',
+      },
+    ],
+    pricePerShare: ['15.203387577266431', '0.15142650055521278'],
+    priceUsd: '0.21097429445966362',
+    balance: '11.896586737763895000',
+    supply: '29726.018516587721136286',
+    availableShortcutIds: [],
+  },
+  {
+    type: 'app-token',
+    networkId: NetworkId['celo-mainnet'],
+    address: '0x31f9dee850b4284b81b52b25a3194f2fc8ff18cf',
+    appId: 'ubeswap',
+    symbol: 'ULP',
+    decimals: 18,
+    appName: 'Ubeswap',
+    displayProps: {
+      title: 'G$ / cUSD',
+      description: 'Pool',
+      imageUrl: '',
+    },
+    tokens: [
+      {
+        type: 'base-token',
+        networkId: NetworkId['celo-mainnet'],
+        address: '0x62b8b11039fcfe5ab0c56e502b1c372a3d2a9c7a',
+        symbol: 'G$',
+        decimals: 18,
+        priceUsd: '0.00016235559507324788',
+        balance: '12400.197092864986',
+      },
+      {
+        type: 'base-token',
+        networkId: NetworkId['celo-mainnet'],
+        address: '0x765de816845861e75a25fca122bb6898b8b1282a',
+        symbol: 'cUSD',
+        decimals: 18,
+        priceUsd: '1',
+        balance: '2.066998331535406848',
+      },
+    ],
+    pricePerShare: ['77.49807502864574', '0.012918213362397938'],
+    priceUsd: '0.025500459450704928',
+    balance: '160.006517430032700000',
+    supply: '232.413684885485035933',
+    availableShortcutIds: [],
+  },
+  {
+    type: 'contract-position',
+    networkId: NetworkId['celo-mainnet'],
+    address: '0xda7f463c27ec862cfbf2369f3f74c364d050d93f',
+    appId: 'ubeswap',
+    appName: 'Ubeswap',
+    displayProps: {
+      title: 'CELO / cUSD',
+      description: 'Farm',
+      imageUrl: '',
+    },
+    tokens: [
+      {
+        type: 'app-token',
+        networkId: NetworkId['celo-mainnet'],
+        address: '0x1e593f1fe7b61c53874b54ec0c59fd0d5eb8621e',
+        appId: 'ubeswap',
+        symbol: 'ULP',
+        decimals: 18,
+        appName: 'Ubeswap',
+        displayProps: {
+          title: 'CELO / cUSD',
+          description: 'Pool',
+          imageUrl: '',
+        },
+        tokens: [
+          {
+            type: 'base-token',
+            networkId: NetworkId['celo-mainnet'],
+            address: '0x471ece3750da237f93b8e339c536989b8978a438',
+            symbol: 'CELO',
+            decimals: 18,
+            priceUsd: '0.6959536890241361',
+            balance: '0.950545800159603456', // total USD value = priceUsd * balance = $0.66
+            category: 'claimable',
+          },
+          {
+            type: 'base-token',
+            networkId: NetworkId['celo-mainnet'],
+            address: '0x765de816845861e75a25fca122bb6898b8b1282a',
+            symbol: 'cUSD',
+            decimals: 18,
+            priceUsd: '1',
+            balance: '0.659223169268731392',
+          },
+        ],
+        pricePerShare: ['2.827719585853931', '1.961082008754231'],
+        priceUsd: '3.9290438860550765',
+        balance: '0.336152780111169400',
+        supply: '42744.727037884449180591',
+        availableShortcutIds: [],
+      },
+      {
+        priceUsd: '0.00904673476946796903',
+        type: 'base-token',
+        category: 'claimable',
+        decimals: 18,
+        networkId: NetworkId['celo-mainnet'],
+        balance: '0.098322815093446616', // total USD value = priceUsd * balance = $0.00009
+        symbol: 'UBE',
+        address: '0x00be915b9dcf56a3cbe739d9b9c202ca692409ec',
+      },
+    ],
+    balanceUsd: '1.3207590254762067',
+    availableShortcutIds: ['claim-reward'],
+  },
+]
+
+export const mockShortcutsLegacy = [
   {
     category: 'claim',
     name: 'Claim',
     networks: ['celo'],
+    description: 'Claim rewards for staked liquidity',
+    id: 'claim-reward',
+    appId: 'ubeswap',
+  },
+]
+
+export const mockShortcuts: Shortcut[] = [
+  {
+    category: 'claim',
+    name: 'Claim',
+    networkIds: [NetworkId['celo-mainnet']],
     description: 'Claim rewards for staked liquidity',
     id: 'claim-reward',
     appId: 'ubeswap',
@@ -1336,7 +1517,7 @@ export const mockLegacyMobileMoneyProvider: LegacyMobileMoneyProvider = {
   },
 }
 
-export const mockNftAllFields: Nft = {
+export const mockNftAllFields: NftWithMetadata = {
   contractAddress: mockContractAddress,
   media: [
     {
@@ -1361,6 +1542,7 @@ export const mockNftAllFields: Nft = {
   ownerAddress: mockAccount,
   tokenId: '1',
   tokenUri: 'https://example.com/1',
+  networkId: NetworkId['celo-alfajores'],
 }
 
 export const mockNftMinimumFields: Nft = {
@@ -1517,3 +1699,89 @@ export const mockCleverTapInboxMessage: CleverTapInboxMessage = {
   priority: undefined,
   openInExternalBrowser: false,
 }
+
+export const mockStoreCelebrationReady = {
+  nfts: {
+    nfts: [mockNftAllFields],
+  },
+  home: {
+    nftCelebration: {
+      networkId: mockNftAllFields.networkId,
+      contractAddress: mockNftAllFields.contractAddress,
+      status: NftCelebrationStatus.celebrationReadyToDisplay,
+    },
+  },
+}
+
+export const mockStoreRewardReady = {
+  nfts: {
+    nfts: [mockNftAllFields],
+  },
+  home: {
+    nftCelebration: {
+      networkId: mockNftAllFields.networkId,
+      contractAddress: mockNftAllFields.contractAddress,
+      status: NftCelebrationStatus.rewardReadyToDisplay,
+      rewardExpirationDate: '3000-12-01T00:00:00.000Z',
+      rewardReminderDate: '3000-01-01T00:00:00.000Z',
+      deepLink: 'celo://test',
+    },
+  },
+}
+
+export const mockStoreReminderReady = {
+  nfts: {
+    nfts: [mockNftAllFields],
+  },
+  home: {
+    nftCelebration: {
+      networkId: mockNftAllFields.networkId,
+      contractAddress: mockNftAllFields.contractAddress,
+      status: NftCelebrationStatus.reminderReadyToDisplay,
+      rewardExpirationDate: '3000-12-01T00:00:00.000Z',
+      rewardReminderDate: '3000-01-01T00:00:00.000Z',
+      deepLink: 'celo://test',
+    },
+  },
+}
+
+export const mockStoreRewardDisplayed = {
+  nfts: {
+    nfts: [mockNftAllFields],
+  },
+  home: {
+    nftCelebration: {
+      networkId: mockNftAllFields.networkId,
+      contractAddress: mockNftAllFields.contractAddress,
+      status: NftCelebrationStatus.rewardDisplayed,
+    },
+  },
+}
+
+export const mockStoreReminderDisplayed = {
+  nfts: {
+    nfts: [mockNftAllFields],
+  },
+  home: {
+    nftCelebration: {
+      networkId: mockNftAllFields.networkId,
+      contractAddress: mockNftAllFields.contractAddress,
+      status: NftCelebrationStatus.reminderDisplayed,
+    },
+  },
+}
+
+export const mockStoreRewardReayWithDifferentNft = {
+  nfts: {
+    nfts: [{ ...mockNftAllFields, contractAddress: '0xNFT' }],
+  },
+  home: {
+    nftCelebration: {
+      networkId: mockNftAllFields.networkId,
+      contractAddress: mockNftAllFields.contractAddress,
+      status: NftCelebrationStatus.rewardReadyToDisplay,
+    },
+  },
+}
+
+export const mockJumpstartAdddress = '0x7BF3fefE9881127553D23a8Cd225a2c2442c438C'

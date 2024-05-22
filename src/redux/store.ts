@@ -1,7 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { configureStore } from '@reduxjs/toolkit'
-import { setupListeners } from '@reduxjs/toolkit/dist/query'
-import { Middleware } from 'redux'
+import { configureStore, Middleware } from '@reduxjs/toolkit'
 import { getStoredState, PersistConfig, persistReducer, persistStore } from 'redux-persist'
 import FSStorage from 'redux-persist-fs-storage'
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
@@ -10,7 +8,7 @@ import { PerformanceEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import { createMigrate } from 'src/redux/createMigrate'
 import { migrations } from 'src/redux/migrations'
-import rootReducer, { RootState } from 'src/redux/reducers'
+import rootReducer, { RootState as ReducersRootState } from 'src/redux/reducers'
 import { rootSaga } from 'src/redux/sagas'
 import { resetStateOnInvalidStoredAccount } from 'src/utils/accountChecker'
 import Logger from 'src/utils/Logger'
@@ -19,14 +17,14 @@ import { ONE_DAY_IN_MILLIS } from 'src/utils/time'
 const timeBetweenStoreSizeEvents = ONE_DAY_IN_MILLIS
 let lastEventTime = Date.now()
 
-const persistConfig: PersistConfig<RootState> = {
+const persistConfig: PersistConfig<ReducersRootState> = {
   key: 'root',
   // default is -1, increment as we make migrations
   // See https://github.com/valora-inc/wallet/tree/main/WALLET.md#redux-state-migration
-  version: 186,
+  version: 213,
   keyPrefix: `reduxStore-`, // the redux-persist default is `persist:` which doesn't work with some file systems.
   storage: FSStorage(),
-  blacklist: ['networkInfo', 'alert', 'imports', 'keylessBackup'],
+  blacklist: ['networkInfo', 'alert', 'imports', 'keylessBackup', 'jumpstart'],
   stateReconciler: autoMergeLevel2,
   migrate: async (...args) => {
     const migrate = createMigrate(migrations)
@@ -92,7 +90,7 @@ export const _persistConfig = persistConfig
 // eslint-disable-next-line no-var
 declare var window: any
 
-export const setupStore = (initialState = {}, config = persistConfig) => {
+export const setupStore = (initialState?: ReducersRootState, config = persistConfig) => {
   const sagaMiddleware = createSagaMiddleware({
     onError: (error, errorInfo) => {
       // Log the uncaught error so it's captured by Sentry
@@ -125,6 +123,7 @@ export const setupStore = (initialState = {}, config = persistConfig) => {
           'stableToken',
           'send',
           'positions',
+          'points',
           'home',
           'transactions',
           'web3',
@@ -141,6 +140,8 @@ export const setupStore = (initialState = {}, config = persistConfig) => {
           'keylessBackup',
           'nfts',
           'swap',
+          'jumpstart',
+          'earn',
           // 'exchange',
           // 'tokens',
           // 'priceHistory',
@@ -167,5 +168,8 @@ export const setupStore = (initialState = {}, config = persistConfig) => {
 }
 
 const { store, persistor } = setupStore()
-setupListeners(store.dispatch)
+
 export { persistor, store }
+
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch

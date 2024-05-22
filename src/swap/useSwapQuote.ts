@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 import { useAsyncCallback } from 'react-async-hook'
 import erc20 from 'src/abis/IERC20'
-import useSelector from 'src/redux/useSelector'
+import { useSelector } from 'src/redux/hooks'
 import { FetchQuoteResponse, Field, ParsedSwapAmount, SwapTransaction } from 'src/swap/types'
 import { feeCurrenciesSelector } from 'src/tokens/selectors'
 import { TokenBalance } from 'src/tokens/slice'
@@ -21,11 +21,14 @@ import { Address, Hex, encodeFunctionData, zeroAddress } from 'viem'
 // varying gas fees of different swap providers (or even the same swap)
 const DECREASED_SWAP_AMOUNT_GAS_FEE_MULTIPLIER = 1.2
 
+export const NO_QUOTE_ERROR_MESSAGE = 'No quote available'
+
 export interface QuoteResult {
   toTokenId: string
   fromTokenId: string
   swapAmount: BigNumber
   price: string
+  appFeePercentageIncludedInPrice: string | undefined
   provider: string
   estimatedPriceImpact: string | null
   allowanceTarget: string
@@ -134,7 +137,15 @@ async function prepareSwapTransactions(
   })
 }
 
-function useSwapQuote(networkId: NetworkId, slippagePercentage: string) {
+function useSwapQuote({
+  networkId,
+  slippagePercentage,
+  enableAppFee,
+}: {
+  networkId: NetworkId
+  slippagePercentage: string
+  enableAppFee: boolean
+}) {
   const walletAddress = useSelector(walletAddressSelector)
   const feeCurrencies = useSelector((state) => feeCurrenciesSelector(state, networkId))
 
@@ -172,6 +183,7 @@ function useSwapQuote(networkId: NetworkId, slippagePercentage: string) {
         [swapAmountParam]: swapAmountInWei.toFixed(0, BigNumber.ROUND_DOWN),
         userAddress: walletAddress ?? '',
         slippagePercentage,
+        ...(enableAppFee === true && { enableAppFee: enableAppFee.toString() }),
       }
       const queryParams = new URLSearchParams({ ...params }).toString()
       const requestUrl = `${networkConfig.getSwapQuoteUrl}?${queryParams}`
@@ -182,6 +194,11 @@ function useSwapQuote(networkId: NetworkId, slippagePercentage: string) {
       }
 
       const quote: FetchQuoteResponse = await response.json()
+
+      if (!quote.unvalidatedSwapTransaction) {
+        throw new Error(NO_QUOTE_ERROR_MESSAGE)
+      }
+
       const swapPrice = quote.unvalidatedSwapTransaction.price
       const price =
         updatedField === Field.FROM
@@ -200,6 +217,8 @@ function useSwapQuote(networkId: NetworkId, slippagePercentage: string) {
         fromTokenId: fromToken.tokenId,
         swapAmount: swapAmount[updatedField],
         price,
+        appFeePercentageIncludedInPrice:
+          quote.unvalidatedSwapTransaction.appFeePercentageIncludedInPrice,
         provider: quote.details.swapProvider,
         estimatedPriceImpact,
         allowanceTarget: quote.unvalidatedSwapTransaction.allowanceTarget,
@@ -225,7 +244,7 @@ function useSwapQuote(networkId: NetworkId, slippagePercentage: string) {
   return {
     quote: refreshQuote.result ?? null,
     refreshQuote: refreshQuote.execute,
-    fetchSwapQuoteError: refreshQuote.status === 'error',
+    fetchSwapQuoteError: refreshQuote.error,
     fetchingSwapQuote: refreshQuote.loading,
     clearQuote,
   }

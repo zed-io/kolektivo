@@ -32,6 +32,7 @@ export interface SwapTransaction {
   // be careful -- price means different things when using sellAmount vs buyAmount
   price: string
   guaranteedPrice: string
+  appFeePercentageIncludedInPrice: string | undefined
   /**
    * In percentage, between 0 and 100
    */
@@ -52,10 +53,12 @@ export interface SwapInfo {
     preparedTransactions: SerializableTransactionRequest[]
     receivedAt: number
     price: string
+    appFeePercentageIncludedInPrice: string | undefined
     provider: string
     estimatedPriceImpact: string | null
     allowanceTarget: string
   }
+  areSwapTokensShuffled: boolean
 }
 
 export interface FetchQuoteResponse {

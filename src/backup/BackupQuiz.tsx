@@ -73,15 +73,12 @@ const mapStateToProps = (state: RootState): StateProps => {
 }
 
 export const navOptionsForQuiz = ({ route }: OwnProps) => {
-  const navigatedFromSettings = route.params?.navigatedFromSettings
-  const onCancel = () => {
-    navigate(Screens.Settings)
-  }
+  const isAccountRemoval = route.params?.isAccountRemoval
   return {
     ...emptyHeader,
     headerLeft: () => {
-      return navigatedFromSettings ? (
-        <CancelButton onCancel={onCancel} style={styles.cancelButton} />
+      return isAccountRemoval ? (
+        <CancelButton onCancel={() => navigate(Screens.Settings)} style={styles.cancelButton} />
       ) : (
         <CancelConfirm screen={TAG} />
       )
@@ -188,8 +185,8 @@ export class BackupQuiz extends React.Component<Props, State> {
     if (lengthsMatch && contentMatches(userChosenWords, mnemonic)) {
       Logger.debug(TAG, 'Backup quiz passed')
       this.props.setBackupCompleted()
-      const navigatedFromSettings = this.props.route.params?.navigatedFromSettings ?? false
-      navigate(Screens.BackupComplete, { navigatedFromSettings })
+      const isAccountRemoval = this.props.route.params?.isAccountRemoval ?? false
+      navigate(Screens.BackupComplete, { isAccountRemoval })
       ValoraAnalytics.track(OnboardingEvents.backup_quiz_complete)
     } else {
       Logger.debug(TAG, 'Backup quiz failed, reseting words')
@@ -246,8 +243,8 @@ export class BackupQuiz extends React.Component<Props, State> {
               {!isQuizComplete && (
                 <Text style={styles.bodyText}>
                   <Trans
-                    i18nKey={'backupQuizWordCount'}
-                    tOptions={{ ordinal: t(`ordinals.${currentWordIndex}`) }}
+                    i18nKey={'backupQuizWordCountV1_83'}
+                    tOptions={{ wordNumber: t(`ordinals.${currentWordIndex}`) }}
                   >
                     <Text style={styles.bodyTextBold}>X</Text>
                   </Trans>

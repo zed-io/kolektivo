@@ -1,26 +1,25 @@
 import { Contract } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
-import jumpstartAbi from 'src/abis/WalletJumpStart.json'
-import { getDynamicConfigParams } from 'src/statsig'
-import { DynamicConfigs } from 'src/statsig/constants'
-import { StatsigDynamicConfigs } from 'src/statsig/types'
-import { Network } from 'src/transactions/types'
+import walletJumpstart from 'src/abis/IWalletJumpstart'
+import { NetworkId } from 'src/transactions/types'
 import Logger from 'src/utils/Logger'
 import { fetchWithTimeout } from 'src/utils/fetchWithTimeout'
 import { getWeb3Async } from 'src/web3/contracts'
 import networkConfig from 'src/web3/networkConfig'
 import { getContract } from 'src/web3/utils'
+import { Hash } from 'viem'
 
 const TAG = 'WalletJumpstart'
 
-export async function jumpstartLinkHandler(privateKey: string, userAddress: string) {
-  const contractAddress = getDynamicConfigParams(
-    DynamicConfigs[StatsigDynamicConfigs.WALLET_JUMPSTART_CONFIG]
-  )?.[Network.Celo]?.contractAddress
-
-  if (!contractAddress) {
-    Logger.error(TAG, 'Contract address is not provided in dynamic config')
-    return
+export async function jumpstartLinkHandler(
+  networkId: NetworkId,
+  contractAddress: string,
+  privateKey: string,
+  userAddress: string
+): Promise<Hash[]> {
+  if (networkId !== networkConfig.defaultNetworkId) {
+    // TODO: make it multichain (RET-1019)
+    throw new Error(`Unsupported network id: ${networkId}`)
   }
 
   const kit = newKitFromWeb3(await getWeb3Async())
@@ -28,10 +27,20 @@ export async function jumpstartLinkHandler(privateKey: string, userAddress: stri
   const accounts: string[] = kit.connection.getLocalAccounts()
   const publicKey = accounts[0]
 
-  const jumpstart: Contract = await getContract(jumpstartAbi, contractAddress)
+  const jumpstart: Contract = await getContract(walletJumpstart.abi, contractAddress)
 
-  await executeClaims(kit, jumpstart, publicKey, userAddress, 'erc20', privateKey)
-  await executeClaims(kit, jumpstart, publicKey, userAddress, 'erc721', privateKey)
+  const transactionHashes = (
+    await Promise.all([
+      executeClaims(kit, jumpstart, publicKey, userAddress, 'erc20', privateKey, networkId),
+      executeClaims(kit, jumpstart, publicKey, userAddress, 'erc721', privateKey, networkId),
+    ])
+  ).flat()
+
+  if (transactionHashes.length === 0) {
+    throw new Error(`Failed to claim any jumpstart reward for ${networkId}`)
+  }
+
+  return transactionHashes
 }
 
 export async function executeClaims(
@@ -40,9 +49,11 @@ export async function executeClaims(
   beneficiary: string,
   userAddress: string,
   assetType: 'erc20' | 'erc721',
-  privateKey: string
-) {
+  privateKey: string,
+  networkId: NetworkId
+): Promise<Hash[]> {
   let index = 0
+  const transactionHashes: Hash[] = []
   while (true) {
     try {
       const info =
@@ -65,13 +76,20 @@ export async function executeClaims(
 
       const { signature } = await kit.web3.eth.accounts.sign(messageHash, privateKey)
 
-      await claimReward({
+      const response = await claimReward({
         index: index.toString(),
         beneficiary,
         signature,
         sendTo: userAddress,
         assetType,
+        networkId,
       })
+
+      const transactionHash = response?.result?.transactionHash
+
+      if (transactionHash) {
+        transactionHashes.push(transactionHash)
+      }
     } catch (error: any) {
       if (error.message === 'execution reverted') {
         // This happens when using an index that doesn't exist.
@@ -84,7 +102,7 @@ export async function executeClaims(
       } else {
         Logger.error(TAG, 'Error claiming jumpstart reward', error)
       }
-      return
+      return transactionHashes
     } finally {
       index++
     }
@@ -97,6 +115,7 @@ export interface RewardInfo {
   signature: string
   sendTo: string
   assetType: 'erc20' | 'erc721'
+  networkId: NetworkId
 }
 
 export async function claimReward(rewardInfo: RewardInfo) {
@@ -108,4 +127,5 @@ export async function claimReward(rewardInfo: RewardInfo) {
       `Failure response claiming wallet jumpstart reward. ${response.status}  ${response.statusText}`
     )
   }
+  return response.json()
 }

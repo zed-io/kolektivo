@@ -6,6 +6,14 @@
   "licenses": "Lizenzen",
   "removeAccountTitle": "Kolektivo zurücksetzen",
   "removeAccountDetails": "Das Zurücksetzen wird dein Konto von diesem Gerät entfernen. Dein Guthaben bleibt im Konto, wird aber nur mit deiner Wiederherstellungsphrase erreichbar sein",
+  "deleteAccountTitle": "Konto löschen",
+  "deleteAccountDetails": "Wenn du dein Konto löschst, wird es von {{appName}} entfernt. Dein Guthaben bleibt auf dem Konto, ist aber nur noch mit deiner Wiederherstellungsphrase zugänglich",
+  "deleteAccountWarning": {
+    "title": "Bist Du sicher?",
+    "description": "Wenn du dein Konto von {{appName}} löschst, wird auch die damit verbundene Telefonnummer entfernt. Dein Guthaben bleibt auf dem Konto, ist aber nur noch mit deiner Wiederherstellungsphrase zugänglich.",
+    "buttonLabel": "Weiter",
+    "buttonLabelRevokingPhoneNumber": "Verknüpfung der Telefonnummer wird aufgehoben ..."
+  },
   "legal": "Rechtshinweisen",
   "appPreferences": "App-Einstellungen",
   "security": "Sicherheit",
@@ -21,7 +29,8 @@
   "dataSaver": "Datensparmodus",
   "enableDataSaver": "Datensparmodus aktivieren",
   "dataSaverDetail": "Der Datensparmodus ermöglicht die Kommunikation mit dem Netzwerk über einen vertrauenswürdigen Knoten. Du kannst diesen Modus jederzeit in den App-Einstellungen ändern.",
-  "keylessBackupSettingsTitle": "E-Mail- und Telefonwiederherstellung",
+  "keylessBackupSettingsTitle": "Sicherung von E-Mail und Telefonnummer",
+  "keylessBackupSettingsDeleteError": "Deine Sicherung konnte nicht gelöscht werden. Bitte warte und versuche es später noch einmal.",
   "setup": "Einrichten",
   "restartModalSwitchOff": {
     "header": "Neustarten, um Datensparmodus auszuschalten",
@@ -55,7 +64,7 @@
   "protectWallet": {
     "title": "Schütze deine Wallet",
     "subtitle": "Schütze deine Wallet",
-    "body": "Wenn du dein Telefon verlierst oder es dir gestohlen wird, ist deine {{mnemonicLength}}-Wörter Wiederherstellungsphrase die einzige Möglichkeit, um auf dein Guthaben zugreifen zu können.",
+    "body": "Wenn dein Telefon verloren geht oder gestohlen wird, ist deine Wiederherstellungsphrase mit 12 Wörtern die einzige Möglichkeit, um auf dein Guthaben zuzugreifen.",
     "recoveryPhrase": {
       "title": "Wiederherstellungsphrase verwenden",
       "subtitle": "Schreibe dir deine Wiederherstellungsphrase auf"
@@ -63,7 +72,7 @@
   },
   "recoveryPhrase": {
     "title": "Deine Wiederherstellungsphrase",
-    "body": "Schreibe diese {{mnemonicLength}} Wörter so auf, dass sie nicht gestohlen oder beschädigt werden können.",
+    "body": "Schreibe diese 12 Wörter auf und bewahre sie an einem sicheren Ort auf, wo sie nicht gestohlen oder beschädigt werden können.",
     "continue": "Ich habe sie gespeichert",
     "copy": "In Zwischenablage kopieren",
     "mnemonicCopied": "Wiederherstellungsphrase in die Zwischenablage kopiert",
@@ -77,16 +86,24 @@
     "title": "Sorge für die Sicherheit deiner Wallet",
     "description": "Nur du kannst auf deine Wallet zugreifen. Wenn du dein Telefon verloren hast oder es dir gestohlen wurde, kann Kolektivo deine Wallet für dich nicht wiederherstellen.\n\nDu musst eine Methode einrichten, durch die deine Wallet sicher und dein Guthaben geschützt sind."
   },
-  "setUpKeylessBackup": {
-    "title": "Wallet-Back-up einrichten",
-    "subtitle": "Folgendes wird zum Einrichten der Sicherung verwendet",
+  "keylessBackupIntro": {
     "emailAddress": "E-Mail-Adresse",
     "phoneNumber": "Telefonnummer",
-    "useRecoveryPhrase": "Verwende stattdessen die Wiederherstellungsphase"
+    "setup": {
+      "title": "Wallet-Back-up einrichten",
+      "description": "Folgendes wird zum Einrichten der Sicherung verwendet",
+      "useRecoveryPhrase": "Verwende stattdessen eine Wiederherstellungsphrase",
+      "reminder": "<0>Denke daran</0>, diese Information ist die einzige Möglichkeit, auf deine Wallet zuzugreifen, wenn dein Gerät verloren geht oder gestohlen wird. Valora speichert weder deine E-Mail-Adresse, noch deine Telefonnummer. Passe gut darauf auf!"
+    },
+    "restore": {
+      "description": "Vergewissere dich, dass du Folgendes zur Verfügung hast, um deine Wallet wiederherzustellen.",
+      "reminder": "<0>Denke daran</0>, dass du Zugang zu derselben E-Mail-Adresse und Telefonnummer brauchst, die du bei der Sicherung verwendet hast"
+    }
   },
   "signInWithEmail": {
     "title": "Mit der E-Mail-Adresse anmelden",
     "subtitle": "Melde dich mit deiner E-Mail-Adresse an, um diese als Sicherung einzurichten.\nDu wirst aufgefordert, dich erneut anzumelden, wenn du jemals deine Wallet verlierst.",
+    "subtitleRestore": "Melde dich mit der E-Mail an, mit der du deine Wallet-Sicherung eingerichtet hast.",
     "google": "Mit Google anmelden"
   },
   "keylessBackupPhoneInput": {
@@ -109,14 +126,36 @@
         "body": "Du kannst jetzt deine Wallet mit deiner E-Mail-Adresse und Telefonnummer wiederherstellen."
       },
       "failed": {
-        "title": "Schlüsselloses Backup nicht verfügbar",
-        "body": "Du kannst das schlüssellose Backup zu einem späteren Zeitpunkt einrichten oder dein Konto jetzt durch ein manuelles Backup schützen.",
-        "later": "Ich führe das Backup später durch",
-        "manual": "Manuelles Backup"
+        "title": "Sicherung nicht verfügbar",
+        "body": "Du kannst später eine Sicherung deiner Wallet einrichten oder dein Konto jetzt schützen, indem du deine Wiederherstellungsphrase speicherst.",
+        "later": "Ich richte später eine Sicherung ein",
+        "manual": "Wiederherstellungsphrase speichern"
+      }
+    },
+    "restore": {
+      "inProgress": {
+        "title": "Deine Wallet wird wiederhergestellt"
+      },
+      "completed": {
+        "title": "Deine Wallet wurde wiederhergestellt!",
+        "bodyZeroBalance": "Sobald du mit der Einrichtung fertig bist, kannst du Guthaben zu deiner Wallet hinzufügen.",
+        "bodyBalance": "Du hast ein Guthaben von <0></0>"
+      },
+      "failed": {
+        "title": "Deine Wallet wurde nicht wiederhergestellt",
+        "body": "Es gab ein technisches Problem bei dem Versuch, deine Wallet wiederherzustellen. Bitte kontaktiere das Support-Team für weitere Informationen.",
+        "tryAgain": "Wiederholen",
+        "createNewWallet": "Wallet erstellen",
+        "help": "Hilfe"
+      },
+      "notFound": {
+        "title": "Wallet nicht gefunden",
+        "body": "Um deine Wallet wiederherzustellen, verwende <0>dieselbe E-Mail-Adresse und Telefonnummer</0>, die du bei der Einrichtung verwendet hast.\n\nDu kannst deine Wallet auch mit deiner Wiederherstellungsphrase wiederherstellen.",
+        "tryAgain": "Wiederholen",
+        "createNewWallet": "Wallet erstellen"
       }
     }
   },
-  "setupKeylessBackupReminder": "<0>Denke daran</0>, diese Information ist die einzige Möglichkeit, auf deine Wallet zuzugreifen, wenn dein Gerät verloren geht oder gestohlen wird. Valora speichert weder deine E-Mail-Adresse, noch deine Telefonnummer. Passe gut darauf auf!",
   "testFaqLink": "{{appName}} FAQ",
   "termsOfServiceLink": "Nutzungsbedingungen",
   "privacyPolicy": "Datenschutzrichtlinie",
@@ -171,6 +210,8 @@
   "completeEducation": "Ich verstehe",
   "yourAccountKey": "Deine Wiederherstellungsphrase",
   "backupKeyNotification2": "Verwahre dein Guthaben sicher. Sichere jetzt deine Wiederherstellungsphrase.",
+  "keylessBackupCTA": "Jetzt sichern",
+  "keylessBackupNotification": "Richte deine E-Mail und Telefonnummer ein, um deine Seed-Phrase zu sichern",
   "backupKeyCTA": "Schließe die Sicherung jetzt ab",
   "backupKeySummary": "Finde einen privaten Ort und schreibe deine Wiederherstellungsphrase auf. Bitte speichere sie an einem sicheren Ort. Speichere sie nicht in deinem Telefon.",
   "backupKeyWarning": "Solltest du deine Wiederherstellungsphrase verlieren, dann verlierst du Zugang auf dein gesamtes Guthaben in Kolektivo.",
@@ -178,6 +219,7 @@
   "moreInfo": "Weitere Infos",
   "savedConfirmation": "Ja, ich habe meine Phrase aufgeschrieben.",
   "backupQuizWordCount": "Was ist das <0>{{ordinal}}</0> Wort deiner Wiederherstellungsphrase?",
+  "backupQuizWordCountV1_83": "Was ist das <0>{{wordNumber}}</0> Wort deiner Wiederherstellungsphrase?",
   "importBackupFailed": "Import des Wallets fehlgeschlagen",
   "backupQuizFailed": "Die Wiederherstellungsphrase ist falsch. Bitte versuche es erneut.",
   "invalidBackupPhrase": "Wiederherstellungsphrase ungültig",
@@ -474,6 +516,7 @@
   "to": "Zu",
   "for": "Für",
   "reclaim": "Zurückfordern",
+  "claimed": "Beansprucht",
   "celoGold": "CELO",
   "celoEuros": "Celo Euro",
   "balanceAvailable": "<0></0> verfügbar",
@@ -634,8 +677,8 @@
     "body": "Ihr erhaltet ein exklusives NFT, sobald dein Freund seine {{appName}}-Wallet eingerichtet hat und seine Nummer damit verknüpft hat."
   },
   "inviteRewardsBannerCUSD": {
-    "title": "Lade Freunde ein und werde belohnt",
-    "body": "Sobald dieser Kontakt seine {{appName}}-Wallet eingerichtet und Guthaben darauf eingezahlt hat, erhaltet ihr beide 0,50 cUSD."
+    "title": "Lade Freunde ein und erhalte bis zu 12 cUSD",
+    "body": "Sobald sie ihre Nummer verbinden und Geld auf {{appName}}einzahlen, erhaltet ihr beide 0,50 cUSD."
   },
   "inviteWithUrl": {
     "title": "Lade deine Freunde ein",
@@ -665,6 +708,28 @@
     "info": "Lese bitte unsere <0>Benutzervereinbarung und Bedingungen</0> und klicke unten auf Akzeptieren um unsere Dienste zu nutzen.",
     "privacy": "Indem du diesem Netzwerk beitrittst, gibst du uns die Erlaubnis, anonyme Informationen über deine Nutzung der App zu sammeln. Wenn du deine Telefonnummer verbindest, wird eine Kopie davon gespeichert. Wenn du Kolektivo Zugriff auf deine Kontaktliste gewährst, wird Kolektivo den Namen, die Telefonnummer und das Profilbild jedes Kontaktes importieren, um Benutzern die Verbindung über die Kolektivo-App zu ermöglichen. Um zu erfahren, wie wir diese Informationen sammeln und verwenden, lesen unsere <0>Datenschutzrichtlinie</0>.",
     "goldDisclaimer": "Wenn du ein „Konto“ bei Kolektivo anlegst, erstellst du ein digitales Wallet, dessen Schlüssel nur du besitzt. Keine andere Person oder Organisation, einschließlich Kolektivo, kann deinen Schlüssel wiederherstellen, Transaktionen ändern oder rückgängig machen oder verlorenes Guthaben wiedererlangen. Sei dir bewusst, dass Kryptowährungen Teil einer neuen Vermögensklasse sind und ein Risiko für finanzielle Verluste darstellen. Überlege dir deine finanzielle Situation und deine Risikobereitschaft genau, bevor du einen Vermögenswert kaufst."
+  },
+  "termsColloquial": {
+    "title": "Beginnen wir mit der Erstellung deines Portemonnaies",
+    "privacyHeading": "Deine Infos & Privatsphäre:",
+    "privacy1": "Wir sammeln Nutzungsdaten, die uns helfen, die App und die Sicherheit zu verbessern. Welche Art von Daten wir sammeln, wie wir sie verwenden und welche Rechte du in Bezug auf diese Daten hast, kannst du in unserer <0>Datenschutzerklärung</0> nachlesen.",
+    "privacy2": "Wenn du dich entscheidest, deine Telefonnummer zu verknüpfen, speichern wir eine verschlüsselte Kopie davon.",
+    "privacy3": "Wenn du dich entscheidest, deine Kontakte zu verbinden, verwenden wir ihre Namen, Nummern und Profilbilder, um sie leichter zu finden.",
+    "walletHeading": "Dein digitales Portemonnaie mit Valora:",
+    "wallet1": "Du bist dabei, eine digitale Brieftasche zu erstellen. Nur du hast den Schlüssel für deine Brieftasche. Wir können deinen Schlüssel oder dein Vermögen nicht wiederherstellen, wenn du ihn verlierst. Wir können auch keine Aktionen rückgängig machen, die über Valora auf Blockchains durchgeführt wurden.",
+    "wallet2": "Digitale Vermögenswerte, die Vermögenswerte, mit denen du bei Valora interagierst, sind mit einzigartigen Risiken verbunden. Wenn du Valora nutzt, akzeptierst du diese Risiken und übernimmst die Verantwortung dafür. Bitte bedenke deine Finanzen und deine Risikobereitschaft, bevor du Entscheidungen triffst.",
+    "fullTerms": "Lies unsere vollständigen <0>Geschäftsbedingungen</0>"
+  },
+  "termsColloquial": {
+    "title": "Beginnen wir mit der Erstellung deines Portemonnaies",
+    "privacyHeading": "Deine Infos & Privatsphäre:",
+    "privacy1": "Wir sammeln Nutzungsdaten, die uns helfen, die App und die Sicherheit zu verbessern. Welche Art von Daten wir sammeln, wie wir sie verwenden und welche Rechte du in Bezug auf diese Daten hast, kannst du in unserer <0>Datenschutzerklärung</0> nachlesen.",
+    "privacy2": "Wenn du dich entscheidest, deine Telefonnummer zu verknüpfen, speichern wir eine verschlüsselte Kopie davon.",
+    "privacy3": "Wenn du dich entscheidest, deine Kontakte zu verbinden, verwenden wir ihre Namen, Nummern und Profilbilder, um sie leichter zu finden.",
+    "walletHeading": "Dein digitales Portemonnaie mit Valora:",
+    "wallet1": "Du bist dabei, eine digitale Brieftasche zu erstellen. Nur du hast den Schlüssel für deine Brieftasche. Wir können deinen Schlüssel oder dein Vermögen nicht wiederherstellen, wenn du ihn verlierst. Wir können auch keine Aktionen rückgängig machen, die über Valora auf Blockchains durchgeführt wurden.",
+    "wallet2": "Digitale Vermögenswerte, die Vermögenswerte, mit denen du bei Valora interagierst, sind mit einzigartigen Risiken verbunden. Wenn du Valora nutzt, akzeptierst du diese Risiken und übernimmst die Verantwortung dafür. Bitte bedenke deine Finanzen und deine Risikobereitschaft, bevor du Entscheidungen triffst.",
+    "fullTerms": "Lies unsere vollständigen <0>Geschäftsbedingungen</0>"
   },
   "fullNameOrPsuedonym": "Vollständiger Name oder Alias",
   "namePlaceholder": "z.B. Name",
@@ -772,7 +837,8 @@
     "restoreWallet": "Wallet wiederherstellen",
     "hasWallet": "Ich habe bereits eine Wallet",
     "header": "Willkommen bei {{appName}}! Lass uns deine Wallet erstellen.",
-    "getStarted": "Erste Schritte"
+    "getStarted": "Erste Schritte",
+    "agreeToTerms": "Wenn du ein Wallet erstellst, stimmst du unseren <0>Allgemeinen Geschäftsbedingungen</0> zu"
   },
   "accessContacts": {
     "disclosure": {
@@ -873,6 +939,18 @@
       "title": "Guthaben\n<0></0>"
     }
   },
+  "importSelect": {
+    "title": "Deine Wallet wiederherstellen",
+    "description": "Wenn du eine Sicherung einrichtest, um deine Wallet zu schützen, wähle unten eine Option.",
+    "emailAndPhone": {
+      "title": "Von E-Mail- und Telefon-Sicherung",
+      "description": "Stelle deine Wallet mit der Telefonnummer und E-Mail wieder her, die du zuvor eingerichtet hast"
+    },
+    "recoveryPhrase": {
+      "title": "Von Wiederherstellungsphrase",
+      "description": "Gib deine Wiederherstellungsphrase mit 12 Wörtern ein, um wieder Zugang zu Valora zu erhalten"
+    }
+  },
   "verificationInput": {
     "title": "Bestätigen",
     "body": "Wir haben dir drei Nachrichten (SMS) gesendet. Bitte kopiere diese und füge sie unten ein.",
@@ -944,6 +1022,7 @@
   "receivedFrom": "Erhalten von",
   "commentLabel": "Nachricht",
   "amountSent": "Betrag gesendet",
+  "amountReceived": "Erhaltener Betrag",
   "amountCeloWithdrawn": "Betrag (CELO)",
   "feeEducation": "Blockchains erheben eine Transaktionsgebühr, um Netzwerke zu unterstützen und reibungslos arbeiten zu lassen.",
   "reviewPayment": "Zahlung überprüfen",
@@ -1096,6 +1175,10 @@
     "notEnoughBalanceForGas": {
       "title": "Unzureichendes Gas-Token-Guthaben",
       "description": "Du hast nicht genug {{feeCurrencies}}, um die Gasgebühren zu begleichen. Bitte füge {{feeCurrencies}} zu deiner Wallet hinzu, um diese Transaktion abzuschließen."
+    },
+    "failedToPrepareTransaction": {
+      "title": "Transaktion konnte nicht vorbereitet werden",
+      "description": "Bei der Vorbereitung der Transaktion ist ein Fehler aufgetreten. Siehe den zugrunde liegenden Fehler für weitere Details.\n\n„{{errorMessage}}“"
     },
     "session": {
       "failUnsupportedNamespace": {
@@ -1250,6 +1333,9 @@
   "feedItemGoldWithdrawal": "Abhebung an {{displayName}}",
   "feedItemGoldReceived": "Erhalten von {{displayName}}",
   "feedItemSwapPath": "{{token1}} zu {{token2}}",
+  "feedItemJumpstartTitle": "Live-Link",
+  "feedItemJumpstartSentSubtitle": "Einladung",
+  "feedItemJumpstartReceivedSubtitle": "Guthaben erhalten",
   "transactionHeaderVerificationFee": "Bestätigung",
   "transactionHeaderNetworkFee": "Netzwerk",
   "transactionHeaderFaucet": "Faucet",
@@ -1687,10 +1773,11 @@
     "swapTo": "ZU",
     "insufficientFunds": "Unzureichendes {{token}}-Guthaben. Versuche es mit einem kleineren Betrag oder wähle ein anderes Vermögen.",
     "fetchSwapQuoteFailed": "Entschuldige die Verzögerung! Es dauert länger als üblich, um den besten Wechselkurs zu ermitteln. Bitte versuche es in ein paar Minuten erneut.",
-    "disclaimer": "Bester von Netzwerkpartnern bestimmter Kurs. <0>Mehr erfahren</0>",
+    "disclaimer": "Bester Kurs von dezentralen Quellen. <0>Mehr erfahren</0>",
     "swapFromTokenSelection": "TAUSCH VON",
     "swapToTokenSelection": "TAUSCH ZU",
     "tokenUsdValueUnknown": "-",
+    "unsupportedSwapTokens": "Die ausgewählten Token werden von deinen Tausch-Anbietern nicht unterstützt.",
     "switchedToNetworkWarning": {
       "title": "Du bist zum Netzwerk {{networkName}} gewechselt",
       "body_swapFrom": "Wähle einen Token aus, den du im {{networkName}} Netzwerk tauschen möchtest, um fortzufahren.",
@@ -1745,6 +1832,9 @@
       "slippageToleranceInfo": "Slippage-Toleranz\n\nDein Tausch wird innerhalb der Slippage-Toleranz in Prozent ausgeführt. Wenn sich der Preis stärker als die Slippage-Toleranz verändert, schützt dich {{appName}}, indem die Ausführung des Handels verhindert wird.",
       "networkFeeInfoDismissButton": "Verstanden",
       "exchangeRate": "Umtauschkurs",
+      "exchangeRateInfo": "Wechselkurs\n\nWir haben den besten Wechselkurs für dich gefunden. Dein Handel wird zu einem Preis abgeschlossen, der innerhalb {{slippagePercentage}}% der Schätzung liegt, oder die Transaktion wird storniert und das Geld wird an deine Brieftasche zurückgegeben.",
+      "exchangeRateInfo_withAppFee": "Wechselkurs\n\nWir haben den besten Wechselkurs für dich gefunden. Dein Handel wird zu einem Kurs innerhalb von {{slippagePercentage}}% des geschätzten Kurses abgewickelt oder die Transaktion wird storniert und das Geld wird an dein Portemonnaie zurückgegeben.\n\nDer geschätzte Kurs beinhaltet eine {{appName}} Gebühr von {{appFeePercentage}}%.",
+      "exchangeRateInfoDismissButton": "Verstanden",
       "estimatedValue": "Geschätzter Wert"
     },
     "fundYourWalletBottomSheet": {
@@ -1850,11 +1940,22 @@
   },
   "profileScreen": {
     "generateName": "Namen generieren",
-    "namePlaceholder": "Wähle einen Namen, z. B. {{exampleName}}"
+    "namePlaceholder": "Wähle einen Namen, z. B. „{{exampleName}}“",
+    "profilePictureDisclaimer": "Passe {{appName}} mit deinem Profilbild an. Dein Bild bleibt privat, es wird nie geteilt oder hochgeladen."
   },
   "tokenBottomSheet": {
     "searchAssets": "Vermögen suchen",
-    "noTokenInResult": "Keine passenden Ergebnisse gefunden für <0>„{{searchTerm}}”</0>"
+    "noTokenInResult": "Keine passenden Ergebnisse gefunden für <0>„{{searchTerm}}”</0>",
+    "noFilterSearchResults": "Es wurde kein Vermögen zu „{{searchTerm}}“ in den folgenden Kategorien gefunden: {{filterNames}}",
+    "noFilterResults": "Es wurde kein Vermögen gefunden, das den folgenden Kategorien entspricht: {{filterNames}}",
+    "noSearchResults": "Kein Vermögen gefunden zu „{{searchTerm}}“",
+    "filters": {
+      "myTokens": "Meine Token",
+      "popular": "Beliebt",
+      "recentlySwapped": "Kürzlich getauscht",
+      "network": "{{networkName}} Netzwerk",
+      "selectNetwork": "Netzwerk"
+    }
   },
   "homeActions": {
     "add": "Kaufen",
@@ -1899,7 +2000,8 @@
       "collectibles": "Sammlerstücke",
       "dappPositions": "DeFi"
     },
-    "importToken": "Importieren"
+    "importToken": "Importieren",
+    "importTokens": "Token importieren"
   },
   "notificationCenterSpotlight": {
     "message": "Einführung einer neuen Möglichkeit, um an einem Ort Rewards zu beanspruchen und Benachrichtigungen und Updates sehen",
@@ -1937,7 +2039,9 @@
       "network": "Netzwerk"
     },
     "error": {
-      "invalidToken": "Ungültiges Token. Versuche es erneut oder kontaktiere das Support-Team"
+      "invalidAddress": "Ungültige Token-Adresse. Bitte überprüfe sie",
+      "invalidToken": "Ungültiges Token. Versuche es erneut oder kontaktiere das Support-Team",
+      "tokenAlreadySupported": "Dieses Token wird bereits unterstützt"
     },
     "importSuccess": "{{tokenSymbol}} Token erfolgreich importiert",
     "importButton": "Importieren"
@@ -1955,7 +2059,11 @@
     },
     "invite": {
       "title": "Sende Krypto an deine Freunde.",
-      "subtitle": "Lade Freunde aus deiner Kontaktliste ein."
+      "subtitle": "Sende Geldmittel oder eine Einladung an deine Kontakte"
+    },
+    "jumpstart": {
+      "title": "Senden mit einem Live-Link",
+      "subtitle": "Einen Link teilen, um Krypto wie einen Text zu versenden"
     },
     "getStarted": {
       "title": "So kannst du Guthaben auf Kolektivo senden.",
@@ -1971,7 +2079,7 @@
         },
         "three": {
           "title": "ENS",
-          "subtitle": "Vermögenswerte an das ENS-Handle von jemandem senden"
+          "subtitle": "Sende Vermögen an das ENS-Handle einer Person"
         },
         "four": {
           "title": "Profilname",
@@ -2006,9 +2114,11 @@
   "viewOnCeloBlockExplorer": "Auf CeloExplorer anzeigen",
   "viewOnCeloScan": "Auf CeloScan anzeigen",
   "viewOnEthereumBlockExplorer": "Auf Etherscan anzeigen",
-  "viewOnArbiscan": "Blick auf Arbiscan",
-  "viewOnOPMainnetExplorer": "Ansicht im OP Mainnet Explorer",
-  "viewOnOPSepoliaExplorer": "Blick auf OP Sepolia Explorer",
+  "viewOnArbiscan": "Auf Arbiscan anzeigen",
+  "viewOnOPMainnetExplorer": "Auf OP Mainnet Explorer ansehen",
+  "viewOnOPSepoliaExplorer": "Auf OP Sepolia Explorer ansehen",
+  "viewOnPolygonPoSScan": "Ansicht auf PolygonScan",
+  "viewOnBaseScan": "Ansicht auf BaseScan",
   "sendEnterAmountScreen": {
     "title": "Betrag eingeben",
     "selectToken": "Token auswählen",
@@ -2021,6 +2131,45 @@
     "notEnoughBalanceForGasWarning": {
       "title": "Du benötigst mehr {{feeTokenSymbol}} für Gas.",
       "description": "Füge {{feeTokenSymbol}} hinzu, um deine Gasgebühren zu begleichen, oder passe den Betrag an, den du senden möchtest."
+    },
+    "prepareTransactionError": {
+      "title": "Etwas ist schief gelaufen!",
+      "description": "Es war nicht möglich, eine Transaktion für dieses Token vorzubereiten."
+    }
+  },
+  "jumpstartEnterAmountScreen": {
+    "maxAmountWarning": {
+      "title": "Du kannst bis zu {{amountInLocalCurrency,currency}} in einem Link senden",
+      "description": "Dieser Link kann von jedem beansprucht werden, der Zugang zu ihm hat. Achte darauf, dass du Links an Leute sendest, denen du vertraust."
+    }
+  },
+  "jumpstartSendConfirmationScreen": {
+    "title": "Einen Live-Link erstellen",
+    "sendAmountLabel": "Betrag des Live-Links",
+    "confirmButton": "Link senden und erstellen",
+    "info": "Wenn du einen Link erstellst, wird Guthaben von deiner Wallet abgehoben. Du kannst den Link jederzeit zurückfordern. Teile Links mit Bedacht.",
+    "sendError": {
+      "title": "Link kann nicht erstellt werden",
+      "description": "Dein Live-Link wurde nicht erstellt. Bitte versuche es erneut.",
+      "ctaLabel": "Verwerfen"
+    }
+  },
+  "jumpstartShareLinkScreen": {
+    "title": "Teile deinen Live Link",
+    "description": "Kopiere den Link, um {{tokenSymbol}} über die Messaging-App deiner Wahl zu senden, oder verwende den QR-Code.",
+    "linkLabel": "Live-Link",
+    "linkCopiedMessage": "Live-Link kopiert",
+    "navigationWarning": {
+      "title": "Hast du deinen Link geteilt?",
+      "description": "Gib diesen Live-Link weiter oder speichere ihn an einem sicheren Ort.\n\nMach dir keine Sorgen, wenn das Geld nicht in Anspruch genommen wird – du kannst es ganz einfach über deinen Aktivitätsfeed zurückfordern.",
+      "ctaNavigate": "Zum Homescreen gehen"
+    },
+    "ctaShare": "Link teilen",
+    "ctaScanQRCode": "QR-Code anzeigen",
+    "shareMessage": "Hallo! Ich sende dir einen Link, der {{tokenAmount}} {{tokenSymbol}} auf {{appName}} enthält. Nutze diesen Link, um die App herunterzuladen, und hole dir dein Guthaben ab! {{link}}",
+    "qrCodeBottomSheet": {
+      "title": "Scanne den Code, um Guthaben zu erhalten",
+      "description": "Überprüfe den Status deines Guthabens auf dem Homescreen. Du kannst auch den Link unten kopieren oder teilen."
     }
   },
   "transactionFeed": {
@@ -2042,7 +2191,203 @@
   },
   "getStartedHome": {
     "title": "Krypto kaufen oder Tokens überweisen",
-    "body": "Kaufe oder überweise kompatible Token, um Krypto zu versenden und erkunde web3!"
+    "body": "Kaufe oder überweise kompatible Token, um Krypto zu senden und web3 zu erkunden!"
+  },
+  "nftCelebration": {
+    "bottomSheet": {
+      "title": "Herzlichen Glückwunsch!",
+      "description": "Du hast ein exklusives Sammlerstück für Early Ethereum Explorers erhalten. Willkommen bei Ethereum auf {{appName}}.",
+      "cta": "Vielen Dank!"
+    },
+    "notification": {
+      "title": "Ein neues NFT wartet auf dich 🎉",
+      "description": "Du findest dein neues NFT {{rewardName}} unter deinen „Sammlerstücken“"
+    },
+    "rewardBottomSheet": {
+      "title": "Verdiene $5 ETH",
+      "description": "Wenn du deine Wallet bis zum 4. April 2024 um 12:00 Uhr PDT mit einem beliebigen Ethereum-Token füllst, bekommst du am 5. April 2024 um 23:59 Uhr PDT $5 ETH von uns.\n\nDies ist ein exklusives Angebot, wenn du ein Early Ethereum Explorer bist.",
+      "expirationLabel": "Läuft ab {{expirationLabelText}}",
+      "cta": "Belohnung verwenden"
+    },
+    "rewardReminderBottomSheet": {
+      "title": "Verpasse es nicht, verdiene $5 ETH",
+      "description": "Wenn du deine Wallet bis zum 4. April 2024 um 12:00 Uhr PDT mit einem beliebigen Ethereum-Token füllst, bekommst du am 5. April 2024 um 23:59 Uhr PDT $5 ETH von uns.\n\nDies ist ein exklusives Angebot, wenn du ein Early Ethereum Explorer bist.",
+      "expirationLabel": "Läuft ab {{expirationLabelText}}",
+      "cta": "Belohnung verwenden"
+    }
+  },
+  "pleaseWait": "Bitte warten",
+  "error": "Fehler",
+  "linkPhoneNumber": {
+    "title": "Verknüpfe eine Telefonnummer mit der Adresse deiner Wallet",
+    "description": "Keine unübersichtlichen Wallet-Adressen mehr! Sende mit nur einer Telefonnummer Krypto an andere Celo-Nutzer",
+    "startButtonLabel": "Telefonnummer verknüpfen",
+    "later": "Das werde ich später tun"
+  },
+  "bottomTabsNavigator": {
+    "wallet": {
+      "tabName": "Wallet",
+      "title": "Mein Wallet"
+    },
+    "home": {
+      "tabName": "Start",
+      "title": "Willkommen"
+    },
+    "discover": {
+      "tabName": "Entdecken",
+      "title": "Entdecke das Web3"
+    }
+  },
+  "jumpstartStatus": {
+    "loading": {
+      "title": "Dein Guthaben ist auf dem Weg",
+      "description": "Das Guthaben, das du von deinem Freund bekommen hast, wird gerade gesendet. Bitte warten ... "
+    },
+    "error": {
+      "title": "Guthaben kann nicht in Anspruch genommen werden",
+      "description": "Probiere deinen Live-Link erneut aus, um zu versuchen, Guthaben zu erhalten, oder bitte deinen Freund, einen neuen Link zu senden",
+      "contactSupport": "Support kontaktieren",
+      "dismiss": "Verwerfen"
+    }
+  },
+  "jumpstartReclaim": {
+    "description": "Für die Rückforderung deines Links fällt eine Netzgasgebühr an. Möchtest du fortfahren?",
+    "fetchStatusError": {
+      "title": "Ups, da ist etwas schief gelaufen",
+      "description": "Wir konnten den Forderungsstatus dieser Einladung nicht ermitteln. Bitte versuche es später noch einmal oder kontaktiere den Support.",
+      "retryCta": "Erneut versuchen"
+    },
+    "reclaimError": {
+      "title": "Nicht in der Lage, Gelder zurückzufordern",
+      "description": "Versuche, erneut zu reklamieren, oder kontaktiere den Support"
+    }
+  },
+  "multiSelect": {
+    "switchNetwork": "Netzwerk wechseln",
+    "allNetworks": "Alle Netzwerke"
+  },
+  "points": {
+    "title": "Valora Punkte",
+    "activity": "Aktivität",
+    "history": {
+      "cards": {
+        "createWallet": {
+          "title": "Brieftaschenhalter",
+          "subtitle": "Mitglied von {{appName}}"
+        },
+        "swap": {
+          "title": "Tauschen",
+          "subtitle": "{{fromToken}} zu {{toToken}}"
+        }
+      },
+      "title": "Meine Punkte Aktivität",
+      "error": {
+        "title": "Aktivität kann keine Punkte laden",
+        "subtitle": "Ups, beim Laden deines Punkte-Aktivitäten-Feeds ist etwas schief gelaufen. Bitte versuche es noch einmal.",
+        "tryAgain": "Erneut versuchen"
+      },
+      "empty": {
+        "title": "Noch keine Punkteaktivität",
+        "subtitle": "Es sieht so aus, als hättest du noch keine Punkte gesammelt. Nutze {{appName}} , um Punkte zu sammeln!",
+        "gotIt": "Verstanden"
+      },
+      "pageError": {
+        "title": "Kann nicht geladen werden",
+        "subtitle": "Ups, beim Beenden des Ladevorgangs ist etwas schief gelaufen. Bitte versuche es noch einmal.",
+        "refresh": "Aktualisieren"
+      }
+    },
+    "fetchBalanceError": {
+      "title": "Du kannst deine Punkte nicht laden",
+      "description": "Ups, beim Versuch, deine Punkte zu laden, ist etwas schiefgegangen. Die Informationen auf dieser Seite sind möglicherweise nicht mehr aktuell. Bitte aktualisiere sie.",
+      "retryCta": "Aktualisieren"
+    },
+    "loading": {
+      "title": "Sammeln deiner Punkte",
+      "description": "Wir sind dabei, deine Punkte zusammenzuzählen, warte ab"
+    },
+    "error": {
+      "title": "Punkte können nicht geladen werden",
+      "description": "Ups, beim Laden deiner Punkte ist etwas schiefgegangen. Bitte versuche es noch einmal.",
+      "retryCta": "Erneut versuchen"
+    },
+    "infoCard": {
+      "title": "Bald gibt es mehr Möglichkeiten, Punkte zu sammeln 🚀.",
+      "body": "Wir arbeiten daran, weitere Möglichkeiten zum Sammeln von Punkten mit der App zu schaffen. Halte dich für Updates auf dem Laufenden."
+    },
+    "activitySection": {
+      "title": "Wie kann ich Punkte sammeln?",
+      "body": "Es ist ganz einfach! Sammle Punkte, indem du einfach die App benutzt."
+    },
+    "noActivities": {
+      "title": "Update zum Freischalten von mehr Punkten 🔓.",
+      "body": "Ups! Es scheint, dass du eine ältere Version von {{appName}}verwendest. Aktualisiere jetzt und entdecke all die spannenden neuen Möglichkeiten, wie du Punkte sammeln kannst."
+    },
+    "activityCards": {
+      "createWallet": {
+        "title": "Erstelle eine {{appName}}  Brieftasche"
+      },
+      "swap": {
+        "title": "Swap-Vermögenswerte",
+        "bottomSheet": {
+          "title": "Swap-Vermögenswerte",
+          "body": "Hier kannst du alle Details angeben, die du dafür brauchst. Vielleicht ein Mindestbetrag zum Tauschen. \n\nVerdiene {{pointsValue}} Punkte, wenn du einen Vermögenswert mit {{appName}}tauschst.",
+          "cta": "Zum Tausch gehen"
+        }
+      },
+      "moreComing": {
+        "title": "Mehr dazu demnächst!"
+      }
+    }
+  },
+  "earnFlow": {
+    "addCryptoBottomSheet": {
+      "title": "Füge {{tokenSymbol}} auf {{tokenNetwork}}hinzu.",
+      "description": "Sobald du Jetons hinzugefügt hast, musst du zurückkommen, um die Einzahlung in einen Pool zu beenden.",
+      "actions": {
+        "add": "Kaufen",
+        "transfer": "Übertragung",
+        "swap": "Tauschen"
+      },
+      "actionDescriptions": {
+        "add": "Kaufe {{tokenSymbol}} auf {{tokenNetwork}} über einen unserer vertrauenswürdigen Anbieter",
+        "transfer": "Verwende jede {{tokenNetwork}} kompatible Brieftasche oder Börse, um {{tokenSymbol}}einzuzahlen.",
+        "swap": "Tausche in {{tokenSymbol}} von einem anderen {{tokenNetwork}} Token"
+      }
+    },
+    "cta": {
+      "title": "Verdiene mit deinen Stablecoins",
+      "subtitle": "Heute einzahlen und Rendite verdienen",
+      "description": "Erfahre, wie viel du verdienen kannst, wenn du einen Kreditpool bereitstellst"
+    },
+    "activePools": {
+      "title": "Aktive Pools",
+      "totalValue": "Gesamtwert:",
+      "apy": "~{{apy}}% APY",
+      "exitPool": "Exit Pool",
+      "depositMore": "Pfand Mehr",
+      "viewPools": "Ansicht Pools"
+    },
+    "depositBottomSheet": {
+      "title": "Überprüfung & Einzahlung",
+      "description": "Bevor du in einen Aave-Pool einzahlst, solltest du die folgenden Transaktionsdetails überprüfen",
+      "amount": "Eingezahlter Betrag",
+      "fee": "Est. Gas-Gebühren",
+      "provider": "Einkommensanbieter",
+      "network": "Netzwerk",
+      "footer": "Wenn du Kryptowährungen in einen Aave-Pool einzahlst, akzeptierst du die mit der Nutzung von Aave verbundenen Risiken. <0>Bedingungen & Konditionen</0>",
+      "primaryCta": "Vollständig",
+      "secondaryCta": "Abbrechen"
+    },
+    "collect": {
+      "title": "Herzlichen Glückwunsch! Überprüfe und sammle deinen Verdienst",
+      "total": "GESAMT",
+      "plus": "PLUS",
+      "rate": "Rate (geschätzt)",
+      "apy": "~{{apy}}% APY",
+      "fee": "Gasgebühr",
+      "cta": "Verdienste sammeln"
+    }
   },
   "celoDollarAmount": "<0></0> Celo Dollar",
   "celoDollarAmount_plural": "<0></0> Celo Dollars"

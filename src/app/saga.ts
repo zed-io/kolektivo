@@ -6,24 +6,24 @@ import { AppState, Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import InAppReview from 'react-native-in-app-review'
 import * as Keychain from 'react-native-keychain'
-import { findBestAvailableLanguage } from 'react-native-localize'
+import { findBestLanguageTag } from 'react-native-localize'
 import { eventChannel } from 'redux-saga'
 import { e164NumberSelector } from 'src/account/selectors'
 import { AppEvents, InviteEvents } from 'src/analytics/Events'
-import { HooksEnablePreviewOrigin } from 'src/analytics/types'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
+import { HooksEnablePreviewOrigin } from 'src/analytics/types'
 import {
   Actions,
+  OpenDeepLink,
+  OpenUrlAction,
+  SetAppState,
   androidMobileServicesAvailabilityChecked,
   appLock,
   inAppReviewRequested,
   inviteLinkConsumed,
   minAppVersionDetermined,
-  OpenDeepLink,
   openDeepLink,
-  OpenUrlAction,
   phoneNumberVerificationMigrated,
-  SetAppState,
   setAppState,
   setSupportedBiometryType,
   updateRemoteConfigValues,
@@ -38,14 +38,13 @@ import {
   sentryNetworkErrorsSelector,
   shouldRunVerificationMigrationSelector,
 } from 'src/app/selectors'
+import { CeloNewsConfig } from 'src/celoNews/types'
 import { DEFAULT_APP_LANGUAGE, FETCH_TIMEOUT_DURATION, isE2EEnv } from 'src/config'
 import { claimRewardsSuccess } from 'src/consumerIncentives/slice'
 import { SuperchargeTokenConfigByToken } from 'src/consumerIncentives/types'
 import { handleDappkitDeepLink } from 'src/dappkit/dappkit'
-import { DappConnectInfo } from 'src/dapps/types'
-import { CeloNewsConfig } from 'src/exchange/types'
-import { FiatAccountSchemaCountryOverrides } from 'src/fiatconnect/types'
 import { FiatExchangeFlow } from 'src/fiatExchanges/utils'
+import { FiatAccountSchemaCountryOverrides } from 'src/fiatconnect/types'
 import { appVersionDeprecationChannel, fetchRemoteConfigValues } from 'src/firebase/firebase'
 import { initI18n } from 'src/i18n'
 import {
@@ -55,7 +54,7 @@ import {
 } from 'src/i18n/selectors'
 import { E164NumberToSaltType } from 'src/identity/reducer'
 import { e164NumberToSaltSelector } from 'src/identity/selectors'
-import { jumpstartLinkHandler } from 'src/jumpstart/jumpstartLinkHandler'
+import { jumpstartClaim } from 'src/jumpstart/saga'
 import { navigate, navigateHome } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
@@ -70,9 +69,10 @@ import { SentryTransaction } from 'src/sentry/SentryTransactions'
 import { getFeatureGate, patchUpdateStatsigUser, setupOverridesFromLaunchArgs } from 'src/statsig'
 import { StatsigFeatureGates } from 'src/statsig/types'
 import { swapSuccess } from 'src/swap/slice'
+import { NetworkId } from 'src/transactions/types'
+import Logger from 'src/utils/Logger'
 import { ensureError } from 'src/utils/ensureError'
 import { isDeepLink, navigateToURI } from 'src/utils/linking'
-import Logger from 'src/utils/Logger'
 import { safely } from 'src/utils/safely'
 import { ONE_DAY_IN_MILLIS } from 'src/utils/time'
 import { isWalletConnectEnabled } from 'src/walletConnect/saga'
@@ -121,7 +121,7 @@ export function* appInit() {
   const allowOtaTranslations = yield* select(allowOtaTranslationsSelector)
   const otaTranslationsAppVersion = yield* select(otaTranslationsAppVersionSelector)
   const language = yield* select(currentLanguageSelector)
-  const bestLanguage = findBestAvailableLanguage(Object.keys(locales))?.languageTag
+  const bestLanguage = findBestLanguageTag(Object.keys(locales))?.languageTag
 
   yield* all([
     call(initializeSentry),
@@ -217,39 +217,26 @@ export function* checkAndroidMobileServicesSaga() {
 
 export interface RemoteConfigValues {
   celoEducationUri: string | null
-  celoEuroEnabled: boolean
   dappListApiUrl: string | null
-  inviteRewardCusd: number
-  inviteRewardWeeklyLimit: number
   inviteRewardsVersion: string
-  walletConnectV1Enabled: boolean
   walletConnectV2Enabled: boolean
   logPhoneNumberTypeEnabled: boolean
   superchargeApy: number
   superchargeTokenConfigByToken: SuperchargeTokenConfigByToken
   pincodeUseExpandedBlocklist: boolean
-  rewardPillText: string
-  rampCashInButtonExpEnabled: boolean
   allowOtaTranslations: boolean
   sentryTracesSampleRate: number
   sentryNetworkErrors: string[]
   maxNumRecentDapps: number
-  skipVerification: boolean
-  showPriceChangeIndicatorInBalances: boolean
   dappsWebViewEnabled: boolean
   fiatConnectCashInEnabled: boolean
   fiatConnectCashOutEnabled: boolean
   fiatAccountSchemaCountryOverrides: FiatAccountSchemaCountryOverrides
-  dappConnectInfo: DappConnectInfo
-  visualizeNFTsEnabledInHomeAssetsPage: boolean
   coinbasePayEnabled: boolean
   showSwapMenuInDrawerMenu: boolean
   maxSwapSlippagePercentage: number
   networkTimeoutSeconds: number
-  dappFavoritesEnabled: boolean
   celoNews: CeloNewsConfig
-  twelveWordMnemonicEnabled: boolean
-  dappsMinimalDisclaimerEnabled: boolean
   priceImpactWarningThreshold: number
   superchargeRewardContractAddress: string
 }
@@ -368,9 +355,10 @@ export function* handleDeepLink(action: OpenDeepLink) {
       ValoraAnalytics.track(InviteEvents.opened_via_invite_url, {
         inviterAddress,
       })
-    } else if (pathParts.length === 3 && pathParts[1] === 'jumpstart') {
+    } else if (pathParts.length === 4 && pathParts[1] === 'jumpstart') {
       const privateKey = pathParts[2]
-      yield* call(jumpstartLinkHandler, privateKey, walletAddress)
+      const networkId = pathParts[3] as NetworkId
+      yield* call(jumpstartClaim, privateKey, networkId, walletAddress)
     } else if (
       (yield* select(allowHooksPreviewSelector)) &&
       rawParams.pathname === '/hooks/enablePreview'
