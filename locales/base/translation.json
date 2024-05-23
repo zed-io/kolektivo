@@ -2196,6 +2196,11 @@
     "title": "Buy crypto or transfer tokens",
     "body": "Buy or transfer compatible tokens to send crypto and explore web3!"
   },
+  "map": "Map",
+  "explore": "Explore",
+  "activities": {
+    "more": "More Activities"
+  },
   "nftCelebration": {
     "bottomSheet": {
       "title": "Congratulations!",
@@ -2239,6 +2244,10 @@
     "discover": {
       "tabName": "Discover",
       "title": "Discover"
+    },
+    "activities": {
+      "tabName": "Activities",
+      "title": "Activities"
     }
   },
   "jumpstartStatus": {

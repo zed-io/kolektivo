@@ -1,6 +1,7 @@
 export enum Screens {
   AccountKeyEducation = 'AccountKeyEducation',
   AccounSetupFailureScreen = 'AccounSetupFailureScreen',
+  ActivityScreen = 'ActivityScreen',
   BackupComplete = 'BackupComplete',
   BackupIntroduction = 'BackupIntroduction',
   BackupPhrase = 'BackupPhrase',
@@ -51,6 +52,7 @@ export enum Screens {
   JumpstartTransactionDetailsScreen = 'JumpstartTransactionDetailsScreen',
   Main = 'Main',
   MainModal = 'MainModal',
+  MapScreen = 'MapScreen',
   MultichainBeta = 'MultichainBeta',
   NotificationCenter = 'NotificationCenter',
   NftsInfoCarousel = 'NftsInfoCarousel',

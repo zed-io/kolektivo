@@ -8,6 +8,8 @@ import TabHome from 'src/home/TabHome'
 import Logo from 'src/icons/Logo'
 import Discover from 'src/icons/navigator/Discover'
 import Wallet from 'src/icons/navigator/Wallet'
+import ActivityScreen from 'src/kolektivo/activities/ActivityScreen'
+import { Activity } from 'src/kolektivo/icons/Activity'
 import { tabHeader } from 'src/navigator/Headers'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
@@ -61,6 +63,17 @@ export default function TabNavigator({ route }: Props) {
           tabBarLabel: t('bottomTabsNavigator.home.tabName') as string,
           tabBarIcon: Logo,
           tabBarTestID: 'Tab/Home',
+        }}
+      />
+      <Tab.Screen
+        name={Screens.ActivityScreen}
+        component={ActivityScreen}
+        options={{
+          freezeOnBlur: false,
+          lazy: false,
+          tabBarLabel: t('bottomTabsNavigator.activities.tabName') as string,
+          tabBarIcon: Activity,
+          tabBarTestID: 'Tab/Activities',
         }}
       />
       <Tab.Screen
