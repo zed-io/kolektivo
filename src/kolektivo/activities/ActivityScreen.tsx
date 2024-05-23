@@ -6,7 +6,6 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { ActivityListItem } from 'src/kolektivo/activities/ActivityListItem'
 import { useDefaultActivities } from 'src/kolektivo/activities/hooks'
 import { ActivityDetail } from 'src/kolektivo/activities/types'
-import DrawerTopBar from 'src/navigator/DrawerTopBar'
 import { typeScale } from 'src/styles/fonts'
 import variables from 'src/styles/variables'
 
@@ -28,9 +27,7 @@ const ActivityScreen = () => {
   })
 
   return (
-    <SafeAreaView testID="ActivityHome" style={styles.container} edges={['top']}>
-      <DrawerTopBar leftElement={null} rightElement={null} scrollPosition={scrollPosition} />
-
+    <SafeAreaView testID="ActivityHome" style={styles.container} edges={[]}>
       <ScrollView
         style={styles.horizontalList}
         horizontal
