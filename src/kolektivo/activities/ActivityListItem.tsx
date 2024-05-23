@@ -28,11 +28,11 @@ export const ActivityListItem = ({
     <Pressable style={[styles.container, fullWidth && styles.fullWidth]} onPress={handlePress}>
       <Image source={{ uri: activityImageUri }} style={styles.image} />
       <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
-        <View style={styles.details}>
-          <Text style={styles.host}>{activityHost}</Text>
-          <Text style={styles.separator}>•</Text>
-          <Text style={styles.date}>{dateTime}</Text>
+        <Text style={[styles.text, styles.title]}>{title}</Text>
+        <View style={[styles.details]}>
+          <Text style={[styles.text, styles.host]}>{activityHost}</Text>
+          <Text style={[styles.text, styles.separator]}>•</Text>
+          <Text style={[styles.text, styles.date]}>{dateTime}</Text>
         </View>
       </View>
     </Pressable>
@@ -62,6 +62,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     padding: variables.contentPadding,
   },
+  text: {
+    color: Colors.infoLight,
+  },
   title: {
     ...typeScale.bodyMedium,
     fontWeight: 'bold',
@@ -71,13 +74,11 @@ const styles = StyleSheet.create({
   },
   host: {
     ...typeScale.bodySmall,
-    color: Colors.gray5,
   },
   separator: {
     marginHorizontal: variables.contentPadding / 2,
   },
   date: {
     ...typeScale.bodySmall,
-    color: Colors.gray5,
   },
 })

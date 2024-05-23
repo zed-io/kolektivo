@@ -3,5 +3,8 @@ export type ActivityDetail = {
   activityId: string
   activityHost: string
   activityDateTime: number
+  activityEndDateTime?: number
+  activityLocation: string
   activityImageUri?: string
+  activityAbout: string
 }
