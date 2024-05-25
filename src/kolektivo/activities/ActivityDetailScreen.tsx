@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Button, { BtnSizes } from 'src/components/Button'
 import i18n from 'src/i18n'
+import AccountCircle from 'src/icons/AccountCircle'
 import Calendar from 'src/icons/Calendar'
 import Clock from 'src/icons/Clock'
 import Pin from 'src/icons/Pin'
@@ -53,6 +54,11 @@ export const ActivityDetailScreen = ({ route }: Props) => {
             category="Time"
             content={eventTime}
             icon={<Clock color={Colors.black} height={24} />}
+          />
+          <ActivityDetailListItem
+            category="Host"
+            content={activity.activityHost}
+            icon={<AccountCircle color={Colors.black} />}
           />
           <View style={[styles.content]}>
             <Text style={[styles.detailLabel]}>About</Text>
