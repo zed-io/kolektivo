@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
 import { ActivityDetail } from 'src/kolektivo/activities/types'
+import { navigate } from 'src/navigator/NavigationService'
+import { Screens } from 'src/navigator/Screens'
 
 export const useDefaultActivities = () => {
   const activities: ActivityDetail[] = []
@@ -20,4 +22,12 @@ export const useDefaultActivities = () => {
   return useMemo(() => {
     return activities
   }, [activities])
+}
+
+export const useActivityEnrollment = () => {
+  const enroll = (activity: ActivityDetail) => {
+    navigate(Screens.QRNavigator, { screen: Screens.QRCode })
+  }
+
+  return { enroll }
 }

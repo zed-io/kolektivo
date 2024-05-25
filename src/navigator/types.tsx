@@ -9,6 +9,7 @@ import { CICOFlow, FiatExchangeFlow, SimplexQuote } from 'src/fiatExchanges/util
 import { Props as KycLandingProps } from 'src/fiatconnect/KycLanding'
 import { FiatAccount } from 'src/fiatconnect/slice'
 import { KeylessBackupFlow } from 'src/keylessBackup/types'
+import { ActivityDetail } from 'src/kolektivo/activities/types'
 import { Screens } from 'src/navigator/Screens'
 import { Nft } from 'src/nfts/types'
 import { Recipient } from 'src/recipients/recipient'
@@ -52,6 +53,9 @@ interface ValidateRecipientParams {
 
 export type StackParamList = {
   [Screens.ActivityScreen]: undefined
+  [Screens.ActivityDetailScreen]: {
+    activity: ActivityDetail
+  }
   [Screens.BackupComplete]: { isAccountRemoval?: boolean } | undefined
   [Screens.BackupIntroduction]: {} | undefined
   [Screens.AccountKeyEducation]:
