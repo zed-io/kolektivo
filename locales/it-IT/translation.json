@@ -93,7 +93,7 @@
       "title": "Imposta il backup del portafoglio",
       "description": "Per impostare il backup della tua email e del tuo numero di telefono, dovrai utilizzare le seguenti informazioni",
       "useRecoveryPhrase": "Usa una frase di recupero",
-      "reminder": "<0>Ricorda</0> che queste informazioni sono l'unico modo per accedere al tuo portafoglio in caso di smarrimento o furto del dispositivo. Valora non memorizza il tuo indirizzo e-mail o il tuo numero telefonico. Tienila al sicuro!"
+      "reminder": "<0>Ricorda</0> che queste informazioni sono l'unico modo per accedere al tuo portafoglio in caso di smarrimento o furto del dispositivo. Kolektivo non memorizza il tuo indirizzo e-mail o il tuo numero telefonico. Tienila al sicuro!"
     },
     "restore": {
       "description": "Assicurati di avere a disposizione quanto segue per ripristinare il tuo portafoglio.",
@@ -715,9 +715,9 @@
     "privacy1": "Raccogliamo dati di utilizzo che ci aiutano a migliorare l'applicazione e la sicurezza. Il tipo di informazioni che raccogliamo, il modo in cui le utilizziamo e i tuoi diritti relativi a tali informazioni sono riportati nella nostra <0>Informativa sulla privacy</0>.",
     "privacy2": "Se decidi di collegare il tuo numero di telefono, ne conserveremo una copia criptata.",
     "privacy3": "Se decidi di collegare i tuoi contatti, usiamo i loro nomi, numeri e immagini del profilo per renderli più facili da trovare.",
-    "walletHeading": "Il tuo portafoglio digitale con Valora:",
-    "wallet1": "Stai per creare un portafoglio digitale. Solo tu hai la chiave del tuo portafoglio. Non possiamo recuperare la tua chiave o i tuoi beni se la perdi. Non possiamo nemmeno annullare le azioni intraprese da Valora sulle blockchain.",
-    "wallet2": "Gli asset digitali, con i quali interagisci con Valora, comportano rischi unici. Utilizzando Valora, accetti questi rischi e te ne assumi la responsabilità. Ti invitiamo a considerare le tue finanze e la tua tolleranza al rischio prima di fare delle scelte.",
+    "walletHeading": "Il tuo portafoglio digitale con Kolektivo:",
+    "wallet1": "Stai per creare un portafoglio digitale. Solo tu hai la chiave del tuo portafoglio. Non possiamo recuperare la tua chiave o i tuoi beni se la perdi. Non possiamo nemmeno annullare le azioni intraprese da Kolektivo sulle blockchain.",
+    "wallet2": "Gli asset digitali, con i quali interagisci con Kolektivo, comportano rischi unici. Utilizzando Kolektivo, accetti questi rischi e te ne assumi la responsabilità. Ti invitiamo a considerare le tue finanze e la tua tolleranza al rischio prima di fare delle scelte.",
     "fullTerms": "Leggi i nostri <0>Termini e Condizioni</0> completi"
   },
   "termsColloquial": {
@@ -726,9 +726,9 @@
     "privacy1": "Raccogliamo dati di utilizzo che ci aiutano a migliorare l'applicazione e la sicurezza. Il tipo di informazioni che raccogliamo, il modo in cui le utilizziamo e i tuoi diritti relativi a tali informazioni sono riportati nella nostra <0>Informativa sulla privacy</0>.",
     "privacy2": "Se decidi di collegare il tuo numero di telefono, ne conserveremo una copia criptata.",
     "privacy3": "Se decidi di collegare i tuoi contatti, usiamo i loro nomi, numeri e immagini del profilo per renderli più facili da trovare.",
-    "walletHeading": "Il tuo portafoglio digitale con Valora:",
-    "wallet1": "Stai per creare un portafoglio digitale. Solo tu hai la chiave del tuo portafoglio. Non possiamo recuperare la tua chiave o i tuoi beni se la perdi. Non possiamo nemmeno annullare le azioni intraprese da Valora sulle blockchain.",
-    "wallet2": "Gli asset digitali, con i quali interagisci con Valora, comportano rischi unici. Utilizzando Valora, accetti questi rischi e te ne assumi la responsabilità. Ti invitiamo a considerare le tue finanze e la tua tolleranza al rischio prima di fare delle scelte.",
+    "walletHeading": "Il tuo portafoglio digitale con Kolektivo:",
+    "wallet1": "Stai per creare un portafoglio digitale. Solo tu hai la chiave del tuo portafoglio. Non possiamo recuperare la tua chiave o i tuoi beni se la perdi. Non possiamo nemmeno annullare le azioni intraprese da Kolektivo sulle blockchain.",
+    "wallet2": "Gli asset digitali, con i quali interagisci con Kolektivo, comportano rischi unici. Utilizzando Kolektivo, accetti questi rischi e te ne assumi la responsabilità. Ti invitiamo a considerare le tue finanze e la tua tolleranza al rischio prima di fare delle scelte.",
     "fullTerms": "Leggi i nostri <0>Termini e Condizioni</0> completi"
   },
   "fullNameOrPsuedonym": "Nome e cognome o alias",
@@ -948,7 +948,7 @@
     },
     "recoveryPhrase": {
       "title": "Frase di recupero",
-      "description": "Inserisci la frase di recupero di 12 parole per ripristinare l'accesso a Valora"
+      "description": "Inserisci la frase di recupero di 12 parole per ripristinare l'accesso a Kolektivo"
     }
   },
   "verificationInput": {
@@ -2267,7 +2267,7 @@
     "allNetworks": "Tutte le reti"
   },
   "points": {
-    "title": "Punti Valora",
+    "title": "Punti Kolektivo",
     "activity": "Attività",
     "history": {
       "cards": {

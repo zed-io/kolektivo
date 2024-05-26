@@ -7,7 +7,7 @@
   "engines": {
     "node": "20"
   },
-  "scripts": {
+"scripts": {
     "lint": "eslint --ext=.tsx,.ts src/",
     "format": "prettier --loglevel error --write .",
     "format:check": "prettier --check .",

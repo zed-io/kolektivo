@@ -93,7 +93,7 @@
       "title": "Set Up Wallet Backup",
       "description": "You'll use the following to set up your email & phone number backup",
       "useRecoveryPhrase": "Use a recovery phrase instead",
-      "reminder": "<0>Remember</0>, this information is the only way to access your wallet if your device is lost or stolen. Valora does not store your email or phone number. Keep it safe!"
+      "reminder": "<0>Remember</0>, this information is the only way to access your wallet if your device is lost or stolen. Kolektivo does not store your email or phone number. Keep it safe!"
     },
     "restore": {
       "description": "Make sure you have the following available to restore your wallet.",
@@ -716,9 +716,9 @@
     "privacy1": "We gather usage data which helps us improve the app and security. The type of information we collect, how we use it and your rights related to that information can all be seen in our <0>Privacy Policy</0>.",
     "privacy2": "If you decide to link your phone number, we will store an encrypted copy of it.",
     "privacy3": "If you decide to connect your contacts, we use their names, numbers, and profile pictures to make it easier to find them.",
-    "walletHeading": "Your Digital Wallet with Valora:",
-    "wallet1": "You’re about to create a digital wallet. Only you have the key to your wallet. We cannot recover your key or your assets if you lose your key. We also cannot reverse actions taken through Valora on blockchains.",
-    "wallet2": "Digital assets, the assets with which you will interact with Valora, come with unique risks. By using Valora, you accept these risks and take responsibility for them. Please consider your finances and risk tolerance before making choices.",
+    "walletHeading": "Your Digital Wallet with Kolektivo:",
+    "wallet1": "You’re about to create a digital wallet. Only you have the key to your wallet. We cannot recover your key or your assets if you lose your key. We also cannot reverse actions taken through Kolektivo on blockchains.",
+    "wallet2": "Digital assets, the assets with which you will interact with Kolektivo, come with unique risks. By using Kolektivo, you accept these risks and take responsibility for them. Please consider your finances and risk tolerance before making choices.",
     "fullTerms": "Read our full <0>Terms & Conditions</0>"
   },
   "termsColloquial": {
@@ -727,9 +727,9 @@
     "privacy1": "We gather usage data which helps us improve the app and security. The type of information we collect, how we use it and your rights related to that information can all be seen in our <0>Privacy Policy</0>.",
     "privacy2": "If you decide to link your phone number, we will store an encrypted copy of it.",
     "privacy3": "If you decide to connect your contacts, we use their names, numbers, and profile pictures to make it easier to find them.",
-    "walletHeading": "Your Digital Wallet with Valora:",
-    "wallet1": "You’re about to create a digital wallet. Only you have the key to your wallet. We cannot recover your key or your assets if you lose your key. We also cannot reverse actions taken through Valora on blockchains.",
-    "wallet2": "Digital assets, the assets with which you will interact with Valora, come with unique risks. By using Valora, you accept these risks and take responsibility for them. Please consider your finances and risk tolerance before making choices.",
+    "walletHeading": "Your Digital Wallet with Kolektivo:",
+    "wallet1": "You’re about to create a digital wallet. Only you have the key to your wallet. We cannot recover your key or your assets if you lose your key. We also cannot reverse actions taken through Kolektivo on blockchains.",
+    "wallet2": "Digital assets, the assets with which you will interact with Kolektivo, come with unique risks. By using Kolektivo, you accept these risks and take responsibility for them. Please consider your finances and risk tolerance before making choices.",
     "fullTerms": "Read our full <0>Terms & Conditions</0>"
   },
   "fullNameOrPsuedonym": "Full name or pseudonym",
@@ -949,7 +949,7 @@
     },
     "recoveryPhrase": {
       "title": "From recovery phrase",
-      "description": "Enter your 12 word recovery phrase to regain access to Valora"
+      "description": "Enter your 12 word recovery phrase to regain access to Kolektivo"
     }
   },
   "verificationInput": {
@@ -2279,7 +2279,7 @@
     "allNetworks": "All Networks"
   },
   "points": {
-    "title": "Valora Points",
+    "title": "Kolektivo Points",
     "activity": "Activity",
     "history": {
       "cards": {

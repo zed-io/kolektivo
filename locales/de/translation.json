@@ -93,7 +93,7 @@
       "title": "Wallet-Back-up einrichten",
       "description": "Folgendes wird zum Einrichten der Sicherung verwendet",
       "useRecoveryPhrase": "Verwende stattdessen eine Wiederherstellungsphrase",
-      "reminder": "<0>Denke daran</0>, diese Information ist die einzige Möglichkeit, auf deine Wallet zuzugreifen, wenn dein Gerät verloren geht oder gestohlen wird. Valora speichert weder deine E-Mail-Adresse, noch deine Telefonnummer. Passe gut darauf auf!"
+      "reminder": "<0>Denke daran</0>, diese Information ist die einzige Möglichkeit, auf deine Wallet zuzugreifen, wenn dein Gerät verloren geht oder gestohlen wird. Kolektivo speichert weder deine E-Mail-Adresse, noch deine Telefonnummer. Passe gut darauf auf!"
     },
     "restore": {
       "description": "Vergewissere dich, dass du Folgendes zur Verfügung hast, um deine Wallet wiederherzustellen.",
@@ -715,9 +715,9 @@
     "privacy1": "Wir sammeln Nutzungsdaten, die uns helfen, die App und die Sicherheit zu verbessern. Welche Art von Daten wir sammeln, wie wir sie verwenden und welche Rechte du in Bezug auf diese Daten hast, kannst du in unserer <0>Datenschutzerklärung</0> nachlesen.",
     "privacy2": "Wenn du dich entscheidest, deine Telefonnummer zu verknüpfen, speichern wir eine verschlüsselte Kopie davon.",
     "privacy3": "Wenn du dich entscheidest, deine Kontakte zu verbinden, verwenden wir ihre Namen, Nummern und Profilbilder, um sie leichter zu finden.",
-    "walletHeading": "Dein digitales Portemonnaie mit Valora:",
-    "wallet1": "Du bist dabei, eine digitale Brieftasche zu erstellen. Nur du hast den Schlüssel für deine Brieftasche. Wir können deinen Schlüssel oder dein Vermögen nicht wiederherstellen, wenn du ihn verlierst. Wir können auch keine Aktionen rückgängig machen, die über Valora auf Blockchains durchgeführt wurden.",
-    "wallet2": "Digitale Vermögenswerte, die Vermögenswerte, mit denen du bei Valora interagierst, sind mit einzigartigen Risiken verbunden. Wenn du Valora nutzt, akzeptierst du diese Risiken und übernimmst die Verantwortung dafür. Bitte bedenke deine Finanzen und deine Risikobereitschaft, bevor du Entscheidungen triffst.",
+    "walletHeading": "Dein digitales Portemonnaie mit Kolektivo:",
+    "wallet1": "Du bist dabei, eine digitale Brieftasche zu erstellen. Nur du hast den Schlüssel für deine Brieftasche. Wir können deinen Schlüssel oder dein Vermögen nicht wiederherstellen, wenn du ihn verlierst. Wir können auch keine Aktionen rückgängig machen, die über Kolektivo auf Blockchains durchgeführt wurden.",
+    "wallet2": "Digitale Vermögenswerte, die Vermögenswerte, mit denen du bei Kolektivo interagierst, sind mit einzigartigen Risiken verbunden. Wenn du Kolektivo nutzt, akzeptierst du diese Risiken und übernimmst die Verantwortung dafür. Bitte bedenke deine Finanzen und deine Risikobereitschaft, bevor du Entscheidungen triffst.",
     "fullTerms": "Lies unsere vollständigen <0>Geschäftsbedingungen</0>"
   },
   "termsColloquial": {
@@ -726,9 +726,9 @@
     "privacy1": "Wir sammeln Nutzungsdaten, die uns helfen, die App und die Sicherheit zu verbessern. Welche Art von Daten wir sammeln, wie wir sie verwenden und welche Rechte du in Bezug auf diese Daten hast, kannst du in unserer <0>Datenschutzerklärung</0> nachlesen.",
     "privacy2": "Wenn du dich entscheidest, deine Telefonnummer zu verknüpfen, speichern wir eine verschlüsselte Kopie davon.",
     "privacy3": "Wenn du dich entscheidest, deine Kontakte zu verbinden, verwenden wir ihre Namen, Nummern und Profilbilder, um sie leichter zu finden.",
-    "walletHeading": "Dein digitales Portemonnaie mit Valora:",
-    "wallet1": "Du bist dabei, eine digitale Brieftasche zu erstellen. Nur du hast den Schlüssel für deine Brieftasche. Wir können deinen Schlüssel oder dein Vermögen nicht wiederherstellen, wenn du ihn verlierst. Wir können auch keine Aktionen rückgängig machen, die über Valora auf Blockchains durchgeführt wurden.",
-    "wallet2": "Digitale Vermögenswerte, die Vermögenswerte, mit denen du bei Valora interagierst, sind mit einzigartigen Risiken verbunden. Wenn du Valora nutzt, akzeptierst du diese Risiken und übernimmst die Verantwortung dafür. Bitte bedenke deine Finanzen und deine Risikobereitschaft, bevor du Entscheidungen triffst.",
+    "walletHeading": "Dein digitales Portemonnaie mit Kolektivo:",
+    "wallet1": "Du bist dabei, eine digitale Brieftasche zu erstellen. Nur du hast den Schlüssel für deine Brieftasche. Wir können deinen Schlüssel oder dein Vermögen nicht wiederherstellen, wenn du ihn verlierst. Wir können auch keine Aktionen rückgängig machen, die über Kolektivo auf Blockchains durchgeführt wurden.",
+    "wallet2": "Digitale Vermögenswerte, die Vermögenswerte, mit denen du bei Kolektivo interagierst, sind mit einzigartigen Risiken verbunden. Wenn du Kolektivo nutzt, akzeptierst du diese Risiken und übernimmst die Verantwortung dafür. Bitte bedenke deine Finanzen und deine Risikobereitschaft, bevor du Entscheidungen triffst.",
     "fullTerms": "Lies unsere vollständigen <0>Geschäftsbedingungen</0>"
   },
   "fullNameOrPsuedonym": "Vollständiger Name oder Alias",
@@ -948,7 +948,7 @@
     },
     "recoveryPhrase": {
       "title": "Von Wiederherstellungsphrase",
-      "description": "Gib deine Wiederherstellungsphrase mit 12 Wörtern ein, um wieder Zugang zu Valora zu erhalten"
+      "description": "Gib deine Wiederherstellungsphrase mit 12 Wörtern ein, um wieder Zugang zu Kolektivo zu erhalten"
     }
   },
   "verificationInput": {
@@ -2267,7 +2267,7 @@
     "allNetworks": "Alle Netzwerke"
   },
   "points": {
-    "title": "Valora Punkte",
+    "title": "Kolektivo Punkte",
     "activity": "Aktivität",
     "history": {
       "cards": {
