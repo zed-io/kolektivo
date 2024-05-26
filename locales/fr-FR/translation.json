@@ -93,7 +93,7 @@
       "title": "Configurer la sauvegarde du portefeuille",
       "description": "Vous utiliserez les éléments suivants pour configurer la sauvegarde :",
       "useRecoveryPhrase": "Utiliser une phrase de récupération",
-      "reminder": "<0>N'oubliez pas</0>, cette phrase est le seul moyen d'accéder à votre portefeuille si votre appareil est perdu ou volé. Valora ne conserve pas votre adresse e-mail ou votre numéro de téléphone. Gardez-la en sécurité !"
+      "reminder": "<0>N'oubliez pas</0>, cette phrase est le seul moyen d'accéder à votre portefeuille si votre appareil est perdu ou volé. Kolektivo ne conserve pas votre adresse e-mail ou votre numéro de téléphone. Gardez-la en sécurité !"
     },
     "restore": {
       "description": "Assurez-vous d'avoir les éléments suivants pour restaurer votre portefeuille.",
@@ -715,9 +715,9 @@
     "privacy1": "Nous recueillons des données d'utilisation qui nous aident à améliorer l'appli et la sécurité. Le type d'informations que nous recueillons, la façon dont nous les utilisons et tes droits liés à ces informations peuvent tous être consultés dans notre <0>Politique de confidentialité</0>.",
     "privacy2": "Si tu décides de lier ton numéro de téléphone, nous en stockerons une copie cryptée.",
     "privacy3": "Si tu décides de connecter tes contacts, nous utilisons leurs noms, leurs numéros et leurs photos de profil pour les retrouver plus facilement.",
-    "walletHeading": "Ton portefeuille numérique avec Valora :",
-    "wallet1": "Tu es sur le point de créer un portefeuille numérique. Tu es le seul à posséder la clé de ton portefeuille. Nous ne pouvons pas récupérer ta clé ou tes actifs si tu perds ta clé. Nous ne pouvons pas non plus annuler les actions effectuées par l'intermédiaire de Valora sur les blockchains.",
-    "wallet2": "Les actifs numériques, ceux avec lesquels tu interagiras avec Valora, comportent des risques uniques. En utilisant Valora, tu acceptes ces risques et en assumes la responsabilité. Prends en compte tes finances et ta tolérance au risque avant de faire des choix.",
+    "walletHeading": "Ton portefeuille numérique avec Kolektivo :",
+    "wallet1": "Tu es sur le point de créer un portefeuille numérique. Tu es le seul à posséder la clé de ton portefeuille. Nous ne pouvons pas récupérer ta clé ou tes actifs si tu perds ta clé. Nous ne pouvons pas non plus annuler les actions effectuées par l'intermédiaire de Kolektivo sur les blockchains.",
+    "wallet2": "Les actifs numériques, ceux avec lesquels tu interagiras avec Kolektivo, comportent des risques uniques. En utilisant Kolektivo, tu acceptes ces risques et en assumes la responsabilité. Prends en compte tes finances et ta tolérance au risque avant de faire des choix.",
     "fullTerms": "Lire l'intégralité de nos <0>conditions générales</0>"
   },
   "termsColloquial": {
@@ -726,9 +726,9 @@
     "privacy1": "Nous recueillons des données d'utilisation qui nous aident à améliorer l'appli et la sécurité. Le type d'informations que nous recueillons, la façon dont nous les utilisons et tes droits liés à ces informations peuvent tous être consultés dans notre <0>Politique de confidentialité</0>.",
     "privacy2": "Si tu décides de lier ton numéro de téléphone, nous en stockerons une copie cryptée.",
     "privacy3": "Si tu décides de connecter tes contacts, nous utilisons leurs noms, leurs numéros et leurs photos de profil pour les retrouver plus facilement.",
-    "walletHeading": "Ton portefeuille numérique avec Valora :",
-    "wallet1": "Tu es sur le point de créer un portefeuille numérique. Tu es le seul à posséder la clé de ton portefeuille. Nous ne pouvons pas récupérer ta clé ou tes actifs si tu perds ta clé. Nous ne pouvons pas non plus annuler les actions effectuées par l'intermédiaire de Valora sur les blockchains.",
-    "wallet2": "Les actifs numériques, ceux avec lesquels tu interagiras avec Valora, comportent des risques uniques. En utilisant Valora, tu acceptes ces risques et en assumes la responsabilité. Prends en compte tes finances et ta tolérance au risque avant de faire des choix.",
+    "walletHeading": "Ton portefeuille numérique avec Kolektivo :",
+    "wallet1": "Tu es sur le point de créer un portefeuille numérique. Tu es le seul à posséder la clé de ton portefeuille. Nous ne pouvons pas récupérer ta clé ou tes actifs si tu perds ta clé. Nous ne pouvons pas non plus annuler les actions effectuées par l'intermédiaire de Kolektivo sur les blockchains.",
+    "wallet2": "Les actifs numériques, ceux avec lesquels tu interagiras avec Kolektivo, comportent des risques uniques. En utilisant Kolektivo, tu acceptes ces risques et en assumes la responsabilité. Prends en compte tes finances et ta tolérance au risque avant de faire des choix.",
     "fullTerms": "Lire l'intégralité de nos <0>conditions générales</0>"
   },
   "fullNameOrPsuedonym": "Prénom et nom ou pseudonyme",
@@ -2267,7 +2267,7 @@
     "allNetworks": "Tous les réseaux"
   },
   "points": {
-    "title": "Points Valora",
+    "title": "Points Kolektivo",
     "activity": "Activité",
     "history": {
       "cards": {

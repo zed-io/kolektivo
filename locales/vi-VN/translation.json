@@ -93,7 +93,7 @@
       "title": "Thiết lập chức năng sao lưu ví.",
       "description": "Bạn sẽ sử dụng những thông tin sau để thiết lập sao lưu email và số điện thoại",
       "useRecoveryPhrase": "Chuyển sang dùng cụm từ khôi phục",
-      "reminder": "<0>Xin nhớ rằng</0>, thông tin này là cách duy nhất để bạn có thể truy cập vào ví trong trường hợp thiết bị của bạn bị mất hoặc bị đánh cắp. Valora không lưu trữ email hay số điện thoại của bạn. Hãy lưu giữ thông tin này an toàn!"
+      "reminder": "<0>Xin nhớ rằng</0>, thông tin này là cách duy nhất để bạn có thể truy cập vào ví trong trường hợp thiết bị của bạn bị mất hoặc bị đánh cắp. Kolektivo không lưu trữ email hay số điện thoại của bạn. Hãy lưu giữ thông tin này an toàn!"
     },
     "restore": {
       "description": "Hãy đảm bảo bạn có sẵn những thông tin sau để khôi phục ví của mình.",
@@ -715,9 +715,9 @@
     "privacy1": "We gather usage data which helps us improve the app and security. The type of information we collect, how we use it and your rights related to that information can all be seen in our <0>Privacy Policy</0>.",
     "privacy2": "If you decide to link your phone number, we will store an encrypted copy of it.",
     "privacy3": "If you decide to connect your contacts, we use their names, numbers, and profile pictures to make it easier to find them.",
-    "walletHeading": "Your Digital Wallet with Valora:",
-    "wallet1": "You’re about to create a digital wallet. Only you have the key to your wallet. We cannot recover your key or your assets if you lose your key. We also cannot reverse actions taken through Valora on blockchains.",
-    "wallet2": "Digital assets, the assets with which you will interact with Valora, come with unique risks. By using Valora, you accept these risks and take responsibility for them. Please consider your finances and risk tolerance before making choices.",
+    "walletHeading": "Your Digital Wallet with Kolektivo:",
+    "wallet1": "You’re about to create a digital wallet. Only you have the key to your wallet. We cannot recover your key or your assets if you lose your key. We also cannot reverse actions taken through Kolektivo on blockchains.",
+    "wallet2": "Digital assets, the assets with which you will interact with Kolektivo, come with unique risks. By using Kolektivo, you accept these risks and take responsibility for them. Please consider your finances and risk tolerance before making choices.",
     "fullTerms": "Read our full <0>Terms & Conditions</0>"
   },
   "termsColloquial": {
@@ -726,9 +726,9 @@
     "privacy1": "We gather usage data which helps us improve the app and security. The type of information we collect, how we use it and your rights related to that information can all be seen in our <0>Privacy Policy</0>.",
     "privacy2": "If you decide to link your phone number, we will store an encrypted copy of it.",
     "privacy3": "If you decide to connect your contacts, we use their names, numbers, and profile pictures to make it easier to find them.",
-    "walletHeading": "Your Digital Wallet with Valora:",
-    "wallet1": "You’re about to create a digital wallet. Only you have the key to your wallet. We cannot recover your key or your assets if you lose your key. We also cannot reverse actions taken through Valora on blockchains.",
-    "wallet2": "Digital assets, the assets with which you will interact with Valora, come with unique risks. By using Valora, you accept these risks and take responsibility for them. Please consider your finances and risk tolerance before making choices.",
+    "walletHeading": "Your Digital Wallet with Kolektivo:",
+    "wallet1": "You’re about to create a digital wallet. Only you have the key to your wallet. We cannot recover your key or your assets if you lose your key. We also cannot reverse actions taken through Kolektivo on blockchains.",
+    "wallet2": "Digital assets, the assets with which you will interact with Kolektivo, come with unique risks. By using Kolektivo, you accept these risks and take responsibility for them. Please consider your finances and risk tolerance before making choices.",
     "fullTerms": "Read our full <0>Terms & Conditions</0>"
   },
   "fullNameOrPsuedonym": "Họ và tên hoặc biệt danh",
@@ -948,7 +948,7 @@
     },
     "recoveryPhrase": {
       "title": "Từ mục cụm từ khôi phục",
-      "description": "Nhập cụm từ khôi phục gồm 12 từ để lấy lại quyền truy cập vào Valora"
+      "description": "Nhập cụm từ khôi phục gồm 12 từ để lấy lại quyền truy cập vào Kolektivo"
     }
   },
   "verificationInput": {
@@ -2265,7 +2265,7 @@
     "allNetworks": "All Networks"
   },
   "points": {
-    "title": "Valora Points",
+    "title": "Kolektivo Points",
     "activity": "Hoạt động",
     "history": {
       "cards": {

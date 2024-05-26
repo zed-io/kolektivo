@@ -3,6 +3,8 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import i18n from 'src/i18n'
 import { ActivityDetail } from 'src/kolektivo/activities/types'
 import variables from 'src/kolektivo/styles/variables'
+import { navigate } from 'src/navigator/NavigationService'
+import { Screens } from 'src/navigator/Screens'
 import Colors from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { getDatetimeDisplayString } from 'src/utils/time'
@@ -17,9 +19,19 @@ export const ActivityListItem = ({
   activityDateTime,
   activityImageUri,
   fullWidth = false,
+  ...rest
 }: OwnProps) => {
   const handlePress = () => {
     // @todo implement navigation to activity detail
+    navigate(Screens.ActivityDetailScreen, {
+      activity: {
+        title,
+        activityHost,
+        activityDateTime,
+        activityImageUri,
+        ...rest,
+      },
+    })
   }
 
   const dateTime = getDatetimeDisplayString(activityDateTime, i18n)

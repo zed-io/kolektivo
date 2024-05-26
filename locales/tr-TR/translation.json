@@ -93,7 +93,7 @@
       "title": "Cüzdan Yedeklemeyi Ayarlama",
       "description": "E-posta ve telefon numarası yedeklemenizi ayarlamak için aşağıdakileri kullanacaksınız",
       "useRecoveryPhrase": "Bunun yerine bir kurtarma ifadesi kullanın",
-      "reminder": "Cihazınızın kaybolması veya çalınması durumunda cüzdanınıza erişmenin tek yolunun bu bilgiler olduğunu <0>unutmayın</0>. Valora e-postanızı veya telefonunuzu saklamaz. Bunları güvende tutun!"
+      "reminder": "Cihazınızın kaybolması veya çalınması durumunda cüzdanınıza erişmenin tek yolunun bu bilgiler olduğunu <0>unutmayın</0>. Kolektivo e-postanızı veya telefonunuzu saklamaz. Bunları güvende tutun!"
     },
     "restore": {
       "description": "Cüzdanınızı geri yüklemek için aşağıdakilere sahip olduğunuzdan emin olun.",
@@ -715,9 +715,9 @@
     "privacy1": "Uygulamayı ve güvenliği geliştirmemize yardımcı olan kullanım verilerini topluyoruz. Topladığımız bilgilerin türü, bunları nasıl kullandığımız ve bu bilgilerle ilgili haklarınızın tümü <0>Gizlilik Politikamızda</0> görülebilir.",
     "privacy2": "Telefon numaranızı bağlamaya karar verirseniz, bunun şifrelenmiş bir kopyasını saklayacağız.",
     "privacy3": "Kişilerinizi bağlamaya karar verirseniz, onları bulmayı kolaylaştırmak için adlarını, numaralarını ve profil resimlerini kullanırız.",
-    "walletHeading": "Valora ile Dijital Cüzdanınız:",
-    "wallet1": "Dijital bir cüzdan oluşturmak üzeresiniz. Cüzdanınızın anahtarı sadece sizde var. Anahtarınızı kaybederseniz, anahtarınızı veya varlıklarınızı kurtaramayız. Ayrıca Valora aracılığıyla blok zincirleri üzerinde gerçekleştirilen eylemleri de tersine çeviremeyiz.",
-    "wallet2": "Valora ile etkileşim kuracağınız varlıklar olan dijital varlıklar, benzersiz risklerle birlikte gelir. Valora'yı kullanarak bu riskleri kabul eder ve bunların sorumluluğunu üstlenirsiniz. Lütfen seçim yapmadan önce mali durumunuzu ve risk toleransınızı göz önünde bulundurun.",
+    "walletHeading": "Kolektivo ile Dijital Cüzdanınız:",
+    "wallet1": "Dijital bir cüzdan oluşturmak üzeresiniz. Cüzdanınızın anahtarı sadece sizde var. Anahtarınızı kaybederseniz, anahtarınızı veya varlıklarınızı kurtaramayız. Ayrıca Kolektivo aracılığıyla blok zincirleri üzerinde gerçekleştirilen eylemleri de tersine çeviremeyiz.",
+    "wallet2": "Kolektivo ile etkileşim kuracağınız varlıklar olan dijital varlıklar, benzersiz risklerle birlikte gelir. Kolektivo'yı kullanarak bu riskleri kabul eder ve bunların sorumluluğunu üstlenirsiniz. Lütfen seçim yapmadan önce mali durumunuzu ve risk toleransınızı göz önünde bulundurun.",
     "fullTerms": "<0>Şartlar ve Koşullarımızın</0> tamamını okuyun"
   },
   "termsColloquial": {
@@ -726,9 +726,9 @@
     "privacy1": "Uygulamayı ve güvenliği geliştirmemize yardımcı olan kullanım verilerini topluyoruz. Topladığımız bilgilerin türü, bunları nasıl kullandığımız ve bu bilgilerle ilgili haklarınızın tümü <0>Gizlilik Politikamızda</0> görülebilir.",
     "privacy2": "Telefon numaranızı bağlamaya karar verirseniz, bunun şifrelenmiş bir kopyasını saklayacağız.",
     "privacy3": "Kişilerinizi bağlamaya karar verirseniz, onları bulmayı kolaylaştırmak için adlarını, numaralarını ve profil resimlerini kullanırız.",
-    "walletHeading": "Valora ile Dijital Cüzdanınız:",
-    "wallet1": "Dijital bir cüzdan oluşturmak üzeresiniz. Cüzdanınızın anahtarı sadece sizde var. Anahtarınızı kaybederseniz, anahtarınızı veya varlıklarınızı kurtaramayız. Ayrıca Valora aracılığıyla blok zincirleri üzerinde gerçekleştirilen eylemleri de tersine çeviremeyiz.",
-    "wallet2": "Valora ile etkileşim kuracağınız varlıklar olan dijital varlıklar, benzersiz risklerle birlikte gelir. Valora'yı kullanarak bu riskleri kabul eder ve bunların sorumluluğunu üstlenirsiniz. Lütfen seçim yapmadan önce mali durumunuzu ve risk toleransınızı göz önünde bulundurun.",
+    "walletHeading": "Kolektivo ile Dijital Cüzdanınız:",
+    "wallet1": "Dijital bir cüzdan oluşturmak üzeresiniz. Cüzdanınızın anahtarı sadece sizde var. Anahtarınızı kaybederseniz, anahtarınızı veya varlıklarınızı kurtaramayız. Ayrıca Kolektivo aracılığıyla blok zincirleri üzerinde gerçekleştirilen eylemleri de tersine çeviremeyiz.",
+    "wallet2": "Kolektivo ile etkileşim kuracağınız varlıklar olan dijital varlıklar, benzersiz risklerle birlikte gelir. Kolektivo'yı kullanarak bu riskleri kabul eder ve bunların sorumluluğunu üstlenirsiniz. Lütfen seçim yapmadan önce mali durumunuzu ve risk toleransınızı göz önünde bulundurun.",
     "fullTerms": "<0>Şartlar ve Koşullarımızın</0> tamamını okuyun"
   },
   "fullNameOrPsuedonym": "Tam ad veya takma ad",
@@ -948,7 +948,7 @@
     },
     "recoveryPhrase": {
       "title": "Kurtarma ifadesinden",
-      "description": "Valora'ya yeniden erişim kazanmak için 12 kelimelik kurtarma ifadenizi girin"
+      "description": "Kolektivo'ya yeniden erişim kazanmak için 12 kelimelik kurtarma ifadenizi girin"
     }
   },
   "verificationInput": {
@@ -2267,7 +2267,7 @@
     "allNetworks": "Tüm Ağlar"
   },
   "points": {
-    "title": "Valora Puanları",
+    "title": "Kolektivo Puanları",
     "activity": "İşlemler",
     "history": {
       "cards": {
