@@ -3,10 +3,8 @@ import { NativeStackHeaderProps, NativeStackScreenProps } from '@react-navigatio
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import TabDiscover from 'src/dappsExplorer/TabDiscover'
 import TabHome from 'src/home/TabHome'
 import Logo from 'src/icons/Logo'
-import Discover from 'src/icons/navigator/Discover'
 import Wallet from 'src/icons/navigator/Wallet'
 import ActivityScreen from 'src/kolektivo/activities/ActivityScreen'
 import { Activity } from 'src/kolektivo/icons/Activity'
@@ -74,9 +72,10 @@ export default function TabNavigator({ route }: Props) {
           tabBarLabel: t('bottomTabsNavigator.activities.tabName') as string,
           tabBarIcon: Activity,
           tabBarTestID: 'Tab/Activities',
+          headerTitle: t('bottomTabsNavigator.activities.tabName') as string,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name={Screens.TabDiscover}
         component={TabDiscover}
         options={{
@@ -89,7 +88,7 @@ export default function TabNavigator({ route }: Props) {
           // but here it's the right expectation
           unmountOnBlur: true,
         }}
-      />
+      /> */}
     </Tab.Navigator>
   )
 }

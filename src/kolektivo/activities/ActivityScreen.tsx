@@ -67,8 +67,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     maxHeight: 180,
+    display: 'none',
   },
   header: {
+    display: 'none',
     ...typeScale.bodyLarge,
     paddingHorizontal: variables.contentPadding,
     marginVertical: variables.contentPadding,
