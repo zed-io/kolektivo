@@ -219,7 +219,7 @@ export const useActions = (token: TokenBalance) => {
           tokenSymbol: token.symbol,
         })
       },
-      visible: !!cashInTokens.find((tokenInfo) => tokenInfo.tokenId === token.tokenId),
+      visible: false,
     },
     {
       name: TokenActionName.Withdraw,

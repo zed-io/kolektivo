@@ -8,18 +8,9 @@ import Card from 'src/components/Card'
 import DevSkipButton from 'src/components/DevSkipButton'
 import TextButton from 'src/components/TextButton'
 import Touchable from 'src/components/Touchable'
-import { FiatExchangeFlow } from 'src/fiatExchanges/utils'
-import CeloIconNew from 'src/icons/CeloIconNew'
-import GraphSparkle from 'src/icons/GraphSparkle'
-import PlusIcon from 'src/icons/PlusIcon'
 import ProfilePlus from 'src/icons/ProfilePlus'
 import { nuxNavigationOptionsNoBackButton } from 'src/navigator/Headers'
-import {
-  navigate,
-  navigateClearingStack,
-  navigateHome,
-  navigateHomeAndThenToScreen,
-} from 'src/navigator/NavigationService'
+import { navigateHome, navigateHomeAndThenToScreen } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { AdventureCardName } from 'src/onboarding/types'
 import { useSelector } from 'src/redux/hooks'
@@ -27,7 +18,6 @@ import colors from 'src/styles/colors'
 import fontStyles from 'src/styles/fonts'
 import { Shadow, Spacing } from 'src/styles/styles'
 import { shuffle } from 'src/utils/random'
-import networkConfig from 'src/web3/networkConfig'
 import { walletAddressSelector } from 'src/web3/selectors'
 
 const DEFAULT_SEED = '0x0'
@@ -65,41 +55,12 @@ function ChooseYourAdventure() {
 
   const cardDetails = [
     {
-      text: t('chooseYourAdventure.options.add'),
-      goToNextScreen: () => {
-        // navigate home so that closing the fiat exchange currency bottom sheet
-        // takes the user back to Home screen. Can't use
-        // navigateHomeAndThenToScreen here because it doesn't work for bottom
-        // sheets.
-        navigateHome()
-        navigate(Screens.FiatExchangeCurrencyBottomSheet, { flow: FiatExchangeFlow.CashIn })
-      },
-      icon: <PlusIcon />,
-      name: AdventureCardName.Add,
-    },
-    {
-      text: t('chooseYourAdventure.options.dapp'),
-      goToNextScreen: () => {
-        navigateClearingStack(Screens.TabNavigator, { initialScreen: Screens.TabDiscover })
-      },
-      icon: <GraphSparkle />,
-      name: AdventureCardName.Dapp,
-    },
-    {
       text: t('chooseYourAdventure.options.profile'),
       goToNextScreen: () => {
         navigateHomeAndThenToScreen(Screens.Profile)
       },
       icon: <ProfilePlus />,
       name: AdventureCardName.Profile,
-    },
-    {
-      text: t('chooseYourAdventure.options.learn'),
-      goToNextScreen: () => {
-        navigateHomeAndThenToScreen(Screens.TokenDetails, { tokenId: networkConfig.celoTokenId })
-      },
-      icon: <CeloIconNew />,
-      name: AdventureCardName.Learn,
     },
   ]
 
