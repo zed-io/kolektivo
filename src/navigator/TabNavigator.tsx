@@ -75,20 +75,6 @@ export default function TabNavigator({ route }: Props) {
           headerTitle: t('bottomTabsNavigator.activities.tabName') as string,
         }}
       />
-      {/* <Tab.Screen
-        name={Screens.TabDiscover}
-        component={TabDiscover}
-        options={{
-          tabBarLabel: t('bottomTabsNavigator.discover.tabName') as string,
-          tabBarIcon: Discover,
-          tabBarTestID: 'Tab/Discover',
-          // Special case for the Dapps explorer,
-          // so it reloads the list when the user comes back to it
-          // Note: we generally want to avoid this as it resets the scroll position (and all other component state)
-          // but here it's the right expectation
-          unmountOnBlur: true,
-        }}
-      /> */}
     </Tab.Navigator>
   )
 }

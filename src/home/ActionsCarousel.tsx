@@ -5,9 +5,7 @@ import { HomeEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import Card from 'src/components/Card'
 import Touchable from 'src/components/Touchable'
-import { FiatExchangeFlow } from 'src/fiatExchanges/utils'
 import { HomeActionName } from 'src/home/types'
-import QuickActionsAdd from 'src/icons/quick-actions/Add'
 import QuickActionsReceive from 'src/icons/quick-actions/Receive'
 import QuickActionsSend from 'src/icons/quick-actions/Send'
 import QuickActionsSwap from 'src/icons/quick-actions/Swap'
@@ -42,14 +40,6 @@ function ActionsCarousel() {
         navigate(Screens.QRNavigator, {
           screen: Screens.QRCode,
         })
-      },
-    },
-    {
-      name: HomeActionName.Add,
-      title: t('homeActions.add'),
-      icon: <QuickActionsAdd color={Colors.successDark} />,
-      onPress: () => {
-        navigate(Screens.FiatExchangeCurrencyBottomSheet, { flow: FiatExchangeFlow.CashIn })
       },
     },
     {
