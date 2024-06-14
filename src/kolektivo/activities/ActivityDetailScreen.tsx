@@ -26,12 +26,12 @@ export const ActivityDetailScreen = ({ route }: Props) => {
   const { t } = useTranslation()
   const { enroll } = useActivityEnrollment()
 
-  const eventDate = formatFeedDate(activity.activityDateTime, i18n)
+  const eventDate = formatFeedDate(new Date().getTime(), i18n)
   const eventTime = useMemo(() => {
-    if (activity.activityEndDateTime) {
-      return `${formatFeedTime(activity.activityDateTime, i18n)} - ${formatFeedTime(activity.activityEndDateTime, i18n)}`
+    if (new Date().getTime()) {
+      return `${formatFeedTime(new Date().getTime(), i18n)} - ${formatFeedTime(new Date().getTime(), i18n)}`
     } else {
-      return formatFeedTime(activity.activityDateTime, i18n)
+      return formatFeedTime(new Date().getTime(), i18n)
     }
   }, [])
 
@@ -39,14 +39,19 @@ export const ActivityDetailScreen = ({ route }: Props) => {
     <SafeAreaView style={styles.container} edges={[]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={[styles.hero]}>
-          <Image source={{ uri: activity.activityImageUri }} style={styles.image} />
+          <Image
+            source={{
+              uri: 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            }}
+            style={styles.image}
+          />
           <Text style={styles.heroTitle}>{activity.title}</Text>
         </View>
         <View style={[styles.main]}>
           <Button size={BtnSizes.FULL} text={t('connect')} onPress={() => enroll(activity)} />
           <ActivityDetailListItem
             category="Location"
-            content={activity.activityLocation}
+            content={activity.fullAddress}
             icon={<Pin />}
           />
           <ActivityDetailListItem category="Date" content={eventDate} icon={<Calendar />} />
@@ -57,12 +62,12 @@ export const ActivityDetailScreen = ({ route }: Props) => {
           />
           <ActivityDetailListItem
             category="Host"
-            content={activity.activityHost}
+            content={activity.activityHost.name}
             icon={<AccountCircle color={Colors.black} />}
           />
           <View style={[styles.content]}>
             <Text style={[styles.detailLabel]}>About</Text>
-            <Text style={[styles.detailAbout]}>{activity.activityAbout}</Text>
+            <Text style={[styles.detailAbout]}>{activity.description}</Text>
           </View>
         </View>
       </ScrollView>
@@ -93,7 +98,7 @@ ActivityDetailScreen.navigationOptions = ({
 }: Props) => ({
   ...headerWithBackButton,
   headerTitle: () => (
-    <HeaderTitleWithSubtitle title={activity.title} subTitle={activity.activityHost} />
+    <HeaderTitleWithSubtitle title={activity.title} subTitle={activity.activityHost.name} />
   ),
   gestureEnabled: false,
 })
