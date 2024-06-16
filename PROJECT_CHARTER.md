@@ -4,7 +4,7 @@ This project charter serves as a statement of scope and objectives for the **Kol
 
 ## §1: Guiding Principles
 
-The **Kolektivo Blockchain Wallet** project operates transparently, openly, collaboratively, and ethically. Project proposals, timelines, and status must not merely be open, but also easily visible to outsiders. The project aims to empower Caribbean communities to actively engage in climate action while promoting sustainable development and financial inclusion.
+The **Kolektivo Blockchain Wallet** project operates transparently, openly, collaboratively, and ethically. Project proposals, timelines, and status must not merely be open but also easily visible to outsiders. The project aims to empower Caribbean communities to actively engage in climate action while promoting sustainable development and financial inclusion. 
 
 ## §2: Scope
 
@@ -26,6 +26,8 @@ The **Kolektivo Blockchain Wallet** is a user-friendly, secure, and open-source 
 - Compliance with relevant regulations and best practices for digital wallets
 - Open-source licensing and contribution guidelines
 - Community engagement and support channels
+- Incorporation of disaster relief functionalities using blockchain for efficient aid distribution
+- Enhanced features for financial inclusion leveraging AI and blockchain
 
 ### §2.2: Out-of-Scope
 
