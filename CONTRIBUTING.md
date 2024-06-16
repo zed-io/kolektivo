@@ -8,7 +8,7 @@ Find an area that is of interest and you would like to help with. If you’d lik
 
 Tasks range from minor to major improvements. Based on your interests, skillset, and level of comfort with the code-base feel free to contribute where you see appropriate. We encourage you to PR \(pull request\) your work regularly and often to solicit feedback and to ensure everyone has an idea of what you’re working on. If you’ve just started, we suggest creating a PR with “WIP” \(Work In Progress\) in the title and let us know when it’s ready to review in the comments.
 
-Kolektivo is part of the Celo community and follows Kolektivo's [Code of Conduct]([https://github.com/zed-io/kolektivo/CODE_OF_CONDUCT.md](https://github.com/zed-io/kolektivo/blob/kolektivo/CODE_OF_CONDUCT.md).
+Kolektivo is part of the Celo community and follows Kolektivo's [Code of Conduct](https://github.com/zed-io/kolektivo/blob/kolektivo/CODE_OF_CONDUCT.md).
 
 ### Contributing _substantial_ changes
 
