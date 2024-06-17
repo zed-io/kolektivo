@@ -1,7 +1,12 @@
 import { differenceInDays } from 'date-fns'
+import { isEqual } from 'lodash'
 import { Actions as AppActions } from 'src/app/actions'
-import { Actions as HomeActions } from 'src/home/actions'
-import { nextPageUrlSelector, pendingPointsEvents } from 'src/points/selectors'
+import { retrieveSignedMessage } from 'src/pincode/authentication'
+import {
+  nextPageUrlSelector,
+  pendingPointsEventsSelector,
+  trackOnceActivitiesSelector,
+} from 'src/points/selectors'
 import {
   PointsConfig,
   getHistoryError,
@@ -167,14 +172,38 @@ export function* getPointsConfig() {
   }
 }
 
-export async function fetchTrackPointsEventsEndpoint(event: PointsEvent) {
-  return fetchWithTimeout(networkConfig.trackPointsEventUrl, {
+export function* fetchTrackPointsEventsEndpoint(event: PointsEvent) {
+  const address = yield* select(walletAddressSelector)
+  const signedMessage = yield* call(retrieveSignedMessage)
+
+  return yield* call(fetchWithTimeout, networkConfig.trackPointsEventUrl, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Valora ${address}:${signedMessage}`,
+    },
     body: JSON.stringify(event),
   })
 }
 
 export function* sendPointsEvent({ payload: event }: ReturnType<typeof trackPointsEvent>) {
+  const trackOnceActivities = yield* select(trackOnceActivitiesSelector)
+  if (trackOnceActivities[event.activityId]) {
+    Logger.debug(TAG, `Skipping already tracked activity: ${event.activityId}`)
+    return
+  }
+
+  const pendingPointsEvents = yield* select(pendingPointsEventsSelector)
+  if (pendingPointsEvents.some((pendingEvent) => isEqual(pendingEvent.event, event))) {
+    // this can happen for events that are tracked after a transaction is
+    // confirmed within the same app session, if it is also picked up by the
+    // internal transactions watcher. The trackPointsEvent action could be
+    // dispatched by the specific feature saga as well as the internal
+    // transactions watcher.
+    Logger.debug(TAG, `Skipping already pending tracked event: ${JSON.stringify(event)}`)
+    return
+  }
+
   const id = uuidv4()
 
   yield* put(
@@ -205,7 +234,7 @@ export function* sendPendingPointsEvents() {
   const LOG_TAG = `${TAG}@sendPendingPointsEvents`
 
   const now = new Date()
-  const pendingEvents = yield* select(pendingPointsEvents)
+  const pendingEvents = yield* select(pendingPointsEventsSelector)
 
   for (const pendingEvent of pendingEvents) {
     const { id, timestamp, event } = pendingEvent
@@ -237,7 +266,7 @@ function* watchGetHistory() {
 }
 
 function* watchGetConfig() {
-  yield* takeLeading([getPointsConfigRetry.type, HomeActions.VISIT_HOME], safely(getPointsConfig))
+  yield* takeLeading(getPointsConfigRetry.type, safely(getPointsConfig))
 }
 
 function* watchTrackPointsEvent() {
@@ -246,7 +275,9 @@ function* watchTrackPointsEvent() {
 
 export function* watchAppMounted() {
   yield* take(AppActions.APP_MOUNTED)
-  yield* call(safely, sendPendingPointsEvents)
+  yield* spawn(getPointsConfig)
+  yield* spawn(getPointsBalance, getHistoryStarted({ getNextPage: false }))
+  yield* spawn(sendPendingPointsEvents)
 }
 
 export function* pointsSaga() {

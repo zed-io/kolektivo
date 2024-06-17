@@ -4,7 +4,9 @@ import { FetchMock } from 'jest-fetch-mock/types'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { throwError } from 'redux-saga-test-plan/providers'
+import { call, select, spawn } from 'redux-saga/effects'
 import { Actions as AppActions } from 'src/app/actions'
+import { retrieveSignedMessage } from 'src/pincode/authentication'
 import * as pointsSaga from 'src/points/saga'
 import {
   fetchHistory,
@@ -16,6 +18,7 @@ import {
   sendPointsEvent,
   watchAppMounted,
 } from 'src/points/saga'
+import { pendingPointsEventsSelector, trackOnceActivitiesSelector } from 'src/points/selectors'
 import pointsReducer, {
   PendingPointsEvent,
   getHistoryError,
@@ -31,10 +34,12 @@ import pointsReducer, {
   sendPointsEventStarted,
   trackPointsEvent,
 } from 'src/points/slice'
-import { ClaimHistory, GetHistoryResponse } from 'src/points/types'
+import { ClaimHistory, GetHistoryResponse, PointsEvent } from 'src/points/types'
+import { NetworkId } from 'src/transactions/types'
 import Logger from 'src/utils/Logger'
 import * as fetchWithTimeout from 'src/utils/fetchWithTimeout'
 import networkConfig from 'src/web3/networkConfig'
+import { walletAddressSelector } from 'src/web3/selectors'
 import { createMockStore } from 'test/utils'
 import { mockAccount } from 'test/values'
 import { v4 as uuidv4 } from 'uuid'
@@ -43,6 +48,7 @@ jest.mock('src/statsig')
 
 jest.mock('uuid')
 jest.mock('src/utils/Logger')
+jest.unmock('src/pincode/authentication')
 
 const MOCK_HISTORY_RESPONSE: GetHistoryResponse = {
   data: [
@@ -392,6 +398,8 @@ describe('sendPointsEvent', () => {
     return expectSaga(sendPointsEvent, mockAction)
       .provide([
         [matchers.call.fn(pointsSaga.fetchTrackPointsEventsEndpoint), mockServerSuccessResponse],
+        [select(trackOnceActivitiesSelector), { 'create-wallet': false }],
+        [select(pendingPointsEventsSelector), []],
       ])
       .put(
         sendPointsEventStarted({
@@ -410,6 +418,8 @@ describe('sendPointsEvent', () => {
     await expectSaga(sendPointsEvent, mockAction)
       .provide([
         [matchers.call.fn(pointsSaga.fetchTrackPointsEventsEndpoint), mockServerErrorResponse],
+        [select(trackOnceActivitiesSelector), { 'create-wallet': false }],
+        [select(pendingPointsEventsSelector), []],
       ])
       .put(
         sendPointsEventStarted({
@@ -429,12 +439,49 @@ describe('sendPointsEvent', () => {
       mockServerErrorMessage
     )
   })
+
+  it('should ignore any track once activities that were already tracked', async () => {
+    const mockAction = trackPointsEvent({ activityId: 'create-wallet' })
+
+    return expectSaga(sendPointsEvent, mockAction)
+      .provide([
+        [select(trackOnceActivitiesSelector), { 'create-wallet': true }],
+        [select(pendingPointsEventsSelector), []],
+      ])
+      .not.put(sendPointsEventStarted(expect.anything()))
+      .not.call(fetchTrackPointsEventsEndpoint)
+      .not.put(pointsEventProcessed(expect.anything()))
+      .run()
+  })
+
+  it('should ignore any activities that are currently being tracked', async () => {
+    const mockSwapEvent = {
+      activityId: 'swap' as const,
+      transactionHash: '0x1234',
+      networkId: NetworkId['celo-mainnet'],
+      toTokenId: 'toTokenId',
+      fromTokenId: 'fromTokenId',
+    }
+    const mockAction = trackPointsEvent(mockSwapEvent)
+
+    return expectSaga(sendPointsEvent, mockAction)
+      .provide([
+        [select(trackOnceActivitiesSelector), { 'create-wallet': true }],
+        [
+          select(pendingPointsEventsSelector),
+          [{ id: 'someId', timestamp: 1234, event: mockSwapEvent }],
+        ],
+      ])
+      .not.put(sendPointsEventStarted(expect.anything()))
+      .not.call(fetchTrackPointsEventsEndpoint)
+      .not.put(pointsEventProcessed(expect.anything()))
+      .run()
+  })
 })
 
 describe('sendPendingPointsEvents', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-
     jest.useFakeTimers({ now: new Date(mockTime).getTime() })
   })
 
@@ -537,19 +584,46 @@ describe('watchAppMounted', () => {
     jest.clearAllMocks()
   })
 
-  it('should call sendPendingPointsEvents only once even if multiple "app mounted" actions are dispatched', async () => {
-    const mockSendPendingPointsEvents = jest.fn()
+  it('should spawn all sagas only once even if multiple "app mounted" actions are dispatched', async () => {
     const mockAction = { type: AppActions.APP_MOUNTED }
 
-    await expectSaga(watchAppMounted)
-      .withState(createMockStore().getState())
+    const result = await expectSaga(watchAppMounted)
       .provide([
-        [matchers.call.fn(pointsSaga.sendPendingPointsEvents), mockSendPendingPointsEvents()],
+        [spawn(getPointsConfig), null],
+        [spawn(getPointsBalance, getHistoryStarted({ getNextPage: false })), null],
+        [spawn(sendPendingPointsEvents), null],
       ])
       .dispatch(mockAction)
       .dispatch(mockAction)
       .run()
 
-    expect(mockSendPendingPointsEvents).toHaveBeenCalledTimes(1)
+    expect(result.effects.fork).toEqual([
+      spawn(getPointsConfig),
+      spawn(getPointsBalance, getHistoryStarted({ getNextPage: false })),
+      spawn(sendPendingPointsEvents),
+    ])
+  })
+})
+
+describe('fetchTrackPointsEventsEndpoint', () => {
+  it('should call fetch with correct params', async () => {
+    const mockEvent: PointsEvent = { activityId: 'create-wallet' }
+    mockFetch.mockResponseOnce(JSON.stringify({ ok: true }))
+
+    await expectSaga(fetchTrackPointsEventsEndpoint, mockEvent)
+      .provide([
+        [select(walletAddressSelector), mockAccount],
+        [call(retrieveSignedMessage), 'someSignedMessage'],
+      ])
+      .run()
+
+    expect(fetchWithTimeoutSpy).toHaveBeenCalledWith(networkConfig.trackPointsEventUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Valora ${mockAccount}:someSignedMessage`,
+      },
+      body: JSON.stringify(mockEvent),
+    })
   })
 })

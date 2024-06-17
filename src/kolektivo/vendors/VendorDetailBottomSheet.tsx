@@ -69,7 +69,7 @@ function VendorDetailBottomSheet({ vendor, dismiss, select }: Props) {
           </View>
           {/* @todo Add Send button */}
           <View style={styles.actionButtons}>
-            {address && (
+            {!!address && (
               <Button
                 type={BtnTypes.PRIMARY}
                 size={BtnSizes.MEDIUM}

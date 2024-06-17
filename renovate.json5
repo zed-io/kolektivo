@@ -48,6 +48,11 @@
       prPriority: 0,
     },
     {
+      // Low priority for gradle dependencies
+      matchManagers: ['gradle', 'gradle-wrapper'],
+      prPriority: -1,
+    },
+    {
       // Group updates for @celo packages
       matchPackagePatterns: ['^@celo/'],
       groupName: 'celo',
@@ -76,6 +81,17 @@
       // Group updates for prettier packages
       matchPackagePatterns: ['^prettier'],
       groupName: 'prettier',
+    },
+    {
+      // Avoid auto merge of major updates on rn, auth0, firebase and walletconnect
+      matchPackagePatterns: [
+        '^@react-native-firebase/',
+        'react-native-auth0',
+        '^@walletconnect/',
+        '^react-native$',
+      ],
+      matchUpdateTypes: ['major'],
+      automerge: false,
     },
   ],
   // A list of dependencies to be ignored by Renovate - "exact match" only

@@ -8,7 +8,7 @@ import FiatConnectQuote from 'src/fiatExchanges/quotes/FiatConnectQuote'
 import { CICOFlow, FiatExchangeFlow, SimplexQuote } from 'src/fiatExchanges/utils'
 import { Props as KycLandingProps } from 'src/fiatconnect/KycLanding'
 import { FiatAccount } from 'src/fiatconnect/slice'
-import { KeylessBackupFlow } from 'src/keylessBackup/types'
+import { KeylessBackupFlow, KeylessBackupOrigin } from 'src/keylessBackup/types'
 import { Activity } from 'src/kolektivo/activities/utils'
 import { Screens } from 'src/navigator/Screens'
 import { Nft } from 'src/nfts/types'
@@ -86,7 +86,16 @@ export type StackParamList = {
     rewardId: string
   }
   [Screens.Debug]: undefined
-  [Screens.EarnCollectScreen]: undefined
+  [Screens.EarnInfoScreen]: {
+    tokenId: string
+  }
+  [Screens.EarnEnterAmount]: {
+    tokenId: string
+  }
+  [Screens.EarnCollectScreen]: {
+    depositTokenId: string
+    poolTokenId: string
+  }
   [Screens.ErrorScreen]: {
     errorMessage?: string
   }
@@ -132,13 +141,16 @@ export type StackParamList = {
   [Screens.KeylessBackupPhoneCodeInput]: {
     keylessBackupFlow: KeylessBackupFlow
     e164Number: string
+    origin: KeylessBackupOrigin
   }
   [Screens.KeylessBackupPhoneInput]: {
     keylessBackupFlow: KeylessBackupFlow
     selectedCountryCodeAlpha2?: string
+    origin: KeylessBackupOrigin
   }
   [Screens.KeylessBackupProgress]: {
     keylessBackupFlow: KeylessBackupFlow
+    origin: KeylessBackupOrigin
   }
   [Screens.KeylessBackupIntro]: {
     keylessBackupFlow: KeylessBackupFlow
@@ -211,6 +223,7 @@ export type StackParamList = {
       }
     | undefined
   [Screens.PointsHome]: undefined
+  [Screens.PointsIntro]: undefined
   [Screens.ProtectWallet]: undefined
   [Screens.OnboardingRecoveryPhrase]: undefined
   [Screens.Profile]: undefined
@@ -260,6 +273,7 @@ export type StackParamList = {
   [Screens.Settings]: { promptConfirmRemovalModal?: boolean } | undefined
   [Screens.SignInWithEmail]: {
     keylessBackupFlow: KeylessBackupFlow
+    origin: KeylessBackupOrigin
   }
   [Screens.Spend]: undefined
   [Screens.StoreWipeRecoveryScreen]: undefined
