@@ -1,4 +1,3 @@
-import { map } from 'lodash'
 import { supabase } from 'src/kolektivo/config/services'
 
 export type Activity = {
@@ -61,9 +60,18 @@ export const getActivities = async (): Promise<Activity[]> => {
     throw new Error(error.message)
   }
 
-  data = map(data, (activity: ActivityModel) => translateActivityFromDatabase(activity))
+  const result: Activity[] = []
 
-  return data
+  if (!data) {
+    return result
+  }
+
+  for (let index = 0; index < data.length; index++) {
+    const activity = data[index]
+    result.push(translateActivityFromDatabase(activity as unknown as ActivityModel))
+  }
+
+  return result
 }
 
 export const getActivityHostById = async (id: string) => {

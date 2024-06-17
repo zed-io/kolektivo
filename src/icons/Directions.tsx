@@ -8,7 +8,7 @@ export interface Props {
   onPress?: () => void
 }
 
-function Directions({ color = colors.greenBrand, size = 24, ...props }: Props) {
+function Directions({ color = colors.primary, size = 24, ...props }: Props) {
   return (
     <Svg
       width={size}

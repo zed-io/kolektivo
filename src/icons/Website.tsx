@@ -7,7 +7,7 @@ export interface Props {
   size?: number
 }
 
-function Website({ color = colors.greenBrand, size = 24, ...props }: Props) {
+function Website({ color = colors.primary, size = 24, ...props }: Props) {
   return (
     <Svg width={size} height={size} viewBox="0 0 20 20" fill="none">
       <Path

@@ -36,7 +36,7 @@ export const ActivityListItem = ({ fullWidth = false, ...rest }: OwnProps) => {
         fullAddress,
         badgeContractAddress,
         activityHost,
-      },
+      } as Activity,
     })
   }
 

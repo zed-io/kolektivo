@@ -7,7 +7,7 @@ export interface Props {
   size?: number
 }
 
-function Phone({ color = colors.greenBrand, size = 24, ...props }: Props) {
+function Phone({ color = colors.primary, size = 24, ...props }: Props) {
   return (
     <Svg
       width={size}

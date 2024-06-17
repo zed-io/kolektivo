@@ -4,10 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import QRCode from 'react-native-qrcode-svg'
-import { useDispatch } from 'react-redux'
-import { showError } from 'src/alert/actions'
-import { SendOrigin } from 'src/analytics/types'
-import { ErrorMessages } from 'src/app/ErrorMessages'
 import Button, { BtnSizes, BtnTypes } from 'src/components/Button'
 import Touchable from 'src/components/Touchable'
 import Directions from 'src/icons/Directions'
@@ -17,15 +13,10 @@ import Share from 'src/icons/Share'
 import Times from 'src/icons/Times'
 import VerifiedIcon from 'src/icons/VerifiedIcon'
 import Website from 'src/icons/Website'
-import { initiateDirection, initiatePhoneCall, initiateShare } from 'src/kolektivo/map/utils'
 import { Vendor, VendorWithLocation } from 'src/kolektivo/vendors/types'
-import { navigate } from 'src/navigator/NavigationService'
-import { Screens } from 'src/navigator/Screens'
-import { Recipient } from 'src/recipients/recipient'
 import colors from 'src/styles/colors'
 import fontStyles from 'src/styles/fonts'
 import variables from 'src/styles/variables'
-import Logger from 'src/utils/Logger'
 import { navigateToURI } from 'src/utils/linking'
 
 type Props = {
@@ -52,22 +43,6 @@ const VendorDetails = ({ vendor, close, action }: Props) => {
   } = vendor
   const { location } = vendor as VendorWithLocation
   const { t } = useTranslation()
-  const dispatch = useDispatch()
-
-  const handleOpenMap = (): void => {
-    try {
-      initiateDirection({ title, coordinate: location, building_number, street, city })
-    } catch (error) {
-      Logger.warn('Directions', error)
-      dispatch(showError(ErrorMessages.FAILED_OPEN_DIRECTION))
-      return
-    }
-  }
-
-  const navigateToSend = (account: string) => {
-    const recipient: Recipient = { address: account as string }
-    navigate(Screens.SendAmount, { recipient, origin: SendOrigin.AppSendFlow })
-  }
 
   return (
     <View style={styles.container}>
@@ -100,12 +75,18 @@ const VendorDetails = ({ vendor, close, action }: Props) => {
 
         <View style={styles.contactRow}>
           {phoneNumber && (
-            <TouchableOpacity onPress={() => initiatePhoneCall(phoneNumber)}>
+            <TouchableOpacity
+              // @ts-ignore @todo
+              onPress={void 0}
+            >
               <Phone />
             </TouchableOpacity>
           )}
-          {((location.latitude !== 0 && location.longitude !== 0) || street) && (
-            <TouchableOpacity onPress={handleOpenMap}>
+          {(((location as any).latitude !== 0 && (location as any).longitude !== 0) || street) && (
+            <TouchableOpacity
+              // @ts-ignore @todo
+              onPress={void 0}
+            >
               <Directions />
             </TouchableOpacity>
           )}
@@ -115,7 +96,10 @@ const VendorDetails = ({ vendor, close, action }: Props) => {
             </TouchableOpacity>
           )}
           {true && (
-            <TouchableOpacity onPress={() => initiateShare({ message: title })}>
+            <TouchableOpacity
+              // @ts-ignore @todo
+              onPress={void 0}
+            >
               <Share />
             </TouchableOpacity>
           )}
@@ -142,14 +126,14 @@ const VendorDetails = ({ vendor, close, action }: Props) => {
             />
           ))}
         </View>
-        {/* @todo Add Send button */}
         <View style={styles.actionButtons}>
           {account && (
             <Button
               type={BtnTypes.PRIMARY}
               size={BtnSizes.MEDIUM}
               text={t('payVendor')}
-              onPress={() => navigateToSend(account)}
+              // @ts-ignore @todo
+              onPress={void 0}
             />
           )}
           <TouchableOpacity onPress={action}>
