@@ -14,6 +14,7 @@ This Quality Assurance (QA) document outlines the procedures and standards for e
 ## Scope
 
 The QA process applies to all stages of the Kolektivo Blockchain Wallet development, including:
+
 - Requirement analysis
 - Design
 - Development
