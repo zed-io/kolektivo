@@ -23,10 +23,7 @@ import KeyboardAwareScrollView from 'src/components/KeyboardAwareScrollView'
 import KeyboardSpacer from 'src/components/KeyboardSpacer'
 import SkeletonPlaceholder from 'src/components/SkeletonPlaceholder'
 import TextInput from 'src/components/TextInput'
-import TokenBottomSheet, {
-  TokenBalanceItemOption,
-  TokenPickerOrigin,
-} from 'src/components/TokenBottomSheet'
+import TokenBottomSheet, { TokenPickerOrigin } from 'src/components/TokenBottomSheet'
 import TokenDisplay from 'src/components/TokenDisplay'
 import TokenIcon, { IconSize } from 'src/components/TokenIcon'
 import Touchable from 'src/components/Touchable'
@@ -98,7 +95,6 @@ export const SendProceed = ({
       text={t('review')}
       style={styles.reviewButton}
       size={BtnSizes.FULL}
-      fontStyle={styles.reviewButtonText}
       disabled={disabled}
       testID="SendEnterAmount/ReviewButton"
     />
@@ -187,7 +183,7 @@ function EnterAmount({
     // eventually we may want to do something smarter here, like subtracting gas fees from the max amount if
     // this is a gas-paying token. for now, we are just showing a warning to the user prompting them to lower the amount
     // if there is not enough for gas
-    setTokenAmountInput(token.balance.toString())
+    setTokenAmountInput(token.balance.toFormat({ decimalSeparator }))
     setEnteredIn('token')
     tokenAmountInputRef.current?.blur()
     localAmountInputRef.current?.blur()
@@ -269,7 +265,7 @@ function EnterAmount({
     return () => clearTimeout(debouncedRefreshTransactions)
   }, [tokenAmount, token])
 
-  const isAmountLessThanBalance = tokenAmount && tokenAmount.lt(token.balance)
+  const isAmountLessThanBalance = tokenAmount && tokenAmount.lte(token.balance)
   const showLowerAmountError = !isAmountLessThanBalance && !disableBalanceCheck
   const showMaxAmountWarning =
     !showLowerAmountError &&
@@ -460,14 +456,13 @@ function EnterAmount({
         onTokenSelected={onSelectToken}
         tokens={tokens}
         title={t('sendEnterAmountScreen.selectToken')}
-        TokenOptionComponent={TokenBalanceItemOption}
         titleStyle={styles.title}
       />
     </SafeAreaView>
   )
 }
 
-function AmountInput({
+export function AmountInput({
   inputValue,
   onInputChange,
   inputRef,
@@ -649,9 +644,6 @@ const styles = StyleSheet.create({
   },
   reviewButton: {
     paddingVertical: Spacing.Thick24,
-  },
-  reviewButtonText: {
-    ...typeScale.labelSemiBoldMedium,
   },
   warning: {
     marginBottom: Spacing.Regular16,

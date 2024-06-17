@@ -46,7 +46,6 @@ export default function PointsHome({ route, navigation }: Props) {
   const pointsBalanceStatus = useSelector(pointsBalanceStatusSelector)
   const pointsHistoryStatus = useSelector(pointsHistoryStatusSelector)
 
-  const lastKnownPointsBalance = useRef(pointsBalance)
   const historyBottomSheetRef = useRef<BottomSheetRefType>(null)
   const activityCardBottomSheetRef = useRef<BottomSheetRefType>(null)
 
@@ -62,12 +61,6 @@ export default function PointsHome({ route, navigation }: Props) {
   useEffect(() => {
     onRefreshHistoryAndBalance()
   }, [])
-
-  useEffect(() => {
-    if (pointsBalanceStatus === 'success') {
-      lastKnownPointsBalance.current = pointsBalance
-    }
-  }, [pointsBalanceStatus])
 
   const onRefreshHistoryAndBalance = () => {
     dispatch(getHistoryStarted({ getNextPage: false }))
@@ -129,7 +122,7 @@ export default function PointsHome({ route, navigation }: Props) {
             <Button
               onPress={onRetryLoadConfig}
               text={t('points.error.retryCta')}
-              type={BtnTypes.GRAY_WITH_BORDER}
+              type={BtnTypes.SECONDARY}
               size={BtnSizes.FULL}
               style={styles.loadingRetryButton}
             />
@@ -144,8 +137,7 @@ export default function PointsHome({ route, navigation }: Props) {
                 testID={'PointsActivityButton'}
                 onPress={onPressActivity}
                 text={t('points.activity')}
-                type={BtnTypes.GRAY_WITH_BORDER}
-                fontStyle={typeScale.labelXSmall}
+                type={BtnTypes.SECONDARY}
                 size={BtnSizes.FULL}
                 touchableStyle={styles.buttonStyle}
               />
@@ -154,7 +146,7 @@ export default function PointsHome({ route, navigation }: Props) {
               <NumberTicker
                 testID="PointsBalance"
                 value={pointsBalance}
-                disableAnimation={lastKnownPointsBalance.current === pointsBalance}
+                disableAnimation={pointsBalanceStatus === 'loading'}
               />
               <LogoHeart size={28} />
             </View>

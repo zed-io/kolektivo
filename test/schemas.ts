@@ -3309,6 +3309,44 @@ export const v213Schema = {
   },
 }
 
+export const v214Schema = {
+  ...v213Schema,
+  _persist: {
+    ...v213Schema._persist,
+    version: 214,
+  },
+  points: {
+    ...v213Schema.points,
+    trackOnceActivities: {
+      'create-wallet': false,
+    },
+  },
+}
+
+export const v215Schema = {
+  ...v214Schema,
+  _persist: {
+    ...v214Schema._persist,
+    version: 215,
+  },
+  points: {
+    ...v214Schema.points,
+    introHasBeenDismissed: false,
+  },
+}
+
+export const v216Schema = {
+  ...v215Schema,
+  _persist: {
+    ...v215Schema._persist,
+    version: 216,
+  },
+  earn: {
+    depositStatus: 'idle',
+    withdrawStatus: 'idle',
+  },
+}
+
 export function getLatestSchema(): Partial<RootState> {
-  return v213Schema as Partial<RootState>
+  return v216Schema as Partial<RootState>
 }

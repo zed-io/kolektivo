@@ -32,6 +32,8 @@ import DappKitSignTxScreen from 'src/dappkit/DappKitSignTxScreen'
 import DappShortcutTransactionRequest from 'src/dapps/DappShortcutTransactionRequest'
 import DappShortcutsRewards from 'src/dapps/DappShortcutsRewards'
 import EarnCollectScreen from 'src/earn/EarnCollectScreen'
+import EarnEnterAmount from 'src/earn/EarnEnterAmount'
+import EarnInfoScreen from 'src/earn/EarnInfoScreen'
 import EscrowedPaymentListScreen from 'src/escrow/EscrowedPaymentListScreen'
 import ReclaimPaymentConfirmationScreen from 'src/escrow/ReclaimPaymentConfirmationScreen'
 import BidaliScreen from 'src/fiatExchanges/BidaliScreen'
@@ -100,6 +102,7 @@ import Welcome from 'src/onboarding/welcome/Welcome'
 import PincodeEnter from 'src/pincode/PincodeEnter'
 import PincodeSet from 'src/pincode/PincodeSet'
 import PointsHome from 'src/points/PointsHome'
+import PointsIntro from 'src/points/PointsIntro'
 import { RootState } from 'src/redux/reducers'
 import { store } from 'src/redux/store'
 import SendConfirmation, { sendConfirmationScreenNavOptions } from 'src/send/SendConfirmation'
@@ -525,11 +528,7 @@ const generalScreens = (Navigator: typeof Stack) => (
       component={ProfileMenu}
       options={ProfileMenu.navigationOptions as NativeStackNavigationOptions}
     />
-    <Navigator.Screen
-      name={Screens.Settings}
-      component={SettingsScreen}
-      options={headerWithBackButton}
-    />
+    <Navigator.Screen name={Screens.Settings} component={SettingsScreen} options={noHeader} />
     <Navigator.Screen name={Screens.Invite} component={Invite} options={noHeader} />
     <Navigator.Screen name={Screens.Support} component={Support} options={headerWithBackButton} />
   </>
@@ -541,6 +540,16 @@ const earnScreens = (Navigator: typeof Stack) => (
       name={Screens.EarnCollectScreen}
       component={EarnCollectScreen}
       options={headerWithBackButton}
+    />
+    <Navigator.Screen
+      name={Screens.EarnEnterAmount}
+      component={EarnEnterAmount}
+      options={noHeader}
+    />
+    <Navigator.Screen
+      name={Screens.EarnInfoScreen}
+      component={EarnInfoScreen}
+      options={EarnInfoScreen.navigationOptions}
     />
   </>
 )
@@ -579,6 +588,7 @@ const assetScreens = (Navigator: typeof Stack) => (
 const pointsScreens = (Navigator: typeof Stack) => (
   <>
     <Navigator.Screen name={Screens.PointsHome} component={PointsHome} options={noHeader} />
+    <Navigator.Screen name={Screens.PointsIntro} component={PointsIntro} options={noHeader} />
   </>
 )
 const mapStateToProps = (state: RootState) => {
