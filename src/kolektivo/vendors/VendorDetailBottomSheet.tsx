@@ -4,15 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Modal from 'react-native-modal'
-import { SendOrigin } from 'src/analytics/types'
+import QRCode from 'react-native-qrcode-svg'
 import Button, { BtnSizes, BtnTypes } from 'src/components/Button'
 import Touchable from 'src/components/Touchable'
-import QRCodeBorderless from 'src/icons/QRCodeBorderless'
 import Times from 'src/icons/Times'
 import { Vendor } from 'src/kolektivo/vendors/types'
-import { navigate } from 'src/navigator/NavigationService'
-import { Screens } from 'src/navigator/Screens'
-import { Recipient } from 'src/recipients/recipient'
 import colors, { Colors } from 'src/styles/colors'
 import fontStyles from 'src/styles/fonts'
 
@@ -28,14 +24,12 @@ function VendorDetailBottomSheet({ vendor, dismiss, select }: Props) {
   const { t } = useTranslation()
   const { title, subtitle, tags, logoURI, address, description } = vendor || {}
 
-  const recipient: Recipient = { address: address as string }
-
   const onDismissBottomSheet = () => {
     dismiss()
   }
 
   const navigateToSend = () => {
-    navigate(Screens.SendAmount, { recipient, origin: SendOrigin.AppSendFlow })
+    // @todo Implement
   }
 
   return (
@@ -66,7 +60,7 @@ function VendorDetailBottomSheet({ vendor, dismiss, select }: Props) {
             {map(tags, (tag) => (
               <Button
                 type={BtnTypes.ONBOARDING_SECONDARY}
-                size={BtnSizes.TINY}
+                size={BtnSizes.SMALL}
                 text={`${tag}`}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 onPress={() => {}}
@@ -84,7 +78,7 @@ function VendorDetailBottomSheet({ vendor, dismiss, select }: Props) {
               />
             )}
             <TouchableOpacity onPress={select}>
-              <QRCodeBorderless />
+              <QRCode />
             </TouchableOpacity>
           </View>
           {/* @todo Add QR scanning button, this should utilize deep linking */}

@@ -3,6 +3,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import QRCode from 'react-native-qrcode-svg'
 import { useDispatch } from 'react-redux'
 import { showError } from 'src/alert/actions'
 import { SendOrigin } from 'src/analytics/types'
@@ -12,7 +13,6 @@ import Touchable from 'src/components/Touchable'
 import Directions from 'src/icons/Directions'
 import Phone from 'src/icons/Phone'
 import Pin from 'src/icons/Pin'
-import QRCodeBorderless from 'src/icons/QRCodeBorderless'
 import Share from 'src/icons/Share'
 import Times from 'src/icons/Times'
 import VerifiedIcon from 'src/icons/VerifiedIcon'
@@ -135,7 +135,7 @@ const VendorDetails = ({ vendor, close, action }: Props) => {
           {map(tags, (tag) => (
             <Button
               type={BtnTypes.ONBOARDING_SECONDARY}
-              size={BtnSizes.TINY}
+              size={BtnSizes.SMALL}
               text={`${tag}`}
               // eslint-disable-next-line @typescript-eslint/no-empty-function
               onPress={() => {}}
@@ -153,7 +153,7 @@ const VendorDetails = ({ vendor, close, action }: Props) => {
             />
           )}
           <TouchableOpacity onPress={action}>
-            <QRCodeBorderless />
+            <QRCode />
           </TouchableOpacity>
         </View>
         {/* @todo Add QR scanning button, this should utilize deep linking */}

@@ -10,7 +10,7 @@ import Button, { BtnSizes, BtnTypes } from 'src/components/Button'
 import Touchable from 'src/components/Touchable'
 import Directions from 'src/icons/Directions'
 import Phone from 'src/icons/Phone'
-import QRCodeBorderless from 'src/icons/QRCodeBorderless'
+import QRCode from 'src/icons/QRCode'
 import Share from 'src/icons/Share'
 import Times from 'src/icons/Times'
 import VerifiedIcon from 'src/icons/VerifiedIcon'
@@ -141,7 +141,7 @@ const FoodForestDetails = ({ forest, close, action }: Props) => {
           {map(tags, (tag) => (
             <Button
               type={BtnTypes.ONBOARDING_SECONDARY}
-              size={BtnSizes.TINY}
+              size={BtnSizes.SMALL}
               text={`${tag}`}
               // eslint-disable-next-line @typescript-eslint/no-empty-function
               onPress={() => {}}
@@ -151,7 +151,7 @@ const FoodForestDetails = ({ forest, close, action }: Props) => {
         {/* @todo Add Send button */}
         <View style={styles.actionButtons}>
           <TouchableOpacity onPress={action}>
-            <QRCodeBorderless />
+            <QRCode />
           </TouchableOpacity>
         </View>
         {/* @todo Add QR scanning button, this should utilize deep linking */}

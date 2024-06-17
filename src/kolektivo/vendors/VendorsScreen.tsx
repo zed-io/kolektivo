@@ -4,7 +4,7 @@ import { RefreshControl, RefreshControlProps, StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import Animated from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import VendorDetailBottomSheet from 'src/kolektivo/vendors/VendorDetailBottomSheet'
 import VendorListItem from 'src/kolektivo/vendors/VendorListItem'
 import { fetchVendors } from 'src/kolektivo/vendors/actions'
@@ -12,7 +12,6 @@ import { vendorLoadingSelector, vendorsSelector } from 'src/kolektivo/vendors/se
 import { Vendor } from 'src/kolektivo/vendors/types'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
-import useSelector from 'src/redux/useSelector'
 import colors from 'src/styles/colors'
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList)
