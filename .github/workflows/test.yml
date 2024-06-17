@@ -4,8 +4,8 @@ on:
   # Run on pushes to main..
   push:
     branches:
-      - main
-  # ..any pull request and merge queue
+      - kolektivo
+  # ..and any pull request.
   pull_request:
   merge_group:
 

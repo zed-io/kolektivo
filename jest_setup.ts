@@ -54,6 +54,47 @@ jest.mock('react-native-shake', () => ({
   removeAllListeners: jest.fn(),
 }))
 
+jest.mock('@supabase/supabase-js', () => {
+  return {
+    createClient: jest.fn().mockImplementation(() => {
+      return {
+        from: jest.fn().mockReturnThis(),
+        select: jest.fn().mockImplementation(() => ({
+          eq: jest.fn().mockReturnThis(),
+          in: jest.fn().mockReturnThis(),
+          is: jest.fn().mockReturnThis(),
+          order: jest.fn().mockReturnThis(),
+          gte: jest.fn().mockReturnThis(),
+          lte: jest.fn().mockReturnThis(),
+          data: [
+            {
+              id: 'mockedRoleId',
+              org_users: [{ id: 'mockUserId', status: 'active' }],
+            },
+          ],
+          error: null,
+        })),
+        update: jest.fn().mockImplementation(() => ({
+          eq: jest.fn().mockReturnThis(),
+          in: jest.fn().mockReturnThis(),
+          is: jest.fn().mockReturnThis(),
+          order: jest.fn().mockReturnThis(),
+          gte: jest.fn().mockReturnThis(),
+          lte: jest.fn().mockReturnThis(),
+          select: jest.fn().mockReturnThis(),
+          data: [
+            {
+              id: 'mockedRoleId',
+              org_users: [{ id: 'mockUserId', status: 'active' }],
+            },
+          ],
+          error: null,
+        })),
+      }
+    }),
+  }
+})
+
 jest.mock('@react-native-clipboard/clipboard', () => ({
   setString: jest.fn(),
   getString: jest.fn(),

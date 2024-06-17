@@ -26,5 +26,5 @@
   },
   "files": ["jest_setup.ts"],
   "include": ["src"],
-  "exclude": ["node_modules", "vendor", ".bundle"]
+  "exclude": ["node_modules", "vendor", ".bundle", "src/kolektivo/map"]
 }

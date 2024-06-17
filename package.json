@@ -1,11 +1,11 @@
 {
-  "name": "@valora/wallet",
+  "name": "@kolektivo/wallet",
   "version": "1.88.0",
-  "author": "Valora Inc",
+  "author": "Zed Labs Ltd.",
   "license": "Apache-2.0",
   "private": true,
   "engines": {
-    "node": "20.11.1"
+    "node": "20"
   },
   "scripts": {
     "lint": "eslint --ext=.tsx,.ts src/",
@@ -112,6 +112,7 @@
     "@segment/analytics-react-native-plugin-firebase": "^0.4.1",
     "@segment/sovran-react-native": "^1.1.1",
     "@sentry/react-native": "^5.22.0",
+    "@supabase/supabase-js": "^2.43.4",
     "@th3rdwave/react-navigation-bottom-sheet": "^0.2.7",
     "@toruslabs/constants": "^13.3.0",
     "@toruslabs/fetch-node-details": "^13.3.0",

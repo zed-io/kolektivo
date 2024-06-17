@@ -4,7 +4,7 @@
   "languageSettings": "Sprache",
   "localCurrencySetting": "Währung",
   "licenses": "Lizenzen",
-  "removeAccountTitle": "Valora zurücksetzen",
+  "removeAccountTitle": "Kolektivo zurücksetzen",
   "removeAccountDetails": "Das Zurücksetzen wird dein Konto von diesem Gerät entfernen. Dein Guthaben bleibt im Konto, wird aber nur mit deiner Wiederherstellungsphrase erreichbar sein",
   "deleteAccountTitle": "Konto löschen",
   "deleteAccountDetails": "Wenn du dein Konto löschst, wird es von {{appName}} entfernt. Dein Guthaben bleibt auf dem Konto, ist aber nur noch mit deiner Wiederherstellungsphrase zugänglich",
@@ -53,13 +53,13 @@
   },
   "accountKeyModal": {
     "header": "Ohne deine Wiederherstellungsphrase verlierst du den Zugriff auf dein Guthaben für immer",
-    "body1": "Um Valora zurückzusetzen, musst du bestätigen, dass du deine Wiederherstellungsphase eingegeben hast.",
-    "body2": "Niemand, nicht einmal Valora, kann dein Konto ohne deine Phrase wiederherstellen."
+    "body1": "Um Kolektivo zurückzusetzen, musst du bestätigen, dass du deine Wiederherstellungsphase eingegeben hast.",
+    "body2": "Niemand, nicht einmal Kolektivo, kann dein Konto ohne deine Phrase wiederherstellen."
   },
   "promptConfirmRemovalModal": {
-    "header": "Bist du sicher, dass du fortfahren willst?",
-    "body": "Du bist dabei, deine Wallet von diesem Gerät zu löschen. Dieser Schritt ist endgültig und kann nicht rückgängig gemacht werden. Es gibt keine Möglichkeit, deine Wiederherstellungsphrase wiederherzustellen, wenn du sie nicht aufgeschrieben hast.",
-    "resetNow": "Weiter"
+    "header": "Bist du dir sicher, dass du Kolektivo zurücksetzen möchtest?",
+    "body": "Du wirst nicht mehr auf deine Guthaben oder deine Wiederherstellungsphrase von diesem Gerät aus zugreifen können. Es gibt keine Möglichkeit, deine Wiederherstellungsphrase wiederherzustellen, wenn du sie nicht aufgeschrieben hast.",
+    "resetNow": "Jetzt zurücksetzen"
   },
   "protectWallet": {
     "title": "Schütze deine Wallet",
@@ -84,7 +84,7 @@
   },
   "walletSecurityPrimer": {
     "title": "Sorge für die Sicherheit deiner Wallet",
-    "description": "Nur du kannst auf deine Wallet zugreifen. Wenn du dein Telefon verloren hast oder es dir gestohlen wurde, kann Valora deine Wallet für dich nicht wiederherstellen.\n\nDu musst eine Methode einrichten, durch die deine Wallet sicher und dein Guthaben geschützt sind."
+    "description": "Nur du kannst auf deine Wallet zugreifen. Wenn du dein Telefon verloren hast oder es dir gestohlen wurde, kann Kolektivo deine Wallet für dich nicht wiederherstellen.\n\nDu musst eine Methode einrichten, durch die deine Wallet sicher und dein Guthaben geschützt sind."
   },
   "keylessBackupIntro": {
     "emailAddress": "E-Mail-Adresse",
@@ -93,7 +93,7 @@
       "title": "Wallet-Back-up einrichten",
       "description": "Folgendes wird zum Einrichten der Sicherung verwendet",
       "useRecoveryPhrase": "Verwende stattdessen eine Wiederherstellungsphrase",
-      "reminder": "<0>Denke daran</0>, diese Information ist die einzige Möglichkeit, auf deine Wallet zuzugreifen, wenn dein Gerät verloren geht oder gestohlen wird. Valora speichert weder deine E-Mail-Adresse, noch deine Telefonnummer. Passe gut darauf auf!"
+      "reminder": "<0>Denke daran</0>, diese Information ist die einzige Möglichkeit, auf deine Wallet zuzugreifen, wenn dein Gerät verloren geht oder gestohlen wird. Kolektivo speichert weder deine E-Mail-Adresse, noch deine Telefonnummer. Passe gut darauf auf!"
     },
     "restore": {
       "description": "Vergewissere dich, dass du Folgendes zur Verfügung hast, um deine Wallet wiederherzustellen.",
@@ -215,7 +215,7 @@
   "keylessBackupNotification": "Richte deine E-Mail und Telefonnummer ein, um deine Seed-Phrase zu sichern",
   "backupKeyCTA": "Schließe die Sicherung jetzt ab",
   "backupKeySummary": "Finde einen privaten Ort und schreibe deine Wiederherstellungsphrase auf. Bitte speichere sie an einem sicheren Ort. Speichere sie nicht in deinem Telefon.",
-  "backupKeyWarning": "Solltest du deine Wiederherstellungsphrase verlieren, dann verlierst du Zugang auf dein gesamtes Guthaben in Valora.",
+  "backupKeyWarning": "Solltest du deine Wiederherstellungsphrase verlieren, dann verlierst du Zugang auf dein gesamtes Guthaben in Kolektivo.",
   "copied": "Phrase in die Zwischenablage kopiert",
   "moreInfo": "Weitere Infos",
   "savedConfirmation": "Ja, ich habe meine Phrase aufgeschrieben.",
@@ -286,7 +286,7 @@
     "dismiss": "Verwerfen"
   },
   "superchargingTitle": "Aktualisierung der App erforderlich",
-  "superchargingDescription": "Aktualisiere die Valora-App, um weiterhin deine wöchentlichen Supercharge-Rewards zu erhalten.",
+  "superchargingDescription": "Aktualisiere die Kolektivo-App, um weiterhin deine wöchentlichen Supercharge-Rewards zu erhalten.",
   "superchargingTitleV1_54": "Supercharge wird beendet",
   "superchargingDescriptionV1_54": "Die wöchentlichen Rewards sind bis Dienstag, den 28. Mai, um 23:59 Uhr UTC einforderbar. Ab dem 29. Mai kannst du keine Supercharge-Rewards mehr einfordern.",
   "superchargeRewardsAvailable": "Du hast {{amount}} {{token}} verfügbar zum Abholen!",
@@ -376,7 +376,7 @@
   "tokenBalance": "{{token}} Guthaben",
   "addFunds": "Guthaben hinzufügen",
   "addFundsHeaderWithCurrency": "Füge {{token}} hinzu",
-  "addFundsSubtitle": "Dein Valora-Konto aufladen",
+  "addFundsSubtitle": "Dein Kolektivo-Konto aufladen",
   "exchanges": "Kryptobörsen",
   "noExchanges": "In deiner Region gibt es keine Börsen für {{digitalAsset}}.",
   "buySellOnExchanges": "Kaufen/Verkaufen bei Kryptobörsen",
@@ -430,11 +430,11 @@
   },
   "providerFeeDiscountDialog": {
     "title": "Gebührenrabatt",
-    "body": "Als Sonderaktion zur Feier der Markteinführung von Valora werden die Gebühren vorübergehend bezuschusst!"
+    "body": "Als Sonderaktion zur Feier der Markteinführung von Kolektivo werden die Gebühren vorübergehend bezuschusst!"
   },
   "pleaseSelectProvider": "Bitte wähle unten einen Anbieter aus. Diese Links verbinden sich mit einem Drittanbieter.",
   "otherFundingOptions": "Weitere Möglichkeiten zum Hinzufügen und Abheben von Guthaben findest du auf <0>Wie du dein Konto auflädst</0>.",
-  "youCanTransferIn": "Du kannst die Börse einer Drittpartei nutzen, um {{digitalAsset}} an dein Valora-Konto zu senden. Dafür benötigst du deine Konto-Adresse.",
+  "youCanTransferIn": "Du kannst die Börse einer Drittpartei nutzen, um {{digitalAsset}} an dein Kolektivo-Konto zu senden. Dafür benötigst du deine Konto-Adresse.",
   "youCanTransferOut": "Du kannst dein Guthaben abheben, indem du es an die Börse einer Drittpartei sendest, die {{digitalAsset}} unterstützt.",
   "useBalanceWithMerchants": "Verwende dein Guthaben bei unterstützenden Händlern",
   "findMerchants": "Lokale Händler in deiner Nähe finden",
@@ -693,7 +693,7 @@
       "body": "Lade deine Freunde und Familien ein, {{appName}} herunterzuladen. Jeder von euch erhält somit ein exklusives NFT"
     },
     "rewardsActiveCUSD": {
-      "title": "ERHALTE BIS ZU 12 cUSD, wenn du deine Freunde zu Valora einlädst!",
+      "title": "ERHALTE BIS ZU 12 cUSD, wenn du deine Freunde zu Kolektivo einlädst!",
       "body": "Du bekommst 0,50 cUSD für jeden Freund, den du zu {{appName}} einlädst. Sobald deine Freunde ihre Telefonnummer verknüpfen, Guthaben hinzufügen und dieses über einen Zeitraum von sieben Tagen behalten, erhaltet ihr beide 0,50 cUSD. Aber beeil dich, das Guthaben ist begrenzt! (25 Freunde)."
     }
   },
@@ -707,8 +707,8 @@
     "heading1": "Daten und Privatsphäre",
     "heading2": "Vermögen und {{appName}}",
     "info": "Lese bitte unsere <0>Benutzervereinbarung und Bedingungen</0> und klicke unten auf Akzeptieren um unsere Dienste zu nutzen.",
-    "privacy": "Indem du diesem Netzwerk beitrittst, gibst du uns die Erlaubnis, anonyme Informationen über deine Nutzung der App zu sammeln. Wenn du deine Telefonnummer verbindest, wird eine Kopie davon gespeichert. Wenn du Valora Zugriff auf deine Kontaktliste gewährst, wird Valora den Namen, die Telefonnummer und das Profilbild jedes Kontaktes importieren, um Benutzern die Verbindung über die Valora-App zu ermöglichen. Um zu erfahren, wie wir diese Informationen sammeln und verwenden, lesen unsere <0>Datenschutzrichtlinie</0>.",
-    "goldDisclaimer": "Wenn du ein „Konto“ bei Valora anlegst, erstellst du ein digitales Wallet, dessen Schlüssel nur du besitzt. Keine andere Person oder Organisation, einschließlich Valora, kann deinen Schlüssel wiederherstellen, Transaktionen ändern oder rückgängig machen oder verlorenes Guthaben wiedererlangen. Sei dir bewusst, dass Kryptowährungen Teil einer neuen Vermögensklasse sind und ein Risiko für finanzielle Verluste darstellen. Überlege dir deine finanzielle Situation und deine Risikobereitschaft genau, bevor du einen Vermögenswert kaufst."
+    "privacy": "Indem du diesem Netzwerk beitrittst, gibst du uns die Erlaubnis, anonyme Informationen über deine Nutzung der App zu sammeln. Wenn du deine Telefonnummer verbindest, wird eine Kopie davon gespeichert. Wenn du Kolektivo Zugriff auf deine Kontaktliste gewährst, wird Kolektivo den Namen, die Telefonnummer und das Profilbild jedes Kontaktes importieren, um Benutzern die Verbindung über die Kolektivo-App zu ermöglichen. Um zu erfahren, wie wir diese Informationen sammeln und verwenden, lesen unsere <0>Datenschutzrichtlinie</0>.",
+    "goldDisclaimer": "Wenn du ein „Konto“ bei Kolektivo anlegst, erstellst du ein digitales Wallet, dessen Schlüssel nur du besitzt. Keine andere Person oder Organisation, einschließlich Kolektivo, kann deinen Schlüssel wiederherstellen, Transaktionen ändern oder rückgängig machen oder verlorenes Guthaben wiedererlangen. Sei dir bewusst, dass Kryptowährungen Teil einer neuen Vermögensklasse sind und ein Risiko für finanzielle Verluste darstellen. Überlege dir deine finanzielle Situation und deine Risikobereitschaft genau, bevor du einen Vermögenswert kaufst."
   },
   "termsColloquial": {
     "title": "Starten wir mit der Erstellung deiner Wallet",
@@ -716,9 +716,9 @@
     "privacy1": "Wir erfassen Nutzungsdaten, die uns dabei helfen, die App und die Sicherheit zu verbessern. Welche Art von Daten wir erfassen, wie wir diese verwenden und welche Rechte du in Bezug auf diese Daten hast, kannst du in unserer <0>Datenschutzrichtlinie</0> nachlesen.",
     "privacy2": "Wenn du dich dazu entscheidest, deine Telefonnummer zu verknüpfen, speichern wir eine verschlüsselte Kopie davon.",
     "privacy3": "Wenn du dich entscheidest, deine Kontakte zu verbinden, verwenden wir ihre Namen, Telefonnummern und Profilbilder, damit wir sie leichter finden können.",
-    "walletHeading": "Deine digitale Wallet bei Valora:",
-    "wallet1": "Du bist dabei, eine digitale Wallet zu erstellen. Nur du hast den Schlüssel für deine Wallet. Wir können deinen Schlüssel oder dein Vermögen nicht wiederherstellen, wenn du deinen Schlüssel verlierst. Wir können auch keine Aktionen rückgängig machen, die über Valora auf Blockchains durchgeführt wurden.",
-    "wallet2": "Digitales Vermögen, die Vermögenswerte, mit denen du bei Valora interagierst, sind mit einzigartigen Risiken verbunden. Wenn du Valora benutzt, akzeptierst du diese Risiken und übernimmst die Verantwortung dafür. Bitte achte bei deinen Entscheidungen auf die dir zur Verfügung stehenden finanziellen Mittel und deine Risikobereitschaft.",
+    "walletHeading": "Deine digitale Wallet bei Kolektivo:",
+    "wallet1": "Du bist dabei, eine digitale Wallet zu erstellen. Nur du hast den Schlüssel für deine Wallet. Wir können deinen Schlüssel oder dein Vermögen nicht wiederherstellen, wenn du deinen Schlüssel verlierst. Wir können auch keine Aktionen rückgängig machen, die über Kolektivo auf Blockchains durchgeführt wurden.",
+    "wallet2": "Digitales Vermögen, die Vermögenswerte, mit denen du bei Kolektivo interagierst, sind mit einzigartigen Risiken verbunden. Wenn du Kolektivo benutzt, akzeptierst du diese Risiken und übernimmst die Verantwortung dafür. Bitte achte bei deinen Entscheidungen auf die dir zur Verfügung stehenden finanziellen Mittel und deine Risikobereitschaft.",
     "fullTerms": "Lies bitte unsere <0>Allgemeinen Nutzungsbedingungen</0> vollständig durch"
   },
   "fullNameOrPsuedonym": "Vollständiger Name oder Alias",
@@ -833,7 +833,7 @@
   "accessContacts": {
     "disclosure": {
       "title": "Kontakte importieren",
-      "body": "Valora würde gerne deine Kontakte importieren. Durch Tippen auf dem unteren Button erlaube ich den Zugriff auf Telefonnummern, Namen und Fotos meiner Kontakte zum Zweck der Verbindung mit ihnen über Valora"
+      "body": "Kolektivo würde gerne deine Kontakte importieren. Durch Tippen auf dem unteren Button erlaube ich den Zugriff auf Telefonnummern, Namen und Fotos meiner Kontakte zum Zweck der Verbindung mit ihnen über Kolektivo"
     }
   },
   "createAccount": "Konto erstellen",
@@ -883,12 +883,12 @@
   "verificationPrematureRevealMessage": "Bitte warte eine Minute, bevor du erneut sendest",
   "verificationLearnMoreDialog": {
     "title": "Telefonnummern und {{appName}}",
-    "body": "Das Verbinden ermöglicht es, Guthaben mit deiner Telefonnummer zu versenden und zu empfangen.\n\n<0>Kann ich das später machen? </0>\n\nJa, aber nicht verbundene Wallets können nur Zahlungen mit QR-Codes oder Konto-Adressen senden.\n\n<1>Sicher und privat</1>\n\nValora verwendet modernste Kryptographie, um deine Telefonnummer privat zu halten.",
+    "body": "Das Verbinden ermöglicht es, Guthaben mit deiner Telefonnummer zu versenden und zu empfangen.\n\n<0>Kann ich das später machen? </0>\n\nJa, aber nicht verbundene Wallets können nur Zahlungen mit QR-Codes oder Konto-Adressen senden.\n\n<1>Sicher und privat</1>\n\nKolektivo verwendet modernste Kryptographie, um deine Telefonnummer privat zu halten.",
     "dismiss": "Verwerfen"
   },
   "phoneVerificationScreen": {
     "screenTitle": "Telefonnummer",
-    "title": "Verbinde deine Telefonnummer mit Valora",
+    "title": "Verbinde deine Telefonnummer mit Kolektivo",
     "description": "Dies verknüpft deine Wallet-Adresse mit deiner Telefonnummer, damit das Versenden von Krypto einfach ist",
     "startButtonLabel": "Verbinden",
     "learnMore": {
@@ -938,7 +938,7 @@
     },
     "recoveryPhrase": {
       "title": "Von Wiederherstellungsphrase",
-      "description": "Gib deine Wiederherstellungsphrase mit 12 Wörtern ein, um wieder Zugang zu Valora zu erhalten"
+      "description": "Gib deine Wiederherstellungsphrase mit 12 Wörtern ein, um wieder Zugang zu Kolektivo zu erhalten"
     }
   },
   "verificationInput": {
@@ -1035,7 +1035,7 @@
   "inviteWithoutPayment": "Hallo! Ich habe {{appName}} benutzt, um Krypto weltweit zu überweisen. Es ist einfach zu versuchen und ich möchte dich einladen, es mit diesem Link zu sehen: {{link}}",
   "inviteWithEscrowedPayment": "Hallo! Ich habe {{appName}} benutzt, um Krypto weltweit zu überweisen. Ich habe dir gerade {{amount}} {{token}} geschickt. Bitte lade die {{appName}} App herunter und löse dein {{token}} mit diesem Link ein: {{link}}",
   "inviteWithRewards": "Hallo! 👋 Ich nutze {{appName}} als Krypto-Wallet. Du kannst die App super schnell herunterladen und deine Telefonnummer verbinden. Außerdem erhalten wir beide ein exklusives NFT als Reward. 💫 \n\nLade die App mit diesem Link herunter: {{link}}",
-  "inviteWithRewardsCUSD": "Hallo! Wenn du dich bei Valora anmeldest, deine Telefonnummer verknüpfst und Geld in deine Wallet einzahlst, können wir beide eine kostenlose Reward in Höhe von 0,50 Dollar erhalten. Ich verwende es, um meine Ersparnisse in USD und Krypto zu vermehren. Wenn du deine Telefonnummer angibst, kannst du deine Wallet in Sekundenschnelle einrichten. Melde dich mit meinem Empfehlungslink hier an: \n\n{{link}} \n\n Aber beeil dich, denn die Empfehlungsaktion endet bald.",
+  "inviteWithRewardsCUSD": "Hallo! Wenn du dich bei Kolektivo anmeldest, deine Telefonnummer verknüpfst und Geld in deine Wallet einzahlst, können wir beide eine kostenlose Reward in Höhe von 0,50 Dollar erhalten. Ich verwende es, um meine Ersparnisse in USD und Krypto zu vermehren. Wenn du deine Telefonnummer angibst, kannst du deine Wallet in Sekundenschnelle einrichten. Melde dich mit meinem Empfehlungslink hier an: \n\n{{link}} \n\n Aber beeil dich, denn die Empfehlungsaktion endet bald.",
   "loadingContacts": "Deine Kontakte finden",
   "myCode": "Mein Code",
   "scanCode": "Scannen",
@@ -1362,7 +1362,7 @@
   "nftViewer": "NFT-Viewer",
   "whatTotalValue": {
     "title": "Was bedeutet Gesamtguthaben?",
-    "body": "Dein Gesamtguthaben ist eine ungefähre Summe deines gesamten Valora-Vermögens. Der Gesamtguthaben ändert sich bei Preisschwankungen. Er wird alle 10 Minuten aktualisiert. \n\nEinige Vermögen können möglicherweise nicht im Gesamtguthaben angezeigt werden, da der Preis zum Berechnungszeitpunkt nicht verfügbar ist.",
+    "body": "Dein Gesamtguthaben ist eine ungefähre Summe deines gesamten Kolektivo-Vermögens. Der Gesamtguthaben ändert sich bei Preisschwankungen. Er wird alle 10 Minuten aktualisiert. \n\nEinige Vermögen können möglicherweise nicht im Gesamtguthaben angezeigt werden, da der Preis zum Berechnungszeitpunkt nicht verfügbar ist.",
     "dismiss": "Verwerfen"
   },
   "supportExportLogsStart": "Protokolle werden exportiert...",
@@ -1400,7 +1400,7 @@
     "stepTwo": {
       "label": "Schritt 2",
       "disabledTitle": "Bankkonto verknüpfen",
-      "disabledDescription": "Bankkonto-Unterstützung ist bald verfügbar! Wir informieren dich, sobald du dein Bankkonto mit Valora verbinden kannst.",
+      "disabledDescription": "Bankkonto-Unterstützung ist bald verfügbar! Wir informieren dich, sobald du dein Bankkonto mit Kolektivo verbinden kannst.",
       "disabledCta": "Demnächst verfügbar",
       "title": "Bankdaten eingeben",
       "description": "Du bist fast fertig! Bankdaten eingeben ein, um dein Konto zu verknüpfen.",
@@ -1408,7 +1408,7 @@
       "error": {
         "title": "Dein Konto konnte nicht verknüpfen werden.",
         "description": "Versuche, dein Bankkonto erneut zu verknüpfen, oder kontaktiere das Support-Team.",
-        "contactSupportPrefill": "Ich konnte mein Bankkonto nicht mit Valora verknüpfen"
+        "contactSupportPrefill": "Ich konnte mein Bankkonto nicht mit Kolektivo verknüpfen"
       }
     }
   },
@@ -1479,12 +1479,12 @@
   },
   "dappsScreenHelpDialog": {
     "title": "Was sind Dapps?",
-    "message": "Dapps (dezentrale Apps) bieten neue Möglichkeiten, dein Krypto zu nutzen, Rewards zu verdienen und Web3 zu entdecken.\n\nVerbinde Valora mit einer Dapp, um loszulegen.",
+    "message": "Dapps (dezentrale Apps) bieten neue Möglichkeiten, dein Krypto zu nutzen, Rewards zu verdienen und Web3 zu entdecken.\n\nVerbinde Kolektivo mit einer Dapp, um loszulegen.",
     "dismiss": "Verwerfen"
   },
   "dappsScreenBottomSheet": {
     "title": "{{dappName}} ist eine externe Anwendung.",
-    "message": "Du bist dabei, eine Anwendung zu öffnen, die nicht von Valora betrieben wird.\n\nValora gibt keine Zusicherungen zu dieser Anwendung ab. Die Nutzung erfolgt auf eigene Gefahr.",
+    "message": "Du bist dabei, eine Anwendung zu öffnen, die nicht von Kolektivo betrieben wird.\n\nKolektivo gibt keine Zusicherungen zu dieser Anwendung ab. Die Nutzung erfolgt auf eigene Gefahr.",
     "button": "Gehe zu {{dappName}}"
   },
   "dappsScreenInfoSheet": {
@@ -1537,7 +1537,7 @@
     "newLabel": "NEU",
     "newDialog": {
       "title": "Neue Möglichkeiten, Geld zu überweisen",
-      "body": "Wir stellen neue Möglichkeiten vor, Geld an ein und von einem Bankkonto zu überweisen – direkt in der Valora-App.\n\nWenn du diese Nachricht siehst, kannst du in deiner Region auf diese Funktion zugreifen.",
+      "body": "Wir stellen neue Möglichkeiten vor, Geld an ein und von einem Bankkonto zu überweisen – direkt in der Kolektivo-App.\n\nWenn du diese Nachricht siehst, kannst du in deiner Region auf diese Funktion zugreifen.",
       "dismiss": "Verwerfen"
     },
     "cashIn": {
@@ -1570,7 +1570,7 @@
     "button": "Du bestätigst und erklärst dich damit einverstanden, dass deine persönlichen Daten uns zur Verfügung gestellt und mit Dritten zu Überprüfungszwecken geteilt werden, wie in der <0>Datenschutzerklärung</0> angegeben."
   },
   "fiatConnectKycStatusScreen": {
-    "contactSupportPrefill": "Ich habe Probleme, meine Identität bei Valora zu verifizieren.",
+    "contactSupportPrefill": "Ich habe Probleme, meine Identität bei Kolektivo zu verifizieren.",
     "contactSupport": "Support kontaktieren",
     "pending": {
       "title": "Deine ID-Verifizierung wird gerade überprüft.",
@@ -1637,7 +1637,7 @@
     },
     "cashIn": {
       "cancel": "Hinzufügen von Guthaben abbrechen",
-      "contactSupportPrefill": "Ich habe Probleme dabei, meiner Valora-Wallet Geld hinzuzufügen."
+      "contactSupportPrefill": "Ich habe Probleme dabei, meiner Kolektivo-Wallet Geld hinzuzufügen."
     },
     "success": {
       "header": "Erfolg",
@@ -1727,7 +1727,7 @@
       },
       "mobileDialog": {
         "title": "Telefonnummer",
-        "body": "Gib die Telefonnummer an, die bei deinem Anbieter für mobile Geldtransaktionen registriert ist. Diese ist möglicherweise nicht dieselbe Nummer wie deine Valora-Telefonnummer.\n\nTelefonnummern müssen die entsprechende Landesvorwahl enthalten, die neben der Telefonnummer angezeigt wird.",
+        "body": "Gib die Telefonnummer an, die bei deinem Anbieter für mobile Geldtransaktionen registriert ist. Diese ist möglicherweise nicht dieselbe Nummer wie deine Kolektivo-Telefonnummer.\n\nTelefonnummern müssen die entsprechende Landesvorwahl enthalten, die neben der Telefonnummer angezeigt wird.",
         "dismiss": "Verwerfen"
       }
     },
@@ -1915,7 +1915,7 @@
     },
     "rewardsActiveCUSD": {
       "title": "Lade {{contactName}} zu {{appName}} ein und erhalte 0,50 cUSD",
-      "body": "Es sieht so aus, als wäre {{contactName}} nicht auf Valora. Du kannst trotzdem Geld für eine Zahlung senden, wenn du die Wallet-Adresse kennst. Du kannst stattdessen aber auch eine Einladung senden. \n\nNachdem die Person Valora heruntergeladen, ihre Telefonnummer verknüpft, Guthaben hinzugefügt und dieses 7 Tage lang in ihrer Wallet behalten hat, erhaltet ihr beide 0,50 cUSD (solange das Geld reicht)."
+      "body": "Es sieht so aus, als wäre {{contactName}} nicht auf Kolektivo. Du kannst trotzdem Geld für eine Zahlung senden, wenn du die Wallet-Adresse kennst. Du kannst stattdessen aber auch eine Einladung senden. \n\nNachdem die Person Kolektivo heruntergeladen, ihre Telefonnummer verknüpft, Guthaben hinzugefügt und dieses 7 Tage lang in ihrer Wallet behalten hat, erhaltet ihr beide 0,50 cUSD (solange das Geld reicht)."
     }
   },
   "celoNews": {
@@ -1926,7 +1926,7 @@
     "retryButtonText": "Erneut versuchen"
   },
   "chooseYourAdventure": {
-    "header": "Willkommen bei Valora",
+    "header": "Willkommen bei Kolektivo",
     "subtitle": "Was möchtest du zuerst tun?",
     "later": "Ich sehe mich später um",
     "options": {
@@ -2059,7 +2059,7 @@
     "results": "Ergebnisse",
     "qr": {
       "title": "QR-Code scannen oder anzeigen",
-      "subtitle": "Finde Adressen schnell auf Valora."
+      "subtitle": "Finde Adressen schnell auf Kolektivo."
     },
     "invite": {
       "title": "Sende Krypto an deine Freunde.",
@@ -2070,7 +2070,7 @@
       "subtitle": "Teile einen Link, um Krypto wie einen Text zu senden"
     },
     "getStarted": {
-      "title": "So kannst du Guthaben auf Valora senden.",
+      "title": "So kannst du Guthaben auf Kolektivo senden.",
       "subtitle": "ERSTE SCHRITTE",
       "options": {
         "one": {
@@ -2079,7 +2079,7 @@
         },
         "two": {
           "title": "Telefonnummer",
-          "subtitle": "Sende direkt an die Telefonnummer von jemandem, wenn diese Person Valora hat."
+          "subtitle": "Sende direkt an die Telefonnummer von jemandem, wenn diese Person Kolektivo hat."
         },
         "three": {
           "title": "ENS",
@@ -2087,7 +2087,7 @@
         },
         "four": {
           "title": "Profilname",
-          "subtitle": "Du kannst auf Valora nach anderen Nutzern suchen."
+          "subtitle": "Du kannst auf Kolektivo nach anderen Nutzern suchen."
         }
       }
     },
@@ -2187,7 +2187,7 @@
   },
   "multichainBeta": {
     "beta": "BETA",
-    "title": "Neu! Ethereum ist auf Valora",
+    "title": "Neu! Ethereum ist auf Kolektivo",
     "description1": "Wir öffnen dieses Feature zuerst für eine ausgewählte Gruppe von Menschen. Du bist einer der Glücklichen!",
     "description2": "Das Feature ist jedoch noch neu und unser Team arbeitet noch hart daran, alles zu perfektionieren. Wir würden uns über dein Feedback freuen.",
     "primaryCta": "Jetzt testen",
@@ -2198,7 +2198,7 @@
     "body": "Kaufe oder überweise kompatible Token, um Krypto zu senden und web3 zu erkunden!",
     "titleV1_86": "Füge Guthaben zu deinem Wallet hinzu",
     "exploreTokens": "Erkunde alle Token",
-    "exploreTokensBody": "Du kannst bis zu 10+ Token in Valora kaufen. Schau sie dir an!"
+    "exploreTokensBody": "Du kannst bis zu 10+ Token in Kolektivo kaufen. Schau sie dir an!"
   },
   "nftCelebration": {
     "bottomSheet": {
@@ -2275,7 +2275,7 @@
     "allNetworks": "Alle Netzwerke"
   },
   "points": {
-    "title": "Valora-Punkte",
+    "title": "Kolektivo Punkte",
     "activity": "Aktivität",
     "history": {
       "cards": {
@@ -2358,7 +2358,7 @@
     }
   },
   "earnFlow": {
-    "gasSubsidized": "Valora übernimmt das Gas für diese Transaktion!",
+    "gasSubsidized": "Kolektivo übernimmt das Gas für diese Transaktion!",
     "addCryptoBottomSheet": {
       "title": "Füge {{tokenSymbol}} auf {{tokenNetwork}} hinzu",
       "description": "Sobald du Tokens hinzugefügt hast, musst du zurückkommen, um die Einzahlung in einen Pool zu beenden.",
@@ -2385,11 +2385,11 @@
           "titleGasSubsidy": "Maximiere Verdienste ohne Gasgebühren*",
           "title": "Maximiere Verdienste",
           "subtitle": "Verdiene an deinen Stablecoins und erhalte Rewards, wenn du einen Pool belieferst.",
-          "footnoteSubsidy": "*Gasgebühren werden vorübergehend von Valora übernommen"
+          "footnoteSubsidy": "*Gasgebühren werden vorübergehend von Kolektivo übernommen"
         },
         "manage": {
-          "title": "Direkt von Valora aus verwalten",
-          "subtitle": "Wir kümmern uns um die Einrichtung, damit du deine Position direkt von Valora aus verwalten kannst."
+          "title": "Direkt von Kolektivo aus verwalten",
+          "subtitle": "Wir kümmern uns um die Einrichtung, damit du deine Position direkt von Kolektivo aus verwalten kannst."
         },
         "access": {
           "title": "Einfacher Zugriff auf dein Guthaben",

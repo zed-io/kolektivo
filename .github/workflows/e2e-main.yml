@@ -2,7 +2,7 @@ name: E2E - Main
 on:
   push:
     branches:
-      - main
+      - kolektivo
   workflow_dispatch:
     inputs:
       logLevel:

@@ -73,6 +73,7 @@ import KeylessBackupProgress from 'src/keylessBackup/KeylessBackupProgress'
 import LinkPhoneNumber from 'src/keylessBackup/LinkPhoneNumber'
 import SignInWithEmail from 'src/keylessBackup/SignInWithEmail'
 import WalletSecurityPrimer from 'src/keylessBackup/WalletSecurityPrimer'
+import ActivityDetailScreen from 'src/kolektivo/activities/ActivityDetailScreen'
 import Language from 'src/language/Language'
 import SelectLocalCurrency from 'src/localCurrency/SelectLocalCurrency'
 import {
@@ -669,6 +670,11 @@ const modalAnimatedScreens = (Navigator: typeof Stack) => (
       name={Screens.PincodeEnter}
       component={PincodeEnter}
       options={PincodeEnter.navigationOptions as NativeStackNavigationOptions}
+    />
+    <Navigator.Screen
+      name={Screens.ActivityDetailScreen}
+      component={ActivityDetailScreen}
+      options={ActivityDetailScreen.navigationOptions as NativeStackNavigationOptions}
     />
     <Navigator.Screen
       name={Screens.RegulatoryTerms}

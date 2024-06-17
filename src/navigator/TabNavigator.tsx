@@ -3,11 +3,11 @@ import { NativeStackHeaderProps, NativeStackScreenProps } from '@react-navigatio
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import TabDiscover from 'src/dappsExplorer/TabDiscover'
 import TabHome from 'src/home/TabHome'
 import Logo from 'src/icons/Logo'
-import Discover from 'src/icons/navigator/Discover'
 import Wallet from 'src/icons/navigator/Wallet'
+import ActivityScreen from 'src/kolektivo/activities/ActivityScreen'
+import { Activity } from 'src/kolektivo/icons/Activity'
 import { tabHeader } from 'src/navigator/Headers'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
@@ -64,17 +64,15 @@ export default function TabNavigator({ route }: Props) {
         }}
       />
       <Tab.Screen
-        name={Screens.TabDiscover}
-        component={TabDiscover}
+        name={Screens.ActivityScreen}
+        component={ActivityScreen}
         options={{
-          tabBarLabel: t('bottomTabsNavigator.discover.tabName') as string,
-          tabBarIcon: Discover,
-          tabBarTestID: 'Tab/Discover',
-          // Special case for the Dapps explorer,
-          // so it reloads the list when the user comes back to it
-          // Note: we generally want to avoid this as it resets the scroll position (and all other component state)
-          // but here it's the right expectation
-          unmountOnBlur: true,
+          freezeOnBlur: false,
+          lazy: false,
+          tabBarLabel: t('bottomTabsNavigator.activities.tabName') as string,
+          tabBarIcon: Activity,
+          tabBarTestID: 'Tab/Activities',
+          headerTitle: t('bottomTabsNavigator.activities.tabName') as string,
         }}
       />
     </Tab.Navigator>

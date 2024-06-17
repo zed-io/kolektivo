@@ -4,7 +4,7 @@
   "languageSettings": "Dil",
   "localCurrencySetting": "Para Birimi",
   "licenses": "Lisanslar",
-  "removeAccountTitle": "Valora'yı Sıfırla",
+  "removeAccountTitle": "Kolektivo'yı Sıfırla",
   "removeAccountDetails": "Sıfırlama, hesabınızı bu cihazdan kaldıracaktır. Fonlarınız hesapta kalacak, ancak yalnızca Kurtarma Kelimeleri ile erişilebilir olacaktır",
   "deleteAccountTitle": "Hesabı Sil",
   "deleteAccountDetails": "Silme, hesabınızı {{appName}} uygulamasından kaldıracaktır. Fonlarınız hesapta kalacak, ancak yalnızca Kurtarma İfadesi ile erişilebilir olacaktır",
@@ -53,13 +53,13 @@
   },
   "accountKeyModal": {
     "header": "Kurtarma Kelimeleriniz olmadan fonlarınıza erişiminizi sonsuza kadar kaybedersiniz",
-    "body1": "Valora'yı sıfırlamak için Kurtarma Kelimelerinizi yazdığınızı onaylamanız gerekir.",
-    "body2": "Valora dahil hiç kimse, Kurtarma Kelimeleriniz olmadan hesabınızı kurtaramaz."
+    "body1": "Kolektivo'yı sıfırlamak için Kurtarma Kelimelerinizi yazdığınızı onaylamanız gerekir.",
+    "body2": "Kolektivo dahil hiç kimse, Kurtarma Kelimeleriniz olmadan hesabınızı kurtaramaz."
   },
   "promptConfirmRemovalModal": {
-    "header": "Devam etmek istediğinizden emin misiniz?",
-    "body": "Cüzdanınızı bu cihazdan silmek üzeresiniz. Bu adım nihaidir ve geri alınamaz. Bir yere yazmadıysanız Kurtarma İfadenizi kurtarmanın bir yolu yoktur.",
-    "resetNow": "İleri"
+    "header": "Kolektivo'yı resetlemek istediğinizden emin misiniz?",
+    "body": "Artık bu cihazdan fonlarınıza veya Kurtarma Kelimelerinize erişemeyeceksiniz. Kurtarma Kelimelerinizi kaydetmediyseniz kurtarmanın bir yolu bulunmamaktadır.",
+    "resetNow": "Resetle"
   },
   "protectWallet": {
     "title": "Cüzdanınızı Koruyun",
@@ -84,7 +84,7 @@
   },
   "walletSecurityPrimer": {
     "title": "Cüzdanınızı güvende tutun",
-    "description": "Cüzdanınıza yalnızca siz erişebilirsiniz. Telefonunuz kaybolur veya çalınırsa, Valora onu sizin için kurtaramaz.\n\nCüzdanınızı güvende tutmak ve paranızı korumak için bir yöntem ayarlamanız gerekir."
+    "description": "Cüzdanınıza yalnızca siz erişebilirsiniz. Telefonunuz kaybolur veya çalınırsa, Kolektivo onu sizin için kurtaramaz.\n\nCüzdanınızı güvende tutmak ve paranızı korumak için bir yöntem ayarlamanız gerekir."
   },
   "keylessBackupIntro": {
     "emailAddress": "E-posta Adresi",
@@ -93,7 +93,7 @@
       "title": "Cüzdan Yedeklemeyi Ayarlama",
       "description": "E-posta ve telefon numarası yedeklemenizi ayarlamak için aşağıdakileri kullanacaksınız",
       "useRecoveryPhrase": "Bunun yerine bir kurtarma ifadesi kullanın",
-      "reminder": "Cihazınızın kaybolması veya çalınması durumunda cüzdanınıza erişmenin tek yolunun bu bilgiler olduğunu <0>unutmayın</0>. Valora e-postanızı veya telefonunuzu saklamaz. Bunları güvende tutun!"
+      "reminder": "Cihazınızın kaybolması veya çalınması durumunda cüzdanınıza erişmenin tek yolunun bu bilgiler olduğunu <0>unutmayın</0>. Kolektivo e-postanızı veya telefonunuzu saklamaz. Bunları güvende tutun!"
     },
     "restore": {
       "description": "Cüzdanınızı geri yüklemek için aşağıdakilere sahip olduğunuzdan emin olun.",
@@ -215,7 +215,7 @@
   "keylessBackupNotification": "Kurtarma ifadenizi yedeklemek için e-postanızı ve telefon numaranızı ayarlayın",
   "backupKeyCTA": "Yedeklemeyi Şimdi Tamamlayın",
   "backupKeySummary": "Kurtarma Kelimelerinizi yazmak için özel bir yer bulun ve not edin. Lütfen kelimelerinizi güvenli bir yerde saklayın ve telefonunuza kaydetmeyin.",
-  "backupKeyWarning": "Kurtarma ifadenizi kaybederseniz Valora'da tutulan tüm fonlarınıza erişimi kaybedersiniz.",
+  "backupKeyWarning": "Kurtarma ifadenizi kaybederseniz Kolektivo'da tutulan tüm fonlarınıza erişimi kaybedersiniz.",
   "copied": "Kelimeler panoya kopyalandı",
   "moreInfo": "Daha Fazla Bilgi",
   "savedConfirmation": "Evet, Kurtarma Kelimelerimi yazdım.",
@@ -376,7 +376,7 @@
   "tokenBalance": "{{token}} Bakiyesi",
   "addFunds": "Bakiye Ekle",
   "addFundsHeaderWithCurrency": "{{token}} ekle",
-  "addFundsSubtitle": "Valora hesabına bakiye yükle",
+  "addFundsSubtitle": "Kolektivo hesabına bakiye yükle",
   "exchanges": "Borsalar",
   "noExchanges": "Bölgenizde {{digitalAsset}} için kullanılabilecek borsa yok.",
   "buySellOnExchanges": "Borsalar üzerinde alım/satım yap",
@@ -430,11 +430,11 @@
   },
   "providerFeeDiscountDialog": {
     "title": "Ücret İndirimi",
-    "body": "Valora'nın lansmanını kutlamak için ücretler geçici olarak düşürüldü!"
+    "body": "Kolektivo'nın lansmanını kutlamak için ücretler geçici olarak düşürüldü!"
   },
   "pleaseSelectProvider": "Lütfen aşağıdan bir sağlayıcı seçin. Bu bağlantılar bir üçüncü taraf hizmetine bağlanır.",
   "otherFundingOptions": "<0>Hesaba nasıl bakiye yatırılır</0> sayfasını ziyaret ederek bakiye yatırma ve çekme yöntemleri hakkında daha fazla bilgi edinebilirsiniz",
-  "youCanTransferIn": "Valora hesabınıza {{digitalAsset}} göndermek için bir üçüncü taraf borsa kullanabilirsiniz. Bunun için Hesap Adresinize ihtiyacınız olacak.",
+  "youCanTransferIn": "Kolektivo hesabınıza {{digitalAsset}} göndermek için bir üçüncü taraf borsa kullanabilirsiniz. Bunun için Hesap Adresinize ihtiyacınız olacak.",
   "youCanTransferOut": "Fonlarınızı {{digitalAsset}}'i destekleyen bir üçüncü taraf borsaya göndererek çekebilirsiniz.",
   "useBalanceWithMerchants": "Bakiyenizi desteklenen satıcılarda kullanın",
   "findMerchants": "Yakınınızdaki yerel satıcıları bulun",
@@ -707,8 +707,8 @@
     "heading1": "Veri ve Gizlilik",
     "heading2": "Varlıkları ve {{appName}} Hesabı",
     "info": "Hizmetlerimizi kullanmak için lütfen <0>Kullanıcı Sözleşmemizi ve Şartlarımızı</0> okuyun ve hemen altındaki kabul et düğmesini tıklayarak kabul edin.",
-    "privacy": "Bu ağa katılarak, uygulamayı kullanımınız hakkında anonim bilgi toplamamıza izin veriyorsunuz. Ek olarak, telefon numaranızı bağlarsanız, bunun hash'li bir kopyası saklanır. Valora'ya kişi listenize erişim izni verirseniz, Valora, kullanıcıların Valora uygulaması aracılığıyla bağlanmasına izin vermek için her kişinin adını, telefon numarasını ve profil resmini içe aktarır. Bu bilgileri nasıl topladığımızı ve kullandığımızı öğrenmek için lütfen <0>Gizlilik Politikamızı</0> inceleyin.",
-    "goldDisclaimer": "Valora ile bir \"hesap\" oluşturduğunuzda, anahtarlarını yalnızca sizin tuttuğunuz bir dijital cüzdan yaratmış olursunuz. Valora dahil olmak üzere başka hiçbir kişi veya kuruluş anahtarınızı geri alamaz, işlemleri değiştiremez veya geri alamaz ya da kaybedilen parayı geri alamaz. Kripto paraların yeni bir varlık sınıfının parçası olduğunu ve finansal kayıp riski taşıdığını unutmayın. Herhangi bir varlık satın almadan önce finansal durumunuzu ve finansal risk toleransınızı dikkatlice değerlendirin."
+    "privacy": "Bu ağa katılarak, uygulamayı kullanımınız hakkında anonim bilgi toplamamıza izin veriyorsunuz. Ek olarak, telefon numaranızı bağlarsanız, bunun hash'li bir kopyası saklanır. Kolektivo'ya kişi listenize erişim izni verirseniz, Kolektivo, kullanıcıların Kolektivo uygulaması aracılığıyla bağlanmasına izin vermek için her kişinin adını, telefon numarasını ve profil resmini içe aktarır. Bu bilgileri nasıl topladığımızı ve kullandığımızı öğrenmek için lütfen <0>Gizlilik Politikamızı</0> inceleyin.",
+    "goldDisclaimer": "Kolektivo ile bir \"hesap\" oluşturduğunuzda, anahtarlarını yalnızca sizin tuttuğunuz bir dijital cüzdan yaratmış olursunuz. Kolektivo dahil olmak üzere başka hiçbir kişi veya kuruluş anahtarınızı geri alamaz, işlemleri değiştiremez veya geri alamaz ya da kaybedilen parayı geri alamaz. Kripto paraların yeni bir varlık sınıfının parçası olduğunu ve finansal kayıp riski taşıdığını unutmayın. Herhangi bir varlık satın almadan önce finansal durumunuzu ve finansal risk toleransınızı dikkatlice değerlendirin."
   },
   "termsColloquial": {
     "title": "Cüzdanınızı oluşturarak başlayalım",
@@ -833,7 +833,7 @@
   "accessContacts": {
     "disclosure": {
       "title": "Kişileri İçe Aktar",
-      "body": "Valora kişilerinizi içe aktarmak istiyor. Aşağıdaki butona dokunarak, Valora aracılığıyla bağlantı kurmak amacıyla kişilerimin telefon numaralarına, adlarına ve fotoğraflarına erişilmesine izin veriyorum"
+      "body": "Kolektivo kişilerinizi içe aktarmak istiyor. Aşağıdaki butona dokunarak, Kolektivo aracılığıyla bağlantı kurmak amacıyla kişilerimin telefon numaralarına, adlarına ve fotoğraflarına erişilmesine izin veriyorum"
     }
   },
   "createAccount": "Hesap Oluştur",
@@ -883,12 +883,12 @@
   "verificationPrematureRevealMessage": "Lütfen yeniden göndermeden önce bir dakika bekleyin",
   "verificationLearnMoreDialog": {
     "title": "Telefon Numaraları ve {{appName}}",
-    "body": "Bağlanmak, telefon numaranızla para gönderip almanıza olanak tanır.\n\n<0>Bunu daha sonra yapabilir miyim?</0>\n\nEvet, ancak bağlı olmayan cüzdanlar yalnızca QR kodları veya Hesap Adresleri ile ödeme gönderebilir.\n\n<1>Güvenli ve Gizli</1>\n\nValora, telefon numaranızı gizli tutmak için son teknoloji şifreleme tekniği kullanır.",
+    "body": "Bağlanmak, telefon numaranızla para gönderip almanıza olanak tanır.\n\n<0>Bunu daha sonra yapabilir miyim?</0>\n\nEvet, ancak bağlı olmayan cüzdanlar yalnızca QR kodları veya Hesap Adresleri ile ödeme gönderebilir.\n\n<1>Güvenli ve Gizli</1>\n\nKolektivo, telefon numaranızı gizli tutmak için son teknoloji şifreleme tekniği kullanır.",
     "dismiss": "Yoksay"
   },
   "phoneVerificationScreen": {
     "screenTitle": "Telefon Numarası",
-    "title": "Telefon numaranızı Valora'ya bağlayın",
+    "title": "Telefon numaranızı Kolektivo'ya bağlayın",
     "description": "Bu, cüzdan adresinizi telefon numaranıza bağlar, böylece kripto göndermek kolaylaşır",
     "startButtonLabel": "Bağla",
     "learnMore": {
@@ -938,7 +938,7 @@
     },
     "recoveryPhrase": {
       "title": "Kurtarma ifadesinden",
-      "description": "Valora'ya yeniden erişim kazanmak için 12 kelimelik kurtarma ifadenizi girin"
+      "description": "Kolektivo'ya yeniden erişim kazanmak için 12 kelimelik kurtarma ifadenizi girin"
     }
   },
   "verificationInput": {
@@ -1342,10 +1342,10 @@
   "transactionHeaderNftSent": "NFT Gönderildi",
   "feedSectionHeaderRecent": "En son",
   "cashInBottomSheet": {
-    "title": "Valora'yı kullanmaya başlamak için bakiye ekleyin!",
+    "title": "Kolektivo'yı kullanmaya başlamak için bakiye ekleyin!",
     "subtitle": "Hesabınız şu anda boş",
     "addFunds": "Bakiye Ekle",
-    "titleRamp": "Valora'yı kullanmaya başlamak için {{currency}} ekleyin",
+    "titleRamp": "Kolektivo'yı kullanmaya başlamak için {{currency}} ekleyin",
     "subtitleRamp": "Güvenilir harici sağlayıcılarımızdan biri aracılığıyla düşük ücretlerle para ekleyin."
   },
   "balances": "Varlıklar",
@@ -1362,7 +1362,7 @@
   "nftViewer": "NFT Viewer",
   "whatTotalValue": {
     "title": "Toplam Bakiye ne demektir?",
-    "body": "Toplam Bakiyeniz, tüm Valora varlıklarınızın yaklaşık bir toplamıdır. Fiyatlar dalgalandıkça Toplam Bakiyeniz değişecektir. Her 10 dakikada bir güncellenir.\nBazı varlıklar, hesaplama sırasında fiyat mevcut olmadığı için Toplam Bakiyede gösterilmeyebilir.",
+    "body": "Toplam Bakiyeniz, tüm Kolektivo varlıklarınızın yaklaşık bir toplamıdır. Fiyatlar dalgalandıkça Toplam Bakiyeniz değişecektir. Her 10 dakikada bir güncellenir.\nBazı varlıklar, hesaplama sırasında fiyat mevcut olmadığı için Toplam Bakiyede gösterilmeyebilir.",
     "dismiss": "Yoksay"
   },
   "supportExportLogsStart": "Günlük dışarı aktarılıyor...",
@@ -1400,15 +1400,15 @@
     "stepTwo": {
       "label": "2. Adım",
       "disabledTitle": "Bir banka hesabı bağla",
-      "disabledDescription": "Banka hesabı desteği çok yakında! Banka hesabınızı Valora'ya ne zaman bağlayabileceğinizi size bildireceğiz.",
+      "disabledDescription": "Banka hesabı desteği çok yakında! Banka hesabınızı Kolektivo'ya ne zaman bağlayabileceğinizi size bildireceğiz.",
       "disabledCta": "Çok Yakında!",
       "title": "Banka Bilgilerini Girin",
-      "description": "Neredeyse tamam! Hesabınızı Valora'ya bağlamak için banka bilgilerini girin.",
+      "description": "Neredeyse tamam! Hesabınızı Kolektivo'ya bağlamak için banka bilgilerini girin.",
       "cta": "Banka Hesabı Bağla",
       "error": {
         "title": "Banka hesabı bağlanamadı.",
         "description": "Lütfen banka hesabınızı tekrar bağlamayı deneyin veya destek ile iletişime geçin.",
-        "contactSupportPrefill": "Banka hesabımı Valora'ya bağlayamadım"
+        "contactSupportPrefill": "Banka hesabımı Kolektivo'ya bağlayamadım"
       }
     }
   },
@@ -1479,12 +1479,12 @@
   },
   "dappsScreenHelpDialog": {
     "title": "Dapp'ler nedir?",
-    "message": "Dapp'ler (merkezi olmayan uygulamalar), kriptonuzu kullanmanın, ödüller kazanmanın ve Web3'ü keşfetmenin yeni yollarını sunar.\n\nBaşlamak için Valora'yı bir dapp'e bağlayın.",
+    "message": "Dapp'ler (merkezi olmayan uygulamalar), kriptonuzu kullanmanın, ödüller kazanmanın ve Web3'ü keşfetmenin yeni yollarını sunar.\n\nBaşlamak için Kolektivo'yı bir dapp'e bağlayın.",
     "dismiss": "Yoksay"
   },
   "dappsScreenBottomSheet": {
     "title": "{{dappName}} harici bir uygulamadır",
-    "message": "Valora tarafından işletilmeyen bir uygulamayı açmak üzeresiniz.\n\nValora, bu uygulama hakkında hiçbir beyanda bulunmaz. Kendi sorumluluğunuzda kullanın.",
+    "message": "Kolektivo tarafından işletilmeyen bir uygulamayı açmak üzeresiniz.\n\nKolektivo, bu uygulama hakkında hiçbir beyanda bulunmaz. Kendi sorumluluğunuzda kullanın.",
     "button": "{{dappName}} uygulamasına git"
   },
   "dappsScreenInfoSheet": {
@@ -1537,7 +1537,7 @@
     "newLabel": "YENİ",
     "newDialog": {
       "title": "Fon transferi için yeni yollar",
-      "body": "Doğrudan Valora uygulamasından banka hesaplarına ve banka hesaplarından para transfer etmenin yeni yollarını yayınlıyoruz.\n\nBunu görüyorsanız, bölgenizde bu özelliğe erişebildiğiniz anlamına gelir.",
+      "body": "Doğrudan Kolektivo uygulamasından banka hesaplarına ve banka hesaplarından para transfer etmenin yeni yollarını yayınlıyoruz.\n\nBunu görüyorsanız, bölgenizde bu özelliğe erişebildiğiniz anlamına gelir.",
       "dismiss": "Yoksay"
     },
     "cashIn": {
@@ -1570,7 +1570,7 @@
     "button": "Kimlik Doğrulamayı Ayarla"
   },
   "fiatConnectKycStatusScreen": {
-    "contactSupportPrefill": "Valora ile kimliğimi doğrulamada sorun yaşıyorum.",
+    "contactSupportPrefill": "Kolektivo ile kimliğimi doğrulamada sorun yaşıyorum.",
     "contactSupport": "Destek ile İletişime Geç",
     "pending": {
       "title": "Kimlik doğrulamanız inceleniyor.",
@@ -1637,7 +1637,7 @@
     },
     "cashIn": {
       "cancel": "Bakiye Eklemeyi İptal Et",
-      "contactSupportPrefill": "Valora cüzdanıma bakiye eklemekte sorun yaşıyorum."
+      "contactSupportPrefill": "Kolektivo cüzdanıma bakiye eklemekte sorun yaşıyorum."
     },
     "success": {
       "header": "Başarılı",
@@ -1727,7 +1727,7 @@
       },
       "mobileDialog": {
         "title": "Telefon Numarası",
-        "body": "Mobil para sağlayıcınızda kayıtlı olan telefon numarasını kullanın. Bu, Valora'da kullandığınız telefon numaranızla aynı olmayabilir.\n\nTelefon numaraları, telefon numarasının yanında ülke kodunu içermelidir.",
+        "body": "Mobil para sağlayıcınızda kayıtlı olan telefon numarasını kullanın. Bu, Kolektivo'da kullandığınız telefon numaranızla aynı olmayabilir.\n\nTelefon numaraları, telefon numarasının yanında ülke kodunu içermelidir.",
         "dismiss": "Yoksay"
       }
     },
@@ -1915,7 +1915,7 @@
     },
     "rewardsActiveCUSD": {
       "title": "{{contactName}} adlı kişiyi {{appName}} uygulamasına davet edin ve 0,50 cUSD kazanın",
-      "body": "Görünüşe göre {{contactName}} Valora kullanmıyor. Bu kişinin cüzdan adresini biliyorsanız, yine de bir ödeme gönderebilir veya bunun yerine davet gönderebilirsiniz. \n\n Bu kişi Valora'yı indirdikten, telefon numarasını bağladıktan, fon ekledikten ve cüzdanında bunu 7 gün tuttuktan sonra, fonlar cüzdanda kaldığı sürece ikiniz de 0,50 cUSD alacaksınız."
+      "body": "Görünüşe göre {{contactName}} Kolektivo kullanmıyor. Bu kişinin cüzdan adresini biliyorsanız, yine de bir ödeme gönderebilir veya bunun yerine davet gönderebilirsiniz. \n\n Bu kişi Kolektivo'yı indirdikten, telefon numarasını bağladıktan, fon ekledikten ve cüzdanında bunu 7 gün tuttuktan sonra, fonlar cüzdanda kaldığı sürece ikiniz de 0,50 cUSD alacaksınız."
     }
   },
   "celoNews": {
@@ -1926,7 +1926,7 @@
     "retryButtonText": "Yeniden Dene"
   },
   "chooseYourAdventure": {
-    "header": "Valora'ya hoş geldiniz",
+    "header": "Kolektivo'ya hoş geldiniz",
     "subtitle": "Önce ne yapmak istersiniz?",
     "later": "Daha sonra keşfedeceğim",
     "options": {
@@ -2059,7 +2059,7 @@
     "results": "Sonuçlar",
     "qr": {
       "title": "QR Kodunu Tarayın veya Gösterin",
-      "subtitle": "Valora'daki adresleri hızlıca bulun"
+      "subtitle": "Kolektivo'daki adresleri hızlıca bulun"
     },
     "invite": {
       "title": "Arkadaşlarınıza kripto gönderin",
@@ -2070,7 +2070,7 @@
       "subtitle": "Metin gibi kripto göndermek için bir bağlantı paylaşın"
     },
     "getStarted": {
-      "title": "Valora'da fon gönderme yolları",
+      "title": "Kolektivo'da fon gönderme yolları",
       "subtitle": "BAŞLAYIN",
       "options": {
         "one": {
@@ -2079,7 +2079,7 @@
         },
         "two": {
           "title": "Telefon Numarası",
-          "subtitle": "Valora kullanan birinin telefon numarasına doğrudan gönderin"
+          "subtitle": "Kolektivo kullanan birinin telefon numarasına doğrudan gönderin"
         },
         "three": {
           "title": "ENS",
@@ -2087,7 +2087,7 @@
         },
         "four": {
           "title": "Profil Adı",
-          "subtitle": "Valora'da mevcut kullanıcıları arayabilirsiniz"
+          "subtitle": "Kolektivo'da mevcut kullanıcıları arayabilirsiniz"
         }
       }
     },
@@ -2187,7 +2187,7 @@
   },
   "multichainBeta": {
     "beta": "BETA",
-    "title": "Yeni! Ethereum Valora'da",
+    "title": "Yeni! Ethereum Kolektivo'da",
     "description1": "Bu özelliği ilk olarak seçkin bir grup kullanıcıya sunuyoruz. Siz şanslı olanlardan birisiniz!",
     "description2": "Bu henüz yeni ve ekibimiz işleri mükemmel hale getirmek için hâlâ çok çalışıyor. Geri bildirimlerinizi duymak isteriz.",
     "primaryCta": "Şimdi deneyin",
@@ -2275,7 +2275,7 @@
     "allNetworks": "Tüm Ağlar"
   },
   "points": {
-    "title": "Valora Puanları",
+    "title": "Kolektivo Puanları",
     "activity": "İşlemler",
     "history": {
       "cards": {

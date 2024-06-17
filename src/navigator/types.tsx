@@ -9,6 +9,7 @@ import { CICOFlow, FiatExchangeFlow, SimplexQuote } from 'src/fiatExchanges/util
 import { Props as KycLandingProps } from 'src/fiatconnect/KycLanding'
 import { FiatAccount } from 'src/fiatconnect/slice'
 import { KeylessBackupFlow, KeylessBackupOrigin } from 'src/keylessBackup/types'
+import { Activity } from 'src/kolektivo/activities/utils'
 import { Screens } from 'src/navigator/Screens'
 import { Nft } from 'src/nfts/types'
 import { Recipient } from 'src/recipients/recipient'
@@ -51,6 +52,10 @@ interface ValidateRecipientParams {
 }
 
 export type StackParamList = {
+  [Screens.ActivityScreen]: undefined
+  [Screens.ActivityDetailScreen]: {
+    activity: Activity
+  }
   [Screens.BackupComplete]: { isAccountRemoval?: boolean } | undefined
   [Screens.BackupIntroduction]: {} | undefined
   [Screens.AccountKeyEducation]:
@@ -194,6 +199,11 @@ export type StackParamList = {
   }
   [Screens.Main]: undefined
   [Screens.MainModal]: undefined
+  [Screens.MapScreen]:
+    | {
+        targetId: string
+      }
+    | undefined
   [Screens.MultichainBeta]: undefined
   [Screens.NotificationCenter]: undefined
   [Screens.NftsInfoCarousel]: { nfts: Nft[]; networkId: NetworkId }
@@ -283,7 +293,11 @@ export type StackParamList = {
   [Screens.TabHome]: {} | undefined
   [Screens.TabWallet]: { activeAssetTab?: AssetTabType } | undefined
   [Screens.TabNavigator]: {
-    initialScreen?: Screens.TabHome | Screens.TabWallet | Screens.TabDiscover
+    initialScreen?:
+      | Screens.TabHome
+      | Screens.TabWallet
+      | Screens.TabDiscover
+      | Screens.ActivityScreen
   }
   [Screens.TokenDetails]: { tokenId: string }
   [Screens.TokenImport]: undefined

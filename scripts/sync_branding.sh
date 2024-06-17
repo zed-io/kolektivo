@@ -21,12 +21,12 @@ echo $mobile_root
 cd "$mobile_root"
 
 # Please update the sha when valora branding updates are needed
-valora_branding_sha=5df16830b1a6ef7f4ede64f2b14637c9257a781f
+valora_branding_sha=fe1fe854bcfe1261d0ad4ea6351d48b87fc576aa
 
 if [[ "$branding" == "valora" ]]; then
   # prevents git from asking credentials
   export GIT_TERMINAL_PROMPT=0
-  remote_path=valora-inc/valora-app-branding.git
+  remote_path=zed-io/kolektivo-branding.git
   local_dir=branding/valora
   if [[ ! -e "$local_dir" ]] && 
     ( 

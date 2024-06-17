@@ -4,7 +4,7 @@
   "languageSettings": "Ngôn ngữ",
   "localCurrencySetting": "Đơn vị tiền tệ",
   "licenses": "Giấy phép",
-  "removeAccountTitle": "Thiết lập lại Valora",
+  "removeAccountTitle": "Thiết lập lại Kolektivo",
   "removeAccountDetails": "Thao tác thiết lập lại sẽ xóa tài khoản của bạn khỏi thiết bị này. Tiền của bạn sẽ giữ nguyên trong tài khoản, nhưng bạn chỉ truy cập được bằng Cụm từ khôi phục",
   "deleteAccountTitle": "Xóa tài khoản",
   "deleteAccountDetails": "Khi bạn xóa tài khoản thì tài khoản của bạn sẽ bị gỡ bỏ khỏi {{appName}}. Tiền của bạn sẽ vẫn giữ nguyên trong tài khoản, nhưng bạn chỉ truy cập được bằng Cụm từ khôi phục",
@@ -53,13 +53,13 @@
   },
   "accountKeyModal": {
     "header": "Nếu không có Cụm từ khôi phục, bạn sẽ mất vĩnh viễn quyền truy cập vào tiền của mình",
-    "body1": "Để thiết lập lại Valora, bạn cần xác nhận rằng bạn đã tạo Cụm từ khôi phục của mình.",
-    "body2": "Không ai, kể cả Valora, có thể khôi phục tài khoản của bạn khi không có Cụm từ này."
+    "body1": "Để thiết lập lại Kolektivo, bạn cần xác nhận rằng bạn đã tạo Cụm từ khôi phục của mình.",
+    "body2": "Không ai, kể cả Kolektivo, có thể khôi phục tài khoản của bạn khi không có Cụm từ này."
   },
   "promptConfirmRemovalModal": {
-    "header": "Bạn có chắc chắn muốn tiếp tục không?",
-    "body": "Bạn sắp xóa ví khỏi thiết bị này. Đây là thao tác xóa vĩnh viễn và không thể khôi phục. Nếu chưa ghi lại Cụm từ khôi phục thì bạn sẽ không có cách nào để lấy lại.",
-    "resetNow": "Tiếp tục"
+    "header": "Bạn có chắc chắn muốn thiết lập lại Kolektivo không?",
+    "body": "Bạn sẽ không thể truy cập vào tiền hoặc Cụm từ khôi phục của mình bằng thiết bị này nữa. Không có cách nào để khôi phục Cụm từ khôi phục nếu bạn đã không viết ra.",
+    "resetNow": "Đặt lại ngay"
   },
   "protectWallet": {
     "title": "Bảo vệ ví của bạn",
@@ -84,7 +84,7 @@
   },
   "walletSecurityPrimer": {
     "title": "Bảo vệ an toàn ví của bạn",
-    "description": "Chỉ bạn mới có thể truy cập vào ví của mình. Nếu điện thoại của bạn bị mất hoặc bị đánh cắp, Valora sẽ không thể khôi phục lại ví cho bạn.\n\nBạn sẽ phải thiết lập một phương thức bảo vệ an toàn cho ví và tiền của mình."
+    "description": "Chỉ bạn mới có thể truy cập vào ví của mình. Nếu điện thoại của bạn bị mất hoặc bị đánh cắp, Kolektivo sẽ không thể khôi phục lại ví cho bạn.\n\nBạn sẽ phải thiết lập một phương thức bảo vệ an toàn cho ví và tiền của mình."
   },
   "keylessBackupIntro": {
     "emailAddress": "Địa chỉ email",
@@ -93,7 +93,7 @@
       "title": "Thiết lập chức năng sao lưu ví.",
       "description": "Bạn sẽ sử dụng những thông tin sau để thiết lập sao lưu email và số điện thoại",
       "useRecoveryPhrase": "Chuyển sang dùng cụm từ khôi phục",
-      "reminder": "<0>Xin nhớ rằng</0>, thông tin này là cách duy nhất để bạn có thể truy cập vào ví trong trường hợp thiết bị của bạn bị mất hoặc bị đánh cắp. Valora không lưu trữ email hay số điện thoại của bạn. Hãy lưu giữ thông tin này an toàn!"
+      "reminder": "<0>Xin nhớ rằng</0>, thông tin này là cách duy nhất để bạn có thể truy cập vào ví trong trường hợp thiết bị của bạn bị mất hoặc bị đánh cắp. Kolektivo không lưu trữ email hay số điện thoại của bạn. Hãy lưu giữ thông tin này an toàn!"
     },
     "restore": {
       "description": "Hãy đảm bảo bạn có sẵn những thông tin sau để khôi phục ví của mình.",
@@ -215,7 +215,7 @@
   "keylessBackupNotification": "Thiết lập email và số điện thoại để sao lưu cụm từ khôi phục",
   "backupKeyCTA": "Hoàn tất quy trình sao lưu ngay",
   "backupKeySummary": "Tìm một nơi riêng tư và viết ra Cụm từ khôi phục của bạn. Vui lòng lưu giữ Cụm từ này ở nơi an toàn. Không lưu vào điện thoại của bạn.",
-  "backupKeyWarning": "Nếu làm mất cụm từ khôi phục, bạn sẽ không thể truy cập vào toàn bộ số tiền bạn sở hữu trên Valora.",
+  "backupKeyWarning": "Nếu làm mất cụm từ khôi phục, bạn sẽ không thể truy cập vào toàn bộ số tiền bạn sở hữu trên Kolektivo.",
   "copied": "Đã sao chép Cụm từ vào bảng nhớ tạm",
   "moreInfo": "Thêm thông tin",
   "savedConfirmation": "Có, tôi đã viết ra Cụm từ khôi phục của mình.",
@@ -376,7 +376,7 @@
   "tokenBalance": "Số dư {{token}}",
   "addFunds": "Nạp tiền",
   "addFundsHeaderWithCurrency": "Nạp {{token}}",
-  "addFundsSubtitle": "Nạp tiền vào tài khoản Valora của bạn",
+  "addFundsSubtitle": "Nạp tiền vào tài khoản Kolektivo của bạn",
   "exchanges": "Sàn giao dịch",
   "noExchanges": "Không có sàn giao dịch nào cung cấp {{digitalAsset}} tại khu vực của bạn.",
   "buySellOnExchanges": "Mua/bán trên sàn giao dịch",
@@ -430,11 +430,11 @@
   },
   "providerFeeDiscountDialog": {
     "title": "Giảm phí",
-    "body": "Chúng tôi khuyến mãi giảm giá phí trong thời gian ngắn để mừng Valora ra mắt!"
+    "body": "Chúng tôi khuyến mãi giảm giá phí trong thời gian ngắn để mừng Kolektivo ra mắt!"
   },
   "pleaseSelectProvider": "Vui lòng chọn một nhà cung cấp bên dưới. Các đường liên kết này sẽ kết nối với dịch vụ của bên thứ ba.",
   "otherFundingOptions": "Để biết các phương thức nạp và rút tiền khác, hãy truy cập <0>Cách nạp tiền vào tài khoản</0>",
-  "youCanTransferIn": "Bạn có thể dùng sàn giao dịch bên thứ ba để gửi {{digitalAsset}} vào tài khoản Valora của mình. Bạn cần có Địa chỉ tài khoản để thực hiện.",
+  "youCanTransferIn": "Bạn có thể dùng sàn giao dịch bên thứ ba để gửi {{digitalAsset}} vào tài khoản Kolektivo của mình. Bạn cần có Địa chỉ tài khoản để thực hiện.",
   "youCanTransferOut": "Bạn có thể rút tiền bằng cách gửi tiền đến sàn giao dịch bên thứ ba hỗ trợ {{digitalAsset}}.",
   "useBalanceWithMerchants": "Sử dụng số dư của bạn với người bán có hỗ trợ",
   "findMerchants": "Tìm người bán địa phương gần bạn",
@@ -707,8 +707,8 @@
     "heading1": "Dữ liệu và quyền riêng tư",
     "heading2": "Tài sản và {{appName}}",
     "info": "Để sử dụng dịch vụ, vui lòng đọc và chấp nhận <0>Thỏa thuận và điều khoản người dùng</0> bằng cách nhấp vào nút chấp nhận bên dưới.",
-    "privacy": "Bằng việc tham gia mạng này, bạn cho phép chúng tôi thu thập thông tin ẩn danh về việc bạn sử dụng ứng dụng. Ngoài ra, nếu bạn kết nối số điện thoại, chúng tôi sẽ lưu trữ bản sao đã băm của số điện thoại. Nếu bạn cấp cho Valora quyền truy cập vào danh bạ, Valora sẽ nhập tên, số điện thoại và ảnh hồ sơ của từng người liên hệ để cho phép người dùng kết nối qua ứng dụng Valora. Để tìm hiểu cách chúng tôi thu thập và sử dụng thông tin này, vui lòng xem lại <0>Chính sách quyền riêng tư</0> của chúng tôi.",
-    "goldDisclaimer": "Khi tạo \"tài khoản\" bằng Valora, bạn tạo một ví điện tử mà chỉ bạn giữ mã khóa. Không cá nhân hoặc tổ chức nào khác, bao gồm Valora, có thể khôi phục mã khóa của bạn, thay đổi hay hủy giao dịch hoặc thu hồi số tiền đã mất. Xin lưu ý rằng tiền điện tử thuộc loại tài sản mới và luôn tiềm ẩn rủi ro về tổn thất tài chính. Hãy cân nhắc kỹ tình hình tài chính của bạn cũng như khả năng chấp nhận rủi ro tài chính trước khi mua bất kỳ tài sản nào."
+    "privacy": "Bằng việc tham gia mạng này, bạn cho phép chúng tôi thu thập thông tin ẩn danh về việc bạn sử dụng ứng dụng. Ngoài ra, nếu bạn kết nối số điện thoại, chúng tôi sẽ lưu trữ bản sao đã băm của số điện thoại. Nếu bạn cấp cho Kolektivo quyền truy cập vào danh bạ, Kolektivo sẽ nhập tên, số điện thoại và ảnh hồ sơ của từng người liên hệ để cho phép người dùng kết nối qua ứng dụng Kolektivo. Để tìm hiểu cách chúng tôi thu thập và sử dụng thông tin này, vui lòng xem lại <0>Chính sách quyền riêng tư</0> của chúng tôi.",
+    "goldDisclaimer": "Khi tạo \"tài khoản\" bằng Kolektivo, bạn tạo một ví điện tử mà chỉ bạn giữ mã khóa. Không cá nhân hoặc tổ chức nào khác, bao gồm Kolektivo, có thể khôi phục mã khóa của bạn, thay đổi hay hủy giao dịch hoặc thu hồi số tiền đã mất. Xin lưu ý rằng tiền điện tử thuộc loại tài sản mới và luôn tiềm ẩn rủi ro về tổn thất tài chính. Hãy cân nhắc kỹ tình hình tài chính của bạn cũng như khả năng chấp nhận rủi ro tài chính trước khi mua bất kỳ tài sản nào."
   },
   "termsColloquial": {
     "title": "Hãy bắt đầu từ bước tạo ví",
@@ -833,7 +833,7 @@
   "accessContacts": {
     "disclosure": {
       "title": "Nhập danh bạ",
-      "body": "Valora muốn nhập danh bạ của bạn. Khi nhấn vào bên dưới, tôi cấp quyền truy cập vào số điện thoại, tên và ảnh của những người có trong danh bạ để kết nối với họ qua Valora"
+      "body": "Kolektivo muốn nhập danh bạ của bạn. Khi nhấn vào bên dưới, tôi cấp quyền truy cập vào số điện thoại, tên và ảnh của những người có trong danh bạ để kết nối với họ qua Kolektivo"
     }
   },
   "createAccount": "Tạo tài khoản",
@@ -883,7 +883,7 @@
   "verificationPrematureRevealMessage": "Vui lòng đợi một phút trước khi gửi lại",
   "verificationLearnMoreDialog": {
     "title": "Số điện thoại và {{appName}}",
-    "body": "Sau khi kết nối, bạn có thể gửi và nhận tiền bằng số điện thoại của mình.\n<0>Tôi có thể làm lúc khác không?</0>\n\nCó, nhưng ví không được kết nối chỉ có thể gửi thanh toán bằng mã QR hoặc Địa chỉ tài khoản.\n\n<1>Bảo mật và Riêng tư</1>\n\nValora sử dụng công nghệ mật mã hiện đại để giữ kín số điện thoại của bạn.",
+    "body": "Sau khi kết nối, bạn có thể gửi và nhận tiền bằng số điện thoại của mình.\n<0>Tôi có thể làm lúc khác không?</0>\n\nCó, nhưng ví không được kết nối chỉ có thể gửi thanh toán bằng mã QR hoặc Địa chỉ tài khoản.\n\n<1>Bảo mật và Riêng tư</1>\n\nKolektivo sử dụng công nghệ mật mã hiện đại để giữ kín số điện thoại của bạn.",
     "dismiss": "Bỏ qua"
   },
   "phoneVerificationScreen": {
@@ -938,7 +938,7 @@
     },
     "recoveryPhrase": {
       "title": "Từ mục cụm từ khôi phục",
-      "description": "Nhập cụm từ khôi phục gồm 12 từ để lấy lại quyền truy cập vào Valora"
+      "description": "Nhập cụm từ khôi phục gồm 12 từ để lấy lại quyền truy cập vào Kolektivo"
     }
   },
   "verificationInput": {
@@ -1340,10 +1340,10 @@
   "transactionHeaderNftSent": "Đã gửi NFT",
   "feedSectionHeaderRecent": "Gần đây",
   "cashInBottomSheet": {
-    "title": "Hãy nạp tiền để bắt đầu sử dụng Valora!",
+    "title": "Hãy nạp tiền để bắt đầu sử dụng Kolektivo!",
     "subtitle": "Tài khoản của bạn hiện đang trống",
     "addFunds": "Nạp tiền",
-    "titleRamp": "Nạp {{currency}} để bắt đầu sử dụng Valora",
+    "titleRamp": "Nạp {{currency}} để bắt đầu sử dụng Kolektivo",
     "subtitleRamp": "Nạp tiền với mức phí thấp thông qua nhà cung cấp bên ngoài đáng tin cậy của chúng tôi."
   },
   "balances": "Tài sản",
@@ -1360,7 +1360,7 @@
   "nftViewer": "Trình xem NFT",
   "whatTotalValue": {
     "title": "Tổng số dư có nghĩa là gì?",
-    "body": "Tổng số dư là tổng gần đúng của tất cả các tài sản Valora mà bạn có. Tổng số dư của bạn sẽ thay đổi khi giá biến động. Số liệu này cập nhật 10 phút một lần. Một số tài sản có thể không hiển thị trong Tổng số dư vì không có thông tin giá tại thời điểm tính toán.",
+    "body": "Tổng số dư là tổng gần đúng của tất cả các tài sản Kolektivo mà bạn có. Tổng số dư của bạn sẽ thay đổi khi giá biến động. Số liệu này cập nhật 10 phút một lần. Một số tài sản có thể không hiển thị trong Tổng số dư vì không có thông tin giá tại thời điểm tính toán.",
     "dismiss": "Bỏ qua"
   },
   "supportExportLogsStart": "Đang xuất nhật ký...",
@@ -1398,15 +1398,15 @@
     "stepTwo": {
       "label": "Bước 2",
       "disabledTitle": "Liên kết tài khoản ngân hàng",
-      "disabledDescription": "Tài khoản ngân hàng sẽ sớm được hỗ trợ! Chúng tôi sẽ thông báo khi bạn có thể kết nối tài khoản ngân hàng với Valora.",
+      "disabledDescription": "Tài khoản ngân hàng sẽ sớm được hỗ trợ! Chúng tôi sẽ thông báo khi bạn có thể kết nối tài khoản ngân hàng với Kolektivo.",
       "disabledCta": "Sắp có!",
       "title": "Nhập thông tin ngân hàng",
-      "description": "Bạn đã sắp hoàn tất! Nhập thông tin ngân hàng để liên kết tài khoản với Valora.",
+      "description": "Bạn đã sắp hoàn tất! Nhập thông tin ngân hàng để liên kết tài khoản với Kolektivo.",
       "cta": "Liên kết tài khoản ngân hàng",
       "error": {
         "title": "Không thể liên kết tài khoản ngân hàng.",
         "description": "Vui lòng thử liên kết tài khoản ngân hàng của bạn lần nữa hoặc liên hệ với bộ phận hỗ trợ.",
-        "contactSupportPrefill": "Tôi không liên kết được tài khoản ngân hàng với Valora"
+        "contactSupportPrefill": "Tôi không liên kết được tài khoản ngân hàng với Kolektivo"
       }
     }
   },
@@ -1477,12 +1477,12 @@
   },
   "dappsScreenHelpDialog": {
     "title": "Dapp là gì?",
-    "message": "Dapp (decentralized app – ứng dụng phi tập trung) mang lại những phương thức mới để sử dụng tiền điện tử, kiếm tiền thưởng và khám phá Web3.\n\nKết nối Valora với dapp để bắt đầu.",
+    "message": "Dapp (decentralized app – ứng dụng phi tập trung) mang lại những phương thức mới để sử dụng tiền điện tử, kiếm tiền thưởng và khám phá Web3.\n\nKết nối Kolektivo với dapp để bắt đầu.",
     "dismiss": "Bỏ qua"
   },
   "dappsScreenBottomSheet": {
     "title": "{{dappName}} là ứng dụng bên ngoài",
-    "message": "Bạn sắp mở một ứng dụng không phải do Valora vận hành.\n\nValora không đưa ra bất kỳ cam đoan nào về ứng dụng này. Bạn phải tự chịu mọi rủi ro khi sử dụng.",
+    "message": "Bạn sắp mở một ứng dụng không phải do Kolektivo vận hành.\n\nKolektivo không đưa ra bất kỳ cam đoan nào về ứng dụng này. Bạn phải tự chịu mọi rủi ro khi sử dụng.",
     "button": "Truy cập {{dappName}}"
   },
   "dappsScreenInfoSheet": {
@@ -1535,7 +1535,7 @@
     "newLabel": "MỚI",
     "newDialog": {
       "title": "Các phương thức chuyển tiền mới",
-      "body": "Chúng tôi sẽ phát hành những phương thức mới để chuyển tiền vào và ra khỏi khoản ngân hàng, trực tiếp từ ứng dụng Valora.\n\nNếu bạn thấy điều này, thì có nghĩa là khu vực của bạn có thể truy cập tính năng này.",
+      "body": "Chúng tôi sẽ phát hành những phương thức mới để chuyển tiền vào và ra khỏi khoản ngân hàng, trực tiếp từ ứng dụng Kolektivo.\n\nNếu bạn thấy điều này, thì có nghĩa là khu vực của bạn có thể truy cập tính năng này.",
       "dismiss": "Bỏ qua"
     },
     "cashIn": {
@@ -1568,7 +1568,7 @@
     "button": "Thiết lập quy trình xác minh giấy tờ tùy thân"
   },
   "fiatConnectKycStatusScreen": {
-    "contactSupportPrefill": "Tôi đang gặp sự cố khi xác minh danh tính với Valora.",
+    "contactSupportPrefill": "Tôi đang gặp sự cố khi xác minh danh tính với Kolektivo.",
     "contactSupport": "Liên hệ với bộ phận hỗ trợ",
     "pending": {
       "title": "Quy trình xác minh giấy tờ tùy thân của bạn đang được xem xét.",
@@ -1635,7 +1635,7 @@
     },
     "cashIn": {
       "cancel": "Hủy lệnh Nạp tiền",
-      "contactSupportPrefill": "Tôi gặp sự cố khi nạp tiền vào ví Valora của mình."
+      "contactSupportPrefill": "Tôi gặp sự cố khi nạp tiền vào ví Kolektivo của mình."
     },
     "success": {
       "header": "Thành công",
@@ -1725,7 +1725,7 @@
       },
       "mobileDialog": {
         "title": "Số điện thoại",
-        "body": "Hãy sử dụng số điện thoại đã đăng ký với nhà cung cấp ví di động. Số điện thoại này có thể khác số điện thoại valora của bạn.\n\nSố điện thoại phải có mã quốc gia ở cạnh số điện thoại.",
+        "body": "Hãy sử dụng số điện thoại đã đăng ký với nhà cung cấp ví di động. Số điện thoại này có thể khác số điện thoại Kolektivo của bạn.\n\nSố điện thoại phải có mã quốc gia ở cạnh số điện thoại.",
         "dismiss": "Bỏ qua"
       }
     },
@@ -1913,7 +1913,7 @@
     },
     "rewardsActiveCUSD": {
       "title": "Mời {{contactName}} tham gia {{appName}} và nhận 0,50 cUSD",
-      "body": "Có vẻ như {{contactName}} chưa sử dụng Valora. Nếu biết địa chỉ ví của họ, bạn vẫn có thể gửi khoản thanh toán hoặc gửi lời mời. \n\n Sau khi họ tải xuống Valora, kết nối số điện thoại, nạp tiền và giữ tiền trong ví trong 7 ngày, cả hai bạn đều sẽ nhận 0,50 cUSD trong thời gian quỹ tiền thưởng vẫn còn hiệu lực."
+      "body": "Có vẻ như {{contactName}} chưa sử dụng Kolektivo. Nếu biết địa chỉ ví của họ, bạn vẫn có thể gửi khoản thanh toán hoặc gửi lời mời. \n\n Sau khi họ tải xuống Kolektivo, kết nối số điện thoại, nạp tiền và giữ tiền trong ví trong 7 ngày, cả hai bạn đều sẽ nhận 0,50 cUSD trong thời gian quỹ tiền thưởng vẫn còn hiệu lực."
     }
   },
   "celoNews": {
@@ -1924,7 +1924,7 @@
     "retryButtonText": "Thử lại"
   },
   "chooseYourAdventure": {
-    "header": "Chào mừng bạn đến với Valora",
+    "header": "Chào mừng bạn đến với Kolektivo",
     "subtitle": "Đầu tiên bạn muốn làm gì?",
     "later": "Tôi sẽ tìm hiểu sau",
     "options": {
@@ -2057,7 +2057,7 @@
     "results": "Kết quả",
     "qr": {
       "title": "Quét hoặc hiển thị mã QR",
-      "subtitle": "Tìm nhanh địa chỉ trên Valora"
+      "subtitle": "Tìm nhanh địa chỉ trên Kolektivo"
     },
     "invite": {
       "title": "Gửi tiền điện tử cho bạn bè",
@@ -2068,7 +2068,7 @@
       "subtitle": "Chia sẻ đường liên kết để gửi tiền điện tử dưới dạng tin nhắn"
     },
     "getStarted": {
-      "title": "Các phương thức gửi tiền trên Valora",
+      "title": "Các phương thức gửi tiền trên Kolektivo",
       "subtitle": "BẮT ĐẦU",
       "options": {
         "one": {
@@ -2077,7 +2077,7 @@
         },
         "two": {
           "title": "Số điện thoại",
-          "subtitle": "Gửi trực tiếp đến số điện thoại của một người khác nếu họ có Valora"
+          "subtitle": "Gửi trực tiếp đến số điện thoại của một người khác nếu họ có Kolektivo"
         },
         "three": {
           "title": "ENS",
@@ -2085,7 +2085,7 @@
         },
         "four": {
           "title": "Tên hồ sơ",
-          "subtitle": "Bạn có thể tìm kiếm người dùng hiện có trên Valora"
+          "subtitle": "Bạn có thể tìm kiếm người dùng hiện có trên Kolektivo"
         }
       }
     },
@@ -2185,7 +2185,7 @@
   },
   "multichainBeta": {
     "beta": "BETA",
-    "title": "Tin nóng hổi! Ethereum đã có trên Valora",
+    "title": "Tin nóng hổi! Ethereum đã có trên Kolektivo",
     "description1": "Chúng tôi mở rộng tính năng này cho một nhóm người dùng được chọn trước. Bạn là một trong những người may mắn!",
     "description2": "Tính năng này vẫn còn mới và nhóm của chúng tôi vẫn đang nỗ lực để hoàn chỉnh mọi thứ. Chúng tôi rất mong nhận được phản hồi của bạn.",
     "primaryCta": "Thử ngay",

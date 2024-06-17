@@ -12,7 +12,7 @@ import { ONE_HOUR_IN_MILLIS } from './utils/time'
 export * from 'src/brandingConfig'
 
 // extract secrets from secrets.json
-const keyOrUndefined = (file: any, secretsKey: any, attribute: any) => {
+export const keyOrUndefined = (file: any, secretsKey: any, attribute: any) => {
   if (secretsKey in file) {
     if (attribute in file[secretsKey]) {
       return file[secretsKey][attribute]
@@ -179,8 +179,8 @@ export const SIMPLEX_URI = 'https://valoraapp.com/simplex'
 export const SIMPLEX_FEES_URL =
   'https://support.simplex.com/hc/en-gb/articles/360014078420-What-fees-am-I-paying-'
 
-export const CASH_IN_SUCCESS_DEEPLINK = 'celo://wallet/cash-in-success'
-export const CASH_IN_FAILURE_DEEPLINK = 'celo://wallet/cash-in-failure'
+export const CASH_IN_SUCCESS_DEEPLINK = 'kolekivo://wallet/cash-in-success'
+export const CASH_IN_FAILURE_DEEPLINK = 'kolekivo://wallet/cash-in-failure'
 
 export const APP_STORE_ID = Config.APP_STORE_ID
 export const DYNAMIC_DOWNLOAD_LINK = Config.DYNAMIC_DOWNLOAD_LINK

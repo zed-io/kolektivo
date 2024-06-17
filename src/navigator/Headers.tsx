@@ -72,7 +72,7 @@ export const headerTransparentWithBack: NativeStackNavigationOptions = {
 export const styles = StyleSheet.create({
   headerTitle: {
     ...typeScale.labelSemiBoldMedium,
-    maxWidth: Dimensions.get('window').width * 0.6,
+    maxWidth: Dimensions.get('window').width * 0.65,
   },
   headerSubTitle: {
     color: colors.gray4,

@@ -4,7 +4,7 @@
   "languageSettings": "Lingua",
   "localCurrencySetting": "Valuta",
   "licenses": "Licenze",
-  "removeAccountTitle": "Ripristina Valora",
+  "removeAccountTitle": "Ripristina Kolektivo",
   "removeAccountDetails": "Il ripristino rimuoverà il tuo conto da questo dispositivo. I tuoi fondi rimarranno nel conto, ma saranno accessibili solo con la tua Frase di recupero.",
   "deleteAccountTitle": "Elimina conto",
   "deleteAccountDetails": "L'eliminazione del tuo conto lo rimuoverà da {{appName}}. I tuoi fondi rimarranno nel conto, ma saranno accessibili solo con la tua Frase di recupero.",
@@ -53,13 +53,13 @@
   },
   "accountKeyModal": {
     "header": "Senza la tua Frase di recupero perderai per sempre l’accesso a tuoi fondi",
-    "body1": "Per ripristinare Valora, devi confermare di avere scritto la tua Frase di recupero.",
-    "body2": "Nessuno, neanche Valora, può recuperare il tuo conto senza la tua Frase di recupero."
+    "body1": "Per ripristinare Kolektivo, devi confermare di avere scritto la tua Frase di recupero.",
+    "body2": "Nessuno, neanche Kolektivo, può recuperare il tuo conto senza la tua Frase di recupero."
   },
   "promptConfirmRemovalModal": {
-    "header": "Sei sicuro di voler procedere?",
-    "body": "Stai per eliminare il tuo portafoglio da questo dispositivo. Questo passo è definitivo e non può essere annullato. Non c'è modo di recuperare la frase di recupero se non l'hai scritta.",
-    "resetNow": "Continua"
+    "header": "Ripristinare Kolektivo?",
+    "body": "Non sarai più in grado di accedere ai tuoi fondi o alla tua Frase di recupero da questo dispositivo. Se non l’hai annotata, non esiste alcun modo per recuperarla.",
+    "resetNow": "Ripristina ora"
   },
   "protectWallet": {
     "title": "Proteggi il tuo portafoglio",
@@ -84,7 +84,7 @@
   },
   "walletSecurityPrimer": {
     "title": "Tieni al sicuro il tuo portafoglio",
-    "description": "Solo tu puoi accedere al tuo portafoglio. Se il tuo telefono viene smarrito o rubato, Valora non può recuperarlo per te.\n\nDovrai impostare un metodo per tenere al sicuro il tuo portafoglio e proteggere i tuoi fondi."
+    "description": "Solo tu puoi accedere al tuo portafoglio. Se il tuo telefono viene smarrito o rubato, Kolektivo non può recuperarlo per te.\n\nDovrai impostare un metodo per tenere al sicuro il tuo portafoglio e proteggere i tuoi fondi."
   },
   "keylessBackupIntro": {
     "emailAddress": "Indirizzo e-mail",
@@ -93,7 +93,7 @@
       "title": "Imposta il backup del portafoglio",
       "description": "Per impostare il backup della tua email e del tuo numero di telefono, dovrai utilizzare le seguenti informazioni",
       "useRecoveryPhrase": "Usa una frase di recupero",
-      "reminder": "<0>Ricorda</0> che queste informazioni sono l'unico modo per accedere al tuo portafoglio in caso di smarrimento o furto del dispositivo. Valora non memorizza il tuo indirizzo e-mail o il tuo numero telefonico. Tienila al sicuro!"
+      "reminder": "<0>Ricorda</0> che queste informazioni sono l'unico modo per accedere al tuo portafoglio in caso di smarrimento o furto del dispositivo. Kolektivo non memorizza il tuo indirizzo e-mail o il tuo numero telefonico. Tienila al sicuro!"
     },
     "restore": {
       "description": "Assicurati di avere a disposizione quanto segue per ripristinare il tuo portafoglio.",
@@ -215,7 +215,7 @@
   "keylessBackupNotification": "Imposta la tua e-mail e il tuo numero di telefono per eseguire il backup",
   "backupKeyCTA": "Termina il backup ora",
   "backupKeySummary": "Trova un luogo privato e annota la tua Frase di recupero. Conservala in un luogo sicuro. Non memorizzarla nel tuo telefono.",
-  "backupKeyWarning": "Senza la tua Frase di recupero, perderai l’accesso a tutti i fondi in Valora.",
+  "backupKeyWarning": "Senza la tua Frase di recupero, perderai l’accesso a tutti i fondi in Kolektivo.",
   "copied": "La Frase di recupero è stata copiata negli appunti.",
   "moreInfo": "Maggiori informazioni",
   "savedConfirmation": "Sì, ho annotato la mia Frase di recupero.",
@@ -376,7 +376,7 @@
   "tokenBalance": "Saldo {{token}}",
   "addFunds": "Aggiungi fondi",
   "addFundsHeaderWithCurrency": "Aggiungi {{token}}",
-  "addFundsSubtitle": "Aggiungi fondi al tuo conto Valora",
+  "addFundsSubtitle": "Aggiungi fondi al tuo conto Kolektivo",
   "exchanges": "Exchange",
   "noExchanges": "Nella tua area non sono presenti exchange disponibili per {{digitalAsset}}.",
   "buySellOnExchanges": "Acquista/Vendi su exchange",
@@ -430,11 +430,11 @@
   },
   "providerFeeDiscountDialog": {
     "title": "Sconto sulle commissioni",
-    "body": "Nell’ambito di una promozione, le commissioni sono temporaneamente ridotte per celebrare il lancio di Valora."
+    "body": "Nell’ambito di una promozione, le commissioni sono temporaneamente ridotte per celebrare il lancio di Kolektivo."
   },
   "pleaseSelectProvider": "Seleziona uno dei provider di seguito. Questi collegamenti rimandano a un servizio terze parti.",
   "otherFundingOptions": "Per ulteriori modalità per aggiungere e prelevare fondi, visita <0>Come aggiungere fondi al tuo conto</0>.",
-  "youCanTransferIn": "Puoi utilizzare un exchange di terze parti per inviare {{digitalAsset}} al tuo conto Valora. A questo scopo, ti servirà il tuo Indirizzo del conto.",
+  "youCanTransferIn": "Puoi utilizzare un exchange di terze parti per inviare {{digitalAsset}} al tuo conto Kolektivo. A questo scopo, ti servirà il tuo Indirizzo del conto.",
   "youCanTransferOut": "Puoi prelevare i tuoi fondi inviandoli a un exchange di terze parti che supporti {{digitalAsset}}.",
   "useBalanceWithMerchants": "Usa il tuo saldo con commercianti che lo supportano",
   "findMerchants": "Trova commercianti locali nelle vicinanze",
@@ -707,8 +707,8 @@
     "heading1": "Dati e privacy",
     "heading2": "Asset e {{appName}}",
     "info": "Per usare i nostri servizi, leggi e accetta il nostro <0>Accordo con l’utente e termini</0> facendo clic sull’apposito pulsante di seguito.",
-    "privacy": "Partecipando a questa rete, ci autorizzi a raccogliere informazioni anonime sul tuo utilizzo dell'app. Inoltre, se colleghi il tuo numero telefonico, ne verrà memorizzata una copia con hash. Se concedi a Valora l'accesso al tuo elenco di contatti, Valora importerà il nome, il numero telefonico e l'immagine del profilo di ciascun contatto per consentire agli utenti di connettersi tramite l'app Valora. Per sapere come raccogliamo e utilizziamo queste informazioni, consulta la nostra <0>Informativa sulla privacy</0>.",
-    "goldDisclaimer": "Quando crei un \"account\" con Valora, crei un portafoglio digitale di cui solo tu possiedi le chiavi. Nessun'altra persona o entità, inclusa Valora, può recuperare la tua chiave, modificare o annullare le transazioni o recuperare fondi perduti. Considera che le criptovalute fanno parte di una nuova classe di asset e comportano un rischio di perdita finanziaria. Prima di acquistare qualsiasi asset, valuta attentamente la tua situazione finanziaria e la tua tolleranza al rischio finanziario."
+    "privacy": "Partecipando a questa rete, ci autorizzi a raccogliere informazioni anonime sul tuo utilizzo dell'app. Inoltre, se colleghi il tuo numero telefonico, ne verrà memorizzata una copia con hash. Se concedi a Kolektivo l'accesso al tuo elenco di contatti, Kolektivo importerà il nome, il numero telefonico e l'immagine del profilo di ciascun contatto per consentire agli utenti di connettersi tramite l'app Kolektivo. Per sapere come raccogliamo e utilizziamo queste informazioni, consulta la nostra <0>Informativa sulla privacy</0>.",
+    "goldDisclaimer": "Quando crei un \"account\" con Kolektivo, crei un portafoglio digitale di cui solo tu possiedi le chiavi. Nessun'altra persona o entità, inclusa Kolektivo, può recuperare la tua chiave, modificare o annullare le transazioni o recuperare fondi perduti. Considera che le criptovalute fanno parte di una nuova classe di asset e comportano un rischio di perdita finanziaria. Prima di acquistare qualsiasi asset, valuta attentamente la tua situazione finanziaria e la tua tolleranza al rischio finanziario."
   },
   "termsColloquial": {
     "title": "Per cominciare, crea il tuo wallet",
@@ -833,7 +833,7 @@
   "accessContacts": {
     "disclosure": {
       "title": "Importa contatti",
-      "body": "Valora desidera importare i tuoi contatti. Toccando qui sotto, autorizzo l’accesso ai numeri telefonici, ai nomi e alle foto dei miei contatti per collegarmi con loro tramite Valora."
+      "body": "Kolektivo desidera importare i tuoi contatti. Toccando qui sotto, autorizzo l’accesso ai numeri telefonici, ai nomi e alle foto dei miei contatti per collegarmi con loro tramite Kolektivo."
     }
   },
   "createAccount": "Crea conto",
@@ -883,12 +883,12 @@
   "verificationPrematureRevealMessage": "Attendi un minuto prima di inviare nuovamente",
   "verificationLearnMoreDialog": {
     "title": "Numeri telefonici e {{appName}}",
-    "body": "Il collegamento ti consente di inviare e ricevere fondi tramite il tuo numero telefonico.\n\n<0>Posso farlo più tardi?</0>\n\nSì, ma un wallet non collegato può inviare pagamenti solo con codici QR o Indirizzi del conto.\n\n<1>Sicuro e privato</1>\n\nValora utilizza una crittografia all'avanguardia per mantenere privato il tuo numero telefonico.",
+    "body": "Il collegamento ti consente di inviare e ricevere fondi tramite il tuo numero telefonico.\n\n<0>Posso farlo più tardi?</0>\n\nSì, ma un wallet non collegato può inviare pagamenti solo con codici QR o Indirizzi del conto.\n\n<1>Sicuro e privato</1>\n\nKolektivo utilizza una crittografia all'avanguardia per mantenere privato il tuo numero telefonico.",
     "dismiss": "Ignora"
   },
   "phoneVerificationScreen": {
     "screenTitle": "Numero telefonico",
-    "title": "Collega il tuo numero telefonico a Valora",
+    "title": "Collega il tuo numero telefonico a Kolektivo",
     "description": "Questo collega il tuo indirizzo del wallet al tuo numero telefonico, in modo che inviare cripto sia facile.",
     "startButtonLabel": "Collega",
     "learnMore": {
@@ -938,7 +938,7 @@
     },
     "recoveryPhrase": {
       "title": "Frase di recupero",
-      "description": "Inserisci la frase di recupero di 12 parole per ripristinare l'accesso a Valora"
+      "description": "Inserisci la frase di recupero di 12 parole per ripristinare l'accesso a Kolektivo"
     }
   },
   "verificationInput": {
@@ -1342,10 +1342,10 @@
   "transactionHeaderNftSent": "NFT inviato",
   "feedSectionHeaderRecent": "Recenti",
   "cashInBottomSheet": {
-    "title": "Aggiungi fondi per iniziare a usare Valora!",
+    "title": "Aggiungi fondi per iniziare a usare Kolektivo!",
     "subtitle": "Il tuo conto è attualmente vuoto",
     "addFunds": "Aggiungi fondi",
-    "titleRamp": "Aggiungi {{currency}} per iniziare a usare Valora",
+    "titleRamp": "Aggiungi {{currency}} per iniziare a usare Kolektivo",
     "subtitleRamp": "Aggiungi fondi con commissioni basse tramite uno dei nostri provider esterni."
   },
   "balances": "Assets",
@@ -1362,7 +1362,7 @@
   "nftViewer": "NFT Viewer",
   "whatTotalValue": {
     "title": "Cosa significa saldo totale?",
-    "body": "Il saldo totale è una somma approssimativa di tutti i tuoi asset Valora che cambia seguendo le oscillazioni dei prezzi. Viene aggiornato ogni 10 minuti.\nAlcuni asset potrebbero non essere visualizzati nel saldo totale perché il prezzo non è disponibile quando vengono eseguiti i calcoli.",
+    "body": "Il saldo totale è una somma approssimativa di tutti i tuoi asset Kolektivo che cambia seguendo le oscillazioni dei prezzi. Viene aggiornato ogni 10 minuti.\nAlcuni asset potrebbero non essere visualizzati nel saldo totale perché il prezzo non è disponibile quando vengono eseguiti i calcoli.",
     "dismiss": "Ignora"
   },
   "supportExportLogsStart": "Esportazione in corso...",
@@ -1400,7 +1400,7 @@
     "stepTwo": {
       "label": "Passaggio 2",
       "disabledTitle": "Collega un conto bancario",
-      "disabledDescription": "Il supporto del conto bancario sarà presto disponibile! Ti faremo sapere quando potrai collegare il tuo conto bancario a Valora.",
+      "disabledDescription": "Il supporto del conto bancario sarà presto disponibile! Ti faremo sapere quando potrai collegare il tuo conto bancario a Kolektivo.",
       "disabledCta": "Presto disponibile.",
       "title": "Immetti i dettagli della banca",
       "description": "La procedura è quasi completata. Immetti i dettagli della banca per collegare il tuo conto.",
@@ -1408,7 +1408,7 @@
       "error": {
         "title": "Impossibile collegare il conto bancario.",
         "description": "Prova a collegare di nuovo il tuo conto o contatta il supporto.",
-        "contactSupportPrefill": "Non sono riuscito a collegare il mio conto bancario a Valora."
+        "contactSupportPrefill": "Non sono riuscito a collegare il mio conto bancario a Kolektivo."
       }
     }
   },
@@ -1479,12 +1479,12 @@
   },
   "dappsScreenHelpDialog": {
     "title": "Che cosa sono le Dapp?",
-    "message": "Le Dapp (app decentralizzate) offrono nuovi modi per usare le tue criptovalute, ottenere ricompense ed esplorare il Web3.\n\nConnetti Valora a una Dapp per iniziare.",
+    "message": "Le Dapp (app decentralizzate) offrono nuovi modi per usare le tue criptovalute, ottenere ricompense ed esplorare il Web3.\n\nConnetti Kolektivo a una Dapp per iniziare.",
     "dismiss": "Ignora"
   },
   "dappsScreenBottomSheet": {
     "title": "{{dappName}} è un'applicazione esterna",
-    "message": "Stai per aprire un'applicazione non gestita da Valora.\n\nValora non fornisce alcuna garanzia su questa applicazione. Usala a tuo rischio.",
+    "message": "Stai per aprire un'applicazione non gestita da Kolektivo.\n\nKolektivo non fornisce alcuna garanzia su questa applicazione. Usala a tuo rischio.",
     "button": "Apri {{dappName}}"
   },
   "dappsScreenInfoSheet": {
@@ -1537,7 +1537,7 @@
     "newLabel": "NUOVI",
     "newDialog": {
       "title": "Nuove modalità di trasferimento",
-      "body": "Stiamo rilasciando nuovi modi per trasferire fondi da e verso i conti bancari, direttamente dall'app Valora.\n\nSe stai vedendo questo messaggio, questa funzione è disponibile nella tua regione.",
+      "body": "Stiamo rilasciando nuovi modi per trasferire fondi da e verso i conti bancari, direttamente dall'app Kolektivo.\n\nSe stai vedendo questo messaggio, questa funzione è disponibile nella tua regione.",
       "dismiss": "Ignora"
     },
     "cashIn": {
@@ -1570,7 +1570,7 @@
     "button": "Configura la verifica dell’identità"
   },
   "fiatConnectKycStatusScreen": {
-    "contactSupportPrefill": "Sto avendo difficoltà a verificare la mia identità con Valora.",
+    "contactSupportPrefill": "Sto avendo difficoltà a verificare la mia identità con Kolektivo.",
     "contactSupport": "Contatta il supporto tecnico",
     "pending": {
       "title": "La verifica del documento di identità è in corso.",
@@ -1637,7 +1637,7 @@
     },
     "cashIn": {
       "cancel": "Annulla l'aggiunta di fondi",
-      "contactSupportPrefill": "Ho problemi ad aggiungere fondi al mio portafoglio Valora."
+      "contactSupportPrefill": "Ho problemi ad aggiungere fondi al mio portafoglio Kolektivo."
     },
     "success": {
       "header": "Operazione completata",
@@ -1727,7 +1727,7 @@
       },
       "mobileDialog": {
         "title": "Numero telefonico",
-        "body": "Usa il numero telefonico registrato con il tuo operatore del servizio di Mobile Money. Potrebbe non essere lo stesso numero telefonico che utilizzi per Valora.\n\nI numeri telefonici devono includere il prefisso nazionale visualizzato accanto al numero telefonico.",
+        "body": "Usa il numero telefonico registrato con il tuo operatore del servizio di Mobile Money. Potrebbe non essere lo stesso numero telefonico che utilizzi per Kolektivo.\n\nI numeri telefonici devono includere il prefisso nazionale visualizzato accanto al numero telefonico.",
         "dismiss": "Ignora"
       }
     },
@@ -1915,7 +1915,7 @@
     },
     "rewardsActiveCUSD": {
       "title": "Invita {{contactName}} in {{appName}} e riceverete 0.50 cUSD",
-      "body": "Sembra che {{contactName}} non sia su Valora. Puoi comunque inviare un pagamento se conosci l'indirizzo del suo portafoglio, oppure inviare un invito. \n\n Dopo che avrà scaricato Valora, collegato il suo numero telefonico, aggiunto e conservato fondi nel suo portafoglio per 7 giorni, riceverete entrambi 0,50 cUSD, fino ad esaurimento fondi."
+      "body": "Sembra che {{contactName}} non sia su Kolektivo. Puoi comunque inviare un pagamento se conosci l'indirizzo del suo portafoglio, oppure inviare un invito. \n\n Dopo che avrà scaricato Kolektivo, collegato il suo numero telefonico, aggiunto e conservato fondi nel suo portafoglio per 7 giorni, riceverete entrambi 0,50 cUSD, fino ad esaurimento fondi."
     }
   },
   "celoNews": {
@@ -1926,7 +1926,7 @@
     "retryButtonText": "Riprova"
   },
   "chooseYourAdventure": {
-    "header": "Benvenuto/a in Valora",
+    "header": "Benvenuto/a in Kolektivo",
     "subtitle": "Qual è la prima cosa che vorresti fare?",
     "later": "Esplorerò più tardi",
     "options": {
@@ -2059,7 +2059,7 @@
     "results": "Risultati",
     "qr": {
       "title": "Inquadra o visualizza il codice QR",
-      "subtitle": "Trova rapidamente gli indirizzi su Valora"
+      "subtitle": "Trova rapidamente gli indirizzi su Kolektivo"
     },
     "invite": {
       "title": "Invia criptovalute ai tuoi amici",
@@ -2070,7 +2070,7 @@
       "subtitle": "Condividi un link per inviare criptovalute in formato testo"
     },
     "getStarted": {
-      "title": "Come inviare fondi su Valora",
+      "title": "Come inviare fondi su Kolektivo",
       "subtitle": "INIZIA",
       "options": {
         "one": {
@@ -2079,7 +2079,7 @@
         },
         "two": {
           "title": "Numero telefonico",
-          "subtitle": "Invia direttamente al numero telefonico di una persona che usa Valora"
+          "subtitle": "Invia direttamente al numero telefonico di una persona che usa Kolektivo"
         },
         "three": {
           "title": "ENS",
@@ -2087,7 +2087,7 @@
         },
         "four": {
           "title": "Nome del profilo",
-          "subtitle": "Puoi cercare utenti esistenti su Valora"
+          "subtitle": "Puoi cercare utenti esistenti su Kolektivo"
         }
       }
     },
@@ -2187,7 +2187,7 @@
   },
   "multichainBeta": {
     "beta": "BETA",
-    "title": "Novità! Ethereum è su Valora",
+    "title": "Novità! Ethereum è su Kolektivo",
     "description1": "Inizialmente, stiamo rendendo disponibile questa funzionalità a un gruppo selezionato di persone. Tu sei tra i fortunati!",
     "description2": "È ancora una novità e il nostro team si sta impegnando per rendere tutto perfetto. Saremo lieti di ricevere il tuo feedback.",
     "primaryCta": "Provala ora",
@@ -2275,7 +2275,7 @@
     "allNetworks": "Tutte le reti"
   },
   "points": {
-    "title": "Punti Valora",
+    "title": "Punti Kolektivo",
     "activity": "Attività",
     "history": {
       "cards": {
