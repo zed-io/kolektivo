@@ -5,7 +5,7 @@ import Animated from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ActivityListItem } from 'src/kolektivo/activities/ActivityListItem'
 import { useDefaultActivities } from 'src/kolektivo/activities/hooks'
-import { ActivityDetail } from 'src/kolektivo/activities/types'
+import { Activity } from 'src/kolektivo/activities/utils'
 import { typeScale } from 'src/styles/fonts'
 import variables from 'src/styles/variables'
 
@@ -38,7 +38,7 @@ const ActivityScreen = () => {
         scrollEventThrottle={16}
       >
         {activities.map((activity) => (
-          <ActivityListItem key={activity.activityId} {...activity} />
+          <ActivityListItem key={activity.id} {...activity} />
         ))}
       </ScrollView>
       <Text style={styles.header}>{t('activities.more')}</Text>
@@ -46,7 +46,7 @@ const ActivityScreen = () => {
         style={styles.verticalList}
         sections={sections}
         keyExtractor={(item) => (item as any).id}
-        renderItem={({ item }) => <ActivityListItem {...(item as ActivityDetail)} fullWidth />}
+        renderItem={({ item }) => <ActivityListItem {...(item as Activity)} fullWidth />}
         refreshControl={<RefreshControl refreshing={false} tintColor={'transparent'} />}
         onEndReachedThreshold={0.1}
         scrollEventThrottle={16}

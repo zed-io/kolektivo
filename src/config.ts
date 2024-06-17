@@ -12,7 +12,7 @@ import { ONE_HOUR_IN_MILLIS } from './utils/time'
 export * from 'src/brandingConfig'
 
 // extract secrets from secrets.json
-const keyOrUndefined = (file: any, secretsKey: any, attribute: any) => {
+export const keyOrUndefined = (file: any, secretsKey: any, attribute: any) => {
   if (secretsKey in file) {
     if (attribute in file[secretsKey]) {
       return file[secretsKey][attribute]

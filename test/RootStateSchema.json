@@ -2789,6 +2789,8 @@
             "enum": [
                 "AccounSetupFailureScreen",
                 "AccountKeyEducation",
+                "ActivityDetailScreen",
+                "ActivityScreen",
                 "BackupComplete",
                 "BackupIntroduction",
                 "BackupPhrase",
@@ -2839,6 +2841,7 @@
                 "LinkPhoneNumber",
                 "Main",
                 "MainModal",
+                "MapScreen",
                 "MultichainBeta",
                 "NftsInfoCarousel",
                 "NotificationCenter",

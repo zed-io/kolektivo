@@ -7,7 +7,7 @@ export interface Props {
   size?: number
 }
 
-export default function VerifiedIcon({ color = colors.greenBrand, size = 22 }: Props) {
+export default function VerifiedIcon({ color = colors.primary, size = 22 }: Props) {
   return (
     <Svg
       width={size}

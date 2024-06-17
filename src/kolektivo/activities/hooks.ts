@@ -1,10 +1,15 @@
 import { useMemo } from 'react'
+import { useAsync } from 'react-async-hook'
 import { ActivityDetail } from 'src/kolektivo/activities/types'
+import { Activity, getActivities } from 'src/kolektivo/activities/utils'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
+import Logger from 'src/utils/Logger'
 
 export const useDefaultActivities = () => {
   const activities: ActivityDetail[] = []
+
+  const dbActivities = useAsync(getActivities, [])
 
   activities.push({
     activityId: 'kol-tt-permaculture-workshop-1',
@@ -20,12 +25,17 @@ export const useDefaultActivities = () => {
   })
 
   return useMemo(() => {
-    return activities
-  }, [activities])
+    if (dbActivities.result) {
+      Logger.debug('dbActivities', dbActivities.result)
+      return dbActivities.result
+    } else {
+      return [] as Activity[]
+    }
+  }, [activities, dbActivities, dbActivities.result])
 }
 
 export const useActivityEnrollment = () => {
-  const enroll = (activity: ActivityDetail) => {
+  const enroll = (activity: Activity) => {
     navigate(Screens.QRNavigator, { screen: Screens.QRCode })
   }
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import i18n from 'src/i18n'
-import { ActivityDetail } from 'src/kolektivo/activities/types'
+import { Activity } from 'src/kolektivo/activities/utils'
 import variables from 'src/kolektivo/styles/variables'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
@@ -9,40 +9,51 @@ import Colors from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { getDatetimeDisplayString } from 'src/utils/time'
 
-type OwnProps = ActivityDetail & {
+type OwnProps = Activity & {
   fullWidth?: boolean
 }
 
-export const ActivityListItem = ({
-  title,
-  activityHost,
-  activityDateTime,
-  activityImageUri,
-  fullWidth = false,
-  ...rest
-}: OwnProps) => {
+export const ActivityListItem = ({ fullWidth = false, ...rest }: OwnProps) => {
+  const {
+    activityHost,
+    startDate,
+    endDate,
+    title,
+    description,
+    fullAddress,
+    badgeContractAddress,
+  } = rest
+
   const handlePress = () => {
     // @todo implement navigation to activity detail
     navigate(Screens.ActivityDetailScreen, {
       activity: {
+        activityHostId: activityHost.id,
+        startDate,
+        endDate,
         title,
+        description,
+        fullAddress,
+        badgeContractAddress,
         activityHost,
-        activityDateTime,
-        activityImageUri,
-        ...rest,
-      },
+      } as Activity,
     })
   }
 
-  const dateTime = getDatetimeDisplayString(activityDateTime, i18n)
+  const dateTime = getDatetimeDisplayString(new Date().getTime(), i18n)
 
   return (
     <Pressable style={[styles.container, fullWidth && styles.fullWidth]} onPress={handlePress}>
-      <Image source={{ uri: activityImageUri }} style={styles.image} />
+      <Image
+        source={{
+          uri: 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        }}
+        style={styles.image}
+      />
       <View style={styles.content}>
         <Text style={[styles.text, styles.title]}>{title}</Text>
         <View style={[styles.details]}>
-          <Text style={[styles.text, styles.host]}>{activityHost}</Text>
+          <Text style={[styles.text, styles.host]}>{activityHost.name}</Text>
           <Text style={[styles.text, styles.separator]}>•</Text>
           <Text style={[styles.text, styles.date]}>{dateTime}</Text>
         </View>

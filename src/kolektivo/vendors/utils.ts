@@ -2,7 +2,6 @@ import BottomSheet from '@gorhom/bottom-sheet'
 import { map } from 'lodash'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { currentForestSelector } from 'src/kolektivo/map/selector'
 import { currentVendorSelector } from 'src/kolektivo/vendors/selector'
 import { Vendor, Vendors, VendorWithLocation } from 'src/kolektivo/vendors/types'
 
@@ -67,7 +66,7 @@ export const formatVendors = (vendorObject: any): Vendors => {
  */
 export const hasValidLocation = (vendor: VendorWithLocation): boolean => {
   const { location } = vendor
-  const { latitude, longitude } = location
+  const { latitude, longitude } = location as any
   return !!latitude && !!longitude
 }
 
@@ -76,7 +75,6 @@ export const useInteractiveBottomSheet = (
 ): [string[]] => {
   const snapPoints = React.useMemo(() => ['10%', '24%', '50%', '80%'], [])
   const currentVendor = useSelector(currentVendorSelector)
-  const currentForest = useSelector(currentForestSelector)
 
   useEffect(() => {
     handleVendorChange()
@@ -84,10 +82,10 @@ export const useInteractiveBottomSheet = (
 
   useEffect(() => {
     handleVendorChange()
-  }, [currentVendor, currentForest])
+  }, [currentVendor])
 
   const handleVendorChange = () => {
-    if (currentVendor || currentForest) {
+    if (currentVendor) {
       bottomSheetRef.current?.snapToIndex(2)
     }
   }

@@ -1,5 +1,3 @@
-import { LatLng } from 'react-native-maps'
-
 export type Vendor = {
   title: string
   subtitle?: string
@@ -19,7 +17,7 @@ export type Vendor = {
 }
 
 export type VendorWithLocation = Vendor & {
-  location: LatLng
+  location: unknown
 }
 
 export type Vendors = {

@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
-import { LatLng } from 'react-native-maps'
 import { useSelector } from 'react-redux'
-import { defaultLocation } from 'src/kolektivo/map/constants'
 import { currentVendorSelector } from 'src/kolektivo/vendors/selector'
 import { VendorWithLocation } from 'src/kolektivo/vendors/types'
 import { hasValidLocation } from 'src/kolektivo/vendors/utils'
@@ -14,7 +12,10 @@ import { hasValidLocation } from 'src/kolektivo/vendors/utils'
  */
 export const useCurrentVendorLocation = () => {
   const currentVendor = useSelector(currentVendorSelector) as VendorWithLocation
-  const [vendorLocation, setLocation] = useState<LatLng>(defaultLocation)
+  // @todo - This is a temporary solution to avoid the issue of the
+  // refactoring of the map functions. This will be removed once the
+  // map functions are refactored.
+  const [vendorLocation, setLocation] = useState<unknown>(undefined)
   useEffect(() => {
     if (currentVendor && hasValidLocation(currentVendor)) {
       setLocation(currentVendor.location)

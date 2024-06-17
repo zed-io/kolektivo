@@ -1,5 +1,4 @@
 import { Vendor, Vendors } from 'src/kolektivo/vendors/types'
-import { SetCurrentFoodForestAction } from 'src/map/actions'
 
 export enum Actions {
   FETCH_VENDORS = 'VENDORS/FETCH_VENDORS',
@@ -50,4 +49,3 @@ export type ActionTypes =
   | setVendorsAction
   | SetLoadingAction
   | SetCurrentVendorAction
-  | SetCurrentFoodForestAction
