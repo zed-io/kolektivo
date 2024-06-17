@@ -59,13 +59,13 @@ const VendorDetails = ({ vendor, close, action }: Props) => {
         <Text style={styles.subtitle}>{subtitle}</Text>
         <Text style={styles.description}>{description}</Text>
         <View style={[styles.cico, acceptsGuilder && providesGuilder ? styles.cicoPartner : null]}>
-          {acceptsGuilder && (
+          {!!acceptsGuilder && (
             <View style={styles.verifiedRow}>
               <VerifiedIcon />
               <Text style={styles.verified}>{t('acceptsGuilder')}</Text>
             </View>
           )}
-          {providesGuilder && (
+          {!!providesGuilder && (
             <View style={styles.verifiedRow}>
               <VerifiedIcon />
               <Text style={styles.verified}>{t('providesGuilder')}</Text>
@@ -74,7 +74,7 @@ const VendorDetails = ({ vendor, close, action }: Props) => {
         </View>
 
         <View style={styles.contactRow}>
-          {phoneNumber && (
+          {!!phoneNumber && (
             <TouchableOpacity
               // @ts-ignore @todo
               onPress={void 0}
@@ -82,7 +82,10 @@ const VendorDetails = ({ vendor, close, action }: Props) => {
               <Phone />
             </TouchableOpacity>
           )}
-          {(((location as any).latitude !== 0 && (location as any).longitude !== 0) || street) && (
+          {!!(
+            ((location as any).latitude !== 0 && (location as any).longitude !== 0) ||
+            street
+          ) && (
             <TouchableOpacity
               // @ts-ignore @todo
               onPress={void 0}
@@ -90,7 +93,7 @@ const VendorDetails = ({ vendor, close, action }: Props) => {
               <Directions />
             </TouchableOpacity>
           )}
-          {siteURI && (
+          {!!siteURI && (
             <TouchableOpacity onPress={() => navigateToURI(siteURI)}>
               <Website />
             </TouchableOpacity>
@@ -106,7 +109,7 @@ const VendorDetails = ({ vendor, close, action }: Props) => {
         </View>
         <View style={styles.actionButtons}></View>
         <View style={styles.furtherDetailsRow}>
-          {street && (
+          {!!street && (
             <View style={styles.streetContainer}>
               <Pin />
               <Text style={styles.street}>{`${street} ${building_number}${
@@ -127,7 +130,7 @@ const VendorDetails = ({ vendor, close, action }: Props) => {
           ))}
         </View>
         <View style={styles.actionButtons}>
-          {account && (
+          {!!account && (
             <Button
               type={BtnTypes.PRIMARY}
               size={BtnSizes.MEDIUM}
