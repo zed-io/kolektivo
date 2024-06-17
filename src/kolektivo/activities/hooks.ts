@@ -4,6 +4,7 @@ import { ActivityDetail } from 'src/kolektivo/activities/types'
 import { Activity, getActivities } from 'src/kolektivo/activities/utils'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
+import Logger from 'src/utils/Logger'
 
 export const useDefaultActivities = () => {
   const activities: ActivityDetail[] = []
@@ -25,7 +26,7 @@ export const useDefaultActivities = () => {
 
   return useMemo(() => {
     if (dbActivities.result) {
-      console.log('dbActivities', dbActivities.result)
+      Logger.debug('dbActivities', dbActivities.result)
       return dbActivities.result
     } else {
       return [] as Activity[]
