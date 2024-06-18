@@ -2500,5 +2500,13 @@
       "earnWithdrawSubtitle": "Withdrew {{tokenSymbol}} from {{providerName}} Pool",
       "earnWithdrawDetails": "Amount Withdrawn"
     }
+  },
+  "communityActivityDetail": {
+    "checkIn": "Check In",
+    "checkOut": "Check Out"
+  },
+  "communityActivityConfirmationSheet": {
+    "title": "Confirmation",
+    "description": "Do you want to take part in the {{activityTitle}} that is taking place on {{activityDate}}?"
   }
 }
