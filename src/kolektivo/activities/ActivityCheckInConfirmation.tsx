@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet, View } from 'react-native'
 import BottomSheet, { BottomSheetRefType } from 'src/components/BottomSheet'
 import Button, { BtnSizes } from 'src/components/Button'
+import { navigate } from 'src/navigator/NavigationService'
+import { Screens } from 'src/navigator/Screens'
 import { Colors } from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
@@ -19,7 +21,9 @@ export default function ActivityCheckInSheet({
   const { t } = useTranslation()
 
   const onCheckIn = () => {
-    forwardedRef.current?.snapToIndex(-1)
+    navigate(Screens.QRNavigator, {
+      screen: Screens.QRScanner,
+    })
   }
 
   return (
