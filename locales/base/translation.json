@@ -2502,6 +2502,7 @@
     }
   },
   "communityActivityDetail": {
+    "signUp": "Sign Up",
     "checkIn": "Check In",
     "checkOut": "Check Out"
   },
