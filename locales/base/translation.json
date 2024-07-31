@@ -2509,5 +2509,10 @@
   "communityActivityConfirmationSheet": {
     "title": "Confirmation",
     "description": "Do you want to take part in the {{activityTitle}} that is taking place on {{activityDate}}?"
+  },
+  "badge": {
+    "rank": ["Beginner", "Intermediate", "Advanced", "Expert"],
+    "myBadges": "My Badges",
+    "more": "View All"
   }
 }

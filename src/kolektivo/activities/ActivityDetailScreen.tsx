@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -14,6 +14,7 @@ import Pin from 'src/icons/Pin'
 import ActivityCheckInSheet from 'src/kolektivo/activities/ActivityCheckInConfirmation'
 import { useActivityEnrollment } from 'src/kolektivo/activities/hooks'
 import { HeaderTitleWithSubtitle, headerWithBackButton } from 'src/navigator/Headers'
+import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
 import Colors from 'src/styles/colors'
@@ -41,7 +42,43 @@ export const ActivityDetailScreen = ({ route }: Props) => {
     }
   }, [])
 
+  const activityActionText = useMemo(() => {
+    // eslint-disable-next-line no-constant-condition
+    if (1) {
+      return t('communityActivityDetail.signUp')
+      // eslint-disable-next-line no-constant-condition
+    } else if (2) {
+      return t('communityActivityDetail.signUp')
+      // eslint-disable-next-line no-constant-condition
+    } else if (3) {
+      return t('communityActivityDetail.checkIn')
+    }
+  }, [])
+
+  const onContinue = useCallback(() => {
+    // eslint-disable-next-line no-constant-condition
+    if (1) {
+      onSignUp()
+      // eslint-disable-next-line no-constant-condition
+    } else if (2) {
+      onCheckIn()
+      // eslint-disable-next-line no-constant-condition
+    } else if (3) {
+      onCheckOut()
+    }
+  }, [])
+
+  const onSignUp = () => {
+    navigate(Screens.QRNavigator, {
+      screen: Screens.QRScanner,
+    })
+  }
+
   const onCheckIn = () => {
+    checkInConfirmationSheetRef.current?.snapToIndex(0)
+  }
+
+  const onCheckOut = () => {
     checkInConfirmationSheetRef.current?.snapToIndex(0)
   }
 
@@ -58,11 +95,7 @@ export const ActivityDetailScreen = ({ route }: Props) => {
           <Text style={styles.heroTitle}>{activity.title}</Text>
         </View>
         <View style={[styles.main]}>
-          <Button
-            size={BtnSizes.FULL}
-            text={t('communityActivityDetail.checkIn')}
-            onPress={onCheckIn}
-          />
+          <Button size={BtnSizes.FULL} text={activityActionText} onPress={onContinue} />
           <ActivityDetailListItem
             category="Location"
             content={activity.fullAddress}
