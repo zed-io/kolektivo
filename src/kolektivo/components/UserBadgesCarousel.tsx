@@ -15,11 +15,15 @@ export default function UserBadgesCarousel() {
   const badges: BadgeDataResponse[] = [
     {
       title: 'Permaculture',
-      stamps: { contractAddress: '0x123', amount: 10 },
+      stamps: { contractAddress: '0x123', amount: 10, title: 'Permaculture' },
+      contractAddress: '0x0000000000000000000000000000000000000000',
+      level: 0,
     },
     {
       title: 'Clean-ups',
-      stamps: { contractAddress: '0x456', amount: 20 },
+      stamps: { contractAddress: '0x456', amount: 20, title: 'Clean-ups' },
+      contractAddress: '0x0000000000000000000000000000000000000000',
+      level: 0,
     },
   ]
 
