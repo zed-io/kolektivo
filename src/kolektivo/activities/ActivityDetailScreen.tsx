@@ -25,7 +25,6 @@ import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
 import { default as colors, default as Colors } from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
-import { Spacing } from 'src/styles/styles'
 import variables from 'src/styles/variables'
 import { formatFeedDate, formatFeedTime } from 'src/utils/time'
 
@@ -267,6 +266,7 @@ const styles = StyleSheet.create({
   detailRow: {
     flexDirection: 'row',
     padding: variables.contentPadding,
+    paddingHorizontal: 0,
     borderBottomWidth: 1,
     borderBottomColor: '#F2F2F2',
   },
@@ -274,18 +274,17 @@ const styles = StyleSheet.create({
     ...typeScale.bodyMedium,
   },
   detailContent: {
-    marginLeft: variables.contentPadding * 1.7,
+    marginHorizontal: variables.contentPadding * 1.7,
     flex: 2,
   },
   detailCategory: {
     marginBottom: 8,
   },
   sectionTitle: {
-    ...typeScale.titleMedium,
+    ...typeScale.titleSmall,
     color: colors.black,
-    marginHorizontal: Spacing.Smallest8,
-    marginTop: Spacing.Smallest8,
-    marginBottom: Spacing.Smallest8,
+    paddingHorizontal: variables.contentPadding,
+    marginBottom: 10,
   },
   horizontalList: {
     flex: 1,

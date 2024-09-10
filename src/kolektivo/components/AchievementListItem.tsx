@@ -50,11 +50,11 @@ const styles = StyleSheet.create({
   },
   title: {
     ...typeScale.labelSemiBoldSmall,
-    color: colors.gray4,
+    color: colors.black,
   },
   subtitle: {
     ...typeScale.bodyMedium,
-    color: colors.gray4,
+    color: colors.black,
     marginLeft: variables.contentPadding / 2,
   },
 })
