@@ -2217,7 +2217,10 @@
   "map": "Map",
   "explore": "Explore",
   "activities": {
-    "more": "More Activities"
+    "more": "More Activities",
+    "requirements": "Requirements",
+    "rewards": "Rewards",
+    "relatedActivities": "Related Activities"
   },
   "nftCelebration": {
     "bottomSheet": {
