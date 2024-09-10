@@ -9,6 +9,7 @@ import { HomeActionName } from 'src/home/types'
 import Receive from 'src/kolektivo/icons/Receive'
 import Scan from 'src/kolektivo/icons/Scan'
 import Send from 'src/kolektivo/icons/Send'
+import variables from 'src/kolektivo/styles/variables'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import Colors from 'src/styles/colors'
@@ -56,7 +57,8 @@ function ActionsCarousel() {
         flexDirection: 'row',
         gap: 20,
         justifyContent: 'space-around',
-        padding: 20,
+        padding: variables.contentPadding,
+        paddingTop: 10,
       }}
       testID={'HomeActionsCarousel'}
     >

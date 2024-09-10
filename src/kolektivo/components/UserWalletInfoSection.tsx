@@ -5,6 +5,7 @@ import KolCurrency from 'src/icons/KolCurrency'
 import LinearBackground from 'src/kolektivo/components/LinearBackground'
 import Clipboard from 'src/kolektivo/icons/Clipboard'
 import { typeScale } from 'src/kolektivo/styles/kolektivoFonts'
+import variables from 'src/kolektivo/styles/variables'
 
 export default function UserWalletInfoSection() {
   return (
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 10,
     height: 128,
-    paddingHorizontal: 20,
+    paddingHorizontal: variables.contentPadding,
   },
   addressClipboard: {
     display: 'flex',

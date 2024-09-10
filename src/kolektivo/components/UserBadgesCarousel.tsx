@@ -45,6 +45,7 @@ export default function UserBadgesCarousel() {
         </Touchable>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.container}>
+        <View style={{ padding: 10 }} />
         {badges.map((badge) => (
           <BadgeProgressTile key={badge.title} {...badge} onPress={onBadgePress} />
         ))}
@@ -56,7 +57,6 @@ export default function UserBadgesCarousel() {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginHorizontal: (variables.contentPadding * 2) / 3,
   },
   header: {
     flexDirection: 'row',
@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...typeScale.labelLarge,
+    marginLeft: 5,
   },
   link: {
     ...typeScale.labelMedium,

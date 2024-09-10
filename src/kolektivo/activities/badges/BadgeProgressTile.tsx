@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    ...typeScale.labelSemiBoldSmall,
-    color: Colors.gray4,
+    ...typeScale.labelSemiBoldMedium,
+    color: Colors.black,
   },
   subtitle: {
     ...typeScale.bodySmall,

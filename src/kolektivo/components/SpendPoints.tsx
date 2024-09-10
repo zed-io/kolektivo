@@ -4,6 +4,7 @@ import Donate from 'src/kolektivo/icons/Donate'
 import Groceries from 'src/kolektivo/icons/Groceries'
 import More from 'src/kolektivo/icons/More'
 import Restaurants from 'src/kolektivo/icons/Restaurant'
+import variables from 'src/kolektivo/styles/variables'
 import { typeScale } from 'src/styles/fonts'
 
 const SpendPoints = () => {
@@ -48,7 +49,8 @@ const SpendPoints = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: variables.contentPadding,
+    paddingTop: 5,
     backgroundColor: '#fff',
   },
   title: {
