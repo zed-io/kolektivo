@@ -283,9 +283,9 @@ const styles = StyleSheet.create({
   sectionTitle: {
     ...typeScale.titleMedium,
     color: colors.black,
-    marginHorizontal: Spacing.Regular16,
-    marginTop: Spacing.Regular16,
-    marginBottom: Spacing.Large32,
+    marginHorizontal: Spacing.Smallest8,
+    marginTop: Spacing.Smallest8,
+    marginBottom: Spacing.Smallest8,
   },
   horizontalList: {
     flex: 1,

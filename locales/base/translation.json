@@ -1981,7 +1981,8 @@
     "request": "Request",
     "send": "Send",
     "swap": "Swap",
-    "withdraw": "Withdraw"
+    "withdraw": "Withdraw",
+    "scan": "Scan"
   },
   "nftGallery": {
     "title": "Collectibles",
@@ -2259,7 +2260,7 @@
       "title": "My Wallet"
     },
     "home": {
-      "tabName": "Home",
+      "tabName": "Kolektivo",
       "title": "Welcome"
     },
     "discover": {
@@ -2517,5 +2518,11 @@
     "rank": ["Beginner", "Intermediate", "Advanced", "Expert"],
     "myBadges": "My Badges",
     "more": "View All"
+  },
+  "upcomingActivities": {
+    "title": "Upcoming Activities"
+  },
+  "spendPoints": {
+    "title": "Spend Points"
   }
 }

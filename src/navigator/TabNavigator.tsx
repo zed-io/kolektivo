@@ -61,6 +61,7 @@ export default function TabNavigator({ route }: Props) {
           tabBarLabel: t('bottomTabsNavigator.home.tabName') as string,
           tabBarIcon: Logo,
           tabBarTestID: 'Tab/Home',
+          headerTitle: t('bottomTabsNavigator.home.tabName') as string,
         }}
       />
       <Tab.Screen

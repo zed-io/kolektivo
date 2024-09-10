@@ -1,35 +1,31 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, StyleSheet, Text } from 'react-native'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import { HomeEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import Card from 'src/components/Card'
 import Touchable from 'src/components/Touchable'
-import { FiatExchangeFlow } from 'src/fiatExchanges/utils'
 import { HomeActionName } from 'src/home/types'
-import QuickActionsAdd from 'src/icons/quick-actions/Add'
-import QuickActionsReceive from 'src/icons/quick-actions/Receive'
-import QuickActionsSend from 'src/icons/quick-actions/Send'
-import QuickActionsSwap from 'src/icons/quick-actions/Swap'
-import QuickActionsWithdraw from 'src/icons/quick-actions/Withdraw'
+import Receive from 'src/kolektivo/icons/Receive'
+import Scan from 'src/kolektivo/icons/Scan'
+import Send from 'src/kolektivo/icons/Send'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
-import { isAppSwapsEnabledSelector } from 'src/navigator/selectors'
-import { useSelector } from 'src/redux/hooks'
 import Colors from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
 
+const { width } = Dimensions.get('window')
+const cardWidth = width / 3 - Spacing.Regular16 * 2
+
 function ActionsCarousel() {
   const { t } = useTranslation()
-
-  const shouldShowSwapAction = useSelector(isAppSwapsEnabledSelector)
 
   const actions = [
     {
       name: HomeActionName.Send,
       title: t('homeActions.send'),
-      icon: <QuickActionsSend color={Colors.successDark} />,
+      icon: <Send color={Colors.primaryDark} />,
       onPress: () => {
         navigate(Screens.SendSelectRecipient)
       },
@@ -37,7 +33,7 @@ function ActionsCarousel() {
     {
       name: HomeActionName.Receive,
       title: t('homeActions.receive'),
-      icon: <QuickActionsReceive color={Colors.successDark} />,
+      icon: <Receive color={Colors.primaryDark} />,
       onPress: () => {
         navigate(Screens.QRNavigator, {
           screen: Screens.QRCode,
@@ -45,85 +41,57 @@ function ActionsCarousel() {
       },
     },
     {
-      name: HomeActionName.Add,
-      title: t('homeActions.add'),
-      icon: <QuickActionsAdd color={Colors.successDark} />,
+      name: HomeActionName.Scan,
+      title: t('homeActions.scan'),
+      icon: <Scan color={Colors.primaryDark} />,
       onPress: () => {
-        navigate(Screens.FiatExchangeCurrencyBottomSheet, { flow: FiatExchangeFlow.CashIn })
-      },
-    },
-    {
-      name: HomeActionName.Swap,
-      title: t('homeActions.swap'),
-      icon: <QuickActionsSwap color={Colors.successDark} />,
-      onPress: () => {
-        navigate(Screens.SwapScreenWithBack)
-      },
-      hidden: !shouldShowSwapAction,
-    },
-    {
-      name: HomeActionName.Withdraw,
-      title: t('homeActions.withdraw'),
-      icon: <QuickActionsWithdraw color={Colors.successDark} />,
-      onPress: () => {
-        navigate(Screens.WithdrawSpend)
+        navigate(Screens.QRNavigator, {
+          screen: Screens.QRCode,
+        })
       },
     },
   ]
 
   return (
-    <ScrollView
-      horizontal={true}
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.carouselContainer}
-      testID={'HomeActionsCarousel'}
-    >
-      {actions
-        .filter(({ hidden }) => !hidden)
-        .map(({ name, title, icon, onPress }) => (
-          <Card
-            style={styles.card}
-            shadow={null}
-            key={`HomeAction-${name}`}
-            testID={`HomeAction-${name}`}
+    <View style={{ display: 'flex', flexDirection: 'row' }} testID={'HomeActionsCarousel'}>
+      {actions.map(({ name, title, icon, onPress }) => (
+        <Card
+          style={[styles.card, { width: cardWidth }]}
+          shadow={null}
+          key={`HomeAction-${name}`}
+          testID={`HomeAction-${name}`}
+        >
+          <Touchable
+            onPress={() => {
+              ValoraAnalytics.track(HomeEvents.home_action_pressed, { action: name })
+              onPress()
+            }}
+            style={styles.touchable}
+            borderRadius={8}
+            testID={`HomeActionTouchable-${name}`}
           >
-            <Touchable
-              onPress={() => {
-                ValoraAnalytics.track(HomeEvents.home_action_pressed, { action: name })
-                onPress()
-              }}
-              style={styles.touchable}
-              borderRadius={8}
-              testID={`HomeActionTouchable-${name}`}
-            >
-              <>
-                {icon}
-                <Text
-                  numberOfLines={1}
-                  allowFontScaling={false}
-                  style={styles.name}
-                  testID={`HomeAction/Title-${name}`}
-                >
-                  {title}
-                </Text>
-              </>
-            </Touchable>
-          </Card>
-        ))}
-    </ScrollView>
+            <>
+              {icon}
+              <Text
+                numberOfLines={1}
+                allowFontScaling={false}
+                style={styles.name}
+                testID={`HomeAction/Title-${name}`}
+              >
+                {title}
+              </Text>
+            </>
+          </Touchable>
+        </Card>
+      ))}
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  carouselContainer: {
-    paddingHorizontal: Spacing.Regular16,
-    marginBottom: Spacing.Smallest8,
-    gap: Spacing.Regular16,
-  },
   card: {
-    width: 84,
-    padding: 0,
-    backgroundColor: Colors.successLight,
+    marginHorizontal: Spacing.Regular16,
+    backgroundColor: Colors.primaryLight,
     borderRadius: 10,
   },
   touchable: {
@@ -134,7 +102,7 @@ const styles = StyleSheet.create({
     ...typeScale.labelSmall,
     lineHeight: 17,
     paddingTop: Spacing.Smallest8,
-    color: Colors.successDark,
+    color: Colors.primaryDark,
   },
 })
 
