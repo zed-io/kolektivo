@@ -51,7 +51,13 @@ function ActionsCarousel() {
 
   return (
     <View
-      style={{ display: 'flex', flexDirection: 'row', gap: 20, justifyContent: 'space-around' }}
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 20,
+        justifyContent: 'space-around',
+        padding: 20,
+      }}
       testID={'HomeActionsCarousel'}
     >
       {actions.map(({ name, title, icon, onPress }) => (

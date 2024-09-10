@@ -24,6 +24,7 @@ import { importContacts } from 'src/identity/actions'
 import SpendPoints from 'src/kolektivo/components/SpendPoints'
 import UpcomingActivities from 'src/kolektivo/components/UpcomingActivities'
 import UserBadgesCarousel from 'src/kolektivo/components/UserBadgesCarousel'
+import UserWalletInfoSection from 'src/kolektivo/components/UserWalletInfoSection'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
 import { trackPointsEvent } from 'src/points/slice'
@@ -133,6 +134,12 @@ function TabHome({ navigation }: Props) {
       />
     ),
   }
+
+  const userWalletInfoSection = {
+    data: [{}],
+    renderItem: () => <UserWalletInfoSection key={'UserWalletInfoSection'} />,
+  }
+
   const actionsCarouselSection = {
     data: [{}],
     renderItem: () => <ActionsCarousel key={'ActionsCarousel'} />,
@@ -154,6 +161,7 @@ function TabHome({ navigation }: Props) {
   }
 
   const sections = [
+    userWalletInfoSection,
     actionsCarouselSection,
     spendPointsSection,
     upcomingActivitiesSection,
@@ -187,7 +195,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
-    paddingHorizontal: 10,
   },
 })
 
