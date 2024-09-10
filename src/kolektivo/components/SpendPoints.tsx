@@ -50,6 +50,7 @@ const SpendPoints = () => {
 const styles = StyleSheet.create({
   container: {
     padding: variables.contentPadding,
+    paddingBottom: 0,
     paddingTop: 5,
     backgroundColor: '#fff',
   },

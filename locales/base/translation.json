@@ -2524,5 +2524,8 @@
   },
   "spendPoints": {
     "title": "Spend Points"
+  },
+  "myCommunity": {
+    "title": "My Community"
   }
 }

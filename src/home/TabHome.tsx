@@ -21,6 +21,7 @@ import NftCelebration from 'src/home/celebration/NftCelebration'
 import NftReward from 'src/home/celebration/NftReward'
 import { showNftCelebrationSelector, showNftRewardSelector } from 'src/home/selectors'
 import { importContacts } from 'src/identity/actions'
+import MyCommunity from 'src/kolektivo/components/MyCommunity'
 import SpendPoints from 'src/kolektivo/components/SpendPoints'
 import UpcomingActivities from 'src/kolektivo/components/UpcomingActivities'
 import UserBadgesCarousel from 'src/kolektivo/components/UserBadgesCarousel'
@@ -150,6 +151,11 @@ function TabHome({ navigation }: Props) {
     renderItem: () => <SpendPoints key={'SpendPoints'} />,
   }
 
+  const myCommunitySection = {
+    data: [{}],
+    renderItem: () => <MyCommunity key={'MyCommunity'} />,
+  }
+
   const upcomingActivitiesSection = {
     data: [{}],
     renderItem: () => <UpcomingActivities key={'UpcomingActivities'} />,
@@ -164,6 +170,7 @@ function TabHome({ navigation }: Props) {
     userWalletInfoSection,
     actionsCarouselSection,
     spendPointsSection,
+    myCommunitySection,
     upcomingActivitiesSection,
     userBadgesCarousel,
     notificationBoxSection,
