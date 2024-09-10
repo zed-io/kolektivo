@@ -7,9 +7,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { BottomSheetRefType } from 'src/components/BottomSheet'
 import Button, { BtnSizes } from 'src/components/Button'
 import i18n from 'src/i18n'
-import AccountCircle from 'src/icons/AccountCircle'
 import Calendar from 'src/icons/Calendar'
 import Clock from 'src/icons/Clock'
+import Exclamation from 'src/icons/Exclamation'
 import Pin from 'src/icons/Pin'
 import ActivityCheckInSheet from 'src/kolektivo/activities/ActivityCheckInConfirmation'
 import { useActivityEnrollment } from 'src/kolektivo/activities/hooks'
@@ -110,7 +110,7 @@ export const ActivityDetailScreen = ({ route }: Props) => {
           <ActivityDetailListItem
             category="Host"
             content={activity.activityHost.name}
-            icon={<AccountCircle color={Colors.black} />}
+            icon={<Exclamation color={Colors.black} />}
           />
           <View style={[styles.content]}>
             <Text style={[styles.detailLabel]}>About</Text>

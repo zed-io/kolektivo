@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     display: 'none',
   },
   header: {
-    display: 'none',
+    display: 'flex',
     ...typeScale.bodyLarge,
     paddingHorizontal: variables.contentPadding,
     marginVertical: variables.contentPadding,
