@@ -38,8 +38,8 @@ const SpendPoints = () => {
         <TouchableOpacity style={styles.block}>
           <View style={styles.icon}>
             <More color="#1E7672" />
-            <Text style={styles.blockText}>More</Text>
           </View>
+          <Text style={styles.blockText}>More</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...typeScale.labelLarge,
+    marginBottom: 17,
   },
   grid: {
     flexDirection: 'row',
@@ -67,8 +68,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row', // Align icon and text in a row
-    paddingHorizontal: 10,
-    marginBottom: 20,
+    paddingHorizontal: 15,
+    marginBottom: 15,
   },
   icon: {
     marginRight: 10,

@@ -10,8 +10,8 @@ interface Props {
 
 export default class Send extends React.PureComponent<Props> {
   static defaultProps = {
-    height: 32,
-    width: 32,
+    height: 18,
+    width: 18,
     color: colors.primary,
   }
 

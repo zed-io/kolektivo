@@ -9,7 +9,7 @@ export type BadgeDataResponse = {
     contractAddress: Address
     title: string
     description?: string
-    amount: BigInt
+    amount: number
   }
 }
 

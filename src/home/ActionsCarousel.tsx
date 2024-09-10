@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { HomeEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import Card from 'src/components/Card'
@@ -14,9 +14,6 @@ import { Screens } from 'src/navigator/Screens'
 import Colors from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
-
-const { width } = Dimensions.get('window')
-const cardWidth = width / 3 - Spacing.Regular16 * 2
 
 function ActionsCarousel() {
   const { t } = useTranslation()
@@ -53,10 +50,13 @@ function ActionsCarousel() {
   ]
 
   return (
-    <View style={{ display: 'flex', flexDirection: 'row' }} testID={'HomeActionsCarousel'}>
+    <View
+      style={{ display: 'flex', flexDirection: 'row', gap: 20, justifyContent: 'space-around' }}
+      testID={'HomeActionsCarousel'}
+    >
       {actions.map(({ name, title, icon, onPress }) => (
         <Card
-          style={[styles.card, { width: cardWidth }]}
+          style={[styles.card]}
           shadow={null}
           key={`HomeAction-${name}`}
           testID={`HomeAction-${name}`}
@@ -90,13 +90,13 @@ function ActionsCarousel() {
 
 const styles = StyleSheet.create({
   card: {
-    marginHorizontal: Spacing.Regular16,
     backgroundColor: Colors.primaryLight,
     borderRadius: 10,
+    flex: 1,
+    maxHeight: 80,
   },
   touchable: {
     alignItems: 'center',
-    paddingVertical: 16,
   },
   name: {
     ...typeScale.labelSmall,
