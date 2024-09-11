@@ -38,7 +38,7 @@ const HEADER_OPACITY_ANIMATION_DISTANCE = 20
 function TabWallet({ navigation, route }: Props) {
   const { t } = useTranslation()
 
-  const activeTab = route.params?.activeAssetTab ?? AssetTabType.Tokens
+  const activeTab = route.params?.activeAssetTab ?? AssetTabType.Transactions
 
   // TODO: Update this to filter out unsupported networks once positions support non-Celo chains
   const positions = useSelector(positionsSelector)

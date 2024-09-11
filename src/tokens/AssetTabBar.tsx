@@ -25,7 +25,11 @@ export default function TabBar({
   const { t } = useTranslation()
 
   const items = useMemo(() => {
-    const items = [t('assets.tabBar.tokens'), t('assets.tabBar.collectibles')]
+    const items = [
+      t('assets.tabBar.transactions'),
+      t('assets.tabBar.tokens'),
+      t('assets.tabBar.collectibles'),
+    ]
     if (displayPositions) {
       items.push(t('assets.tabBar.dappPositions'))
     }
@@ -35,6 +39,7 @@ export default function TabBar({
   const handleSelectOption = (index: AssetTabType) => () => {
     ValoraAnalytics.track(
       [
+        AssetsEvents.view_transactions,
         AssetsEvents.view_wallet_assets,
         AssetsEvents.view_collectibles,
         AssetsEvents.view_dapp_positions,
@@ -72,6 +77,7 @@ export default function TabBar({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    marginLeft: variables.contentPadding,
   },
   touchable: {
     flexShrink: 1,

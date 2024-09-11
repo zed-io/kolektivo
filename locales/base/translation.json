@@ -2015,6 +2015,7 @@
     "bridge": "Bridged via {{bridge}}",
     "networkName": "{{networkName}} Network",
     "tabBar": {
+      "transactions": "Transactions",
       "tokens": "Tokens",
       "collectibles": "Collectibles",
       "dappPositions": "Dapp Positions"
