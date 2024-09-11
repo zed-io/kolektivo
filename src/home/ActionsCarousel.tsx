@@ -55,7 +55,7 @@ function ActionsCarousel() {
       style={{
         display: 'flex',
         flexDirection: 'row',
-        gap: 20,
+        gap: 10,
         justifyContent: 'space-around',
         padding: variables.contentPadding,
         paddingTop: 10,

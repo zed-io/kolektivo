@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import KolCurrency from 'src/icons/KolCurrency'
 import LinearBackground from 'src/kolektivo/components/LinearBackground'
+import { TokenBalance } from 'src/kolektivo/components/TokenBalance'
 import Clipboard from 'src/kolektivo/icons/Clipboard'
 import { typeScale } from 'src/kolektivo/styles/kolektivoFonts'
 import variables from 'src/kolektivo/styles/variables'
@@ -20,7 +21,11 @@ export default function UserWalletInfoSection() {
         </TouchableOpacity>
         <View style={styles.currency}>
           <KolCurrency size={23} />
-          <Text style={styles.currencyAmount}>173.90</Text>
+          <TokenBalance
+            style={styles.currencyAmount}
+            singleTokenViewEnabled={false}
+            showBalanceToggle={true}
+          />
         </View>
       </LinearBackground>
     </View>

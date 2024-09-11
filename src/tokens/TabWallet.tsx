@@ -11,7 +11,8 @@ import Animated, {
 import { AssetsEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import Button, { BtnSizes, BtnTypes } from 'src/components/Button'
-import { AssetsTokenBalance } from 'src/components/TokenBalance'
+import ActionsCarousel from 'src/home/ActionsCarousel'
+import UserWalletInfoSection from 'src/kolektivo/components/UserWalletInfoSection'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import useScrollAwareHeader from 'src/navigator/ScrollAwareHeader'
@@ -160,7 +161,8 @@ function TabWallet({ navigation, route }: Props) {
           style={[styles.nonStickyHeaderContainer]}
           onLayout={handleMeasureNonStickyHeaderHeight}
         >
-          <AssetsTokenBalance showInfo={displayPositions} />
+          <UserWalletInfoSection />
+          <ActionsCarousel />
         </View>
         <AssetTabBar
           activeTab={activeTab}
@@ -198,7 +200,7 @@ const styles = StyleSheet.create({
   listHeaderContainer: {
     ...getShadowStyle(Shadow.SoftLight),
     paddingBottom: Spacing.Regular16,
-    paddingHorizontal: Spacing.Regular16,
+    paddingHorizontal: 0,
     backgroundColor: Colors.white,
     position: 'absolute',
     width: '100%',
