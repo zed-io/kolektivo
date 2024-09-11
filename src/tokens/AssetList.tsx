@@ -249,9 +249,11 @@ export default function AssetList({
       case AssetTabType.Positions:
         return null
       case AssetTabType.Collectibles:
-        if (nftsError) return <NftsLoadError testID="Assets/NftsLoadError" />
-        else if (nftsLoading) return null
-        else
+        if (nftsError) {
+          return <NftsLoadError testID="Assets/NftsLoadError" />
+        } else if (nftsLoading) {
+          return null
+        } else {
           return (
             <View
               testID="Assets/NoNfts"
@@ -260,6 +262,9 @@ export default function AssetList({
               <Text style={styles.noNftsText}>{t('nftGallery.noNfts')}</Text>
             </View>
           )
+        }
+      default:
+        return null
     }
   }
 

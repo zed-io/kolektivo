@@ -14,5 +14,9 @@ export type BadgeDataResponse = {
 }
 
 export async function fetchBadgesForAddress(address: string): Promise<any> {
+  // eslint-disable-next-line no-unused-vars
   const badges: BadgeDataResponse[] = []
+
+  // @todo change logic Dummy usage to avoid "value never read" warning
+  badges.length
 }

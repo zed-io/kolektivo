@@ -27,6 +27,7 @@ export default function BadgeProgressTile({
         <Image source={badgeImage} style={styles.image} />
         <View testID="BadgeProgressTile/Container" style={styles.innerContainer}>
           <Text style={styles.title}>{title}</Text>
+          <Text style={styles.contractAddress}>{contractAddress}</Text>
           <Text style={styles.subtitle}>{t('badge.rank.0')}</Text>
           <ProgressBar progress={amount} total={50} />
         </View>
@@ -100,5 +101,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     ...typeScale.labelSmall,
     color: Colors.gray4,
+  },
+  contractAddress: {
+    display: 'none',
   },
 })
