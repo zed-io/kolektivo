@@ -6,7 +6,6 @@ import { formatValueToDisplay } from 'src/components/TokenDisplay'
 import TokenIcon, { IconSize } from 'src/components/TokenIcon'
 import Colors from 'src/kolektivo/styles/colors'
 import { useDollarsToLocalAmount } from 'src/localCurrency/hooks'
-import { getLocalCurrencySymbol } from 'src/localCurrency/selectors'
 import { totalPositionsBalanceUsdSelector } from 'src/positions/selectors'
 import { useSelector } from 'src/redux/hooks'
 import fontStyles from 'src/styles/fonts'
@@ -29,7 +28,6 @@ export function TokenBalance({
 }) {
   const supportedNetworkIds = getSupportedNetworkIdsForTokenBalances()
   const tokensWithUsdValue = useTokensWithUsdValue(supportedNetworkIds)
-  const localCurrencySymbol = useSelector(getLocalCurrencySymbol)
   const totalTokenBalanceLocal = useTotalTokenBalance()
   const tokenFetchLoading = useSelector(tokenFetchLoadingSelector)
   const tokenFetchError = useSelector(tokenFetchErrorSelector)

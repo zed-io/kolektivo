@@ -35,7 +35,9 @@ export const ActivityDetailScreen = ({ route }: Props) => {
   const { t } = useTranslation()
   const activities = useDefaultActivities()
   const sections = []
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onPressEarned = useCallback(() => {}, [])
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onPressStamps = useCallback(() => {}, [])
 
   sections.push({

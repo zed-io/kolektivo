@@ -7,9 +7,13 @@ import Stamp from 'src/icons/Stamp'
 import AchievementListItem from 'src/kolektivo/components/AchievementListItem'
 
 export default function ProfileAchievementSummary() {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onPressEarned = useCallback(() => {}, [])
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onPressDonated = useCallback(() => {}, [])
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onPressStamps = useCallback(() => {}, [])
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onPressBadges = useCallback(() => {}, [])
 
   return (
