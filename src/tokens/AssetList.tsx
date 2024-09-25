@@ -44,6 +44,7 @@ import { sortedTokensWithBalanceOrShowZeroBalanceSelector } from 'src/tokens/sel
 import { TokenBalance } from 'src/tokens/slice'
 import { AssetTabType } from 'src/tokens/types'
 import { getSupportedNetworkIdsForTokenBalances, getTokenAnalyticsProps } from 'src/tokens/utils'
+import TransactionFeed from 'src/transactions/feed/TransactionFeed'
 
 interface SectionData {
   appName?: string
@@ -245,6 +246,8 @@ export default function AssetList({
 
   const renderEmptyState = () => {
     switch (activeTab) {
+      case AssetTabType.Transactions:
+        return <TransactionFeed />
       case AssetTabType.Tokens:
       case AssetTabType.Positions:
         return null
