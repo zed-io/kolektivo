@@ -86,8 +86,8 @@ export const ActivityDetailScreen = ({ route }: Props) => {
   }, [])
 
   const onSignUp = () => {
-    navigate(Screens.QRNavigator, {
-      screen: Screens.QRScanner,
+    navigate(Screens.QRKolektivoNavigator, {
+      screen: Screens.QRKolektivoScanner,
     })
   }
 

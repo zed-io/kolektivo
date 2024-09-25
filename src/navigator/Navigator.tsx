@@ -74,6 +74,7 @@ import LinkPhoneNumber from 'src/keylessBackup/LinkPhoneNumber'
 import SignInWithEmail from 'src/keylessBackup/SignInWithEmail'
 import WalletSecurityPrimer from 'src/keylessBackup/WalletSecurityPrimer'
 import ActivityDetailScreen from 'src/kolektivo/activities/ActivityDetailScreen'
+import QRKolektivoNavigator from 'src/kolektivo/qrcode/QRKolektivoNavigator'
 import Language from 'src/language/Language'
 import SelectLocalCurrency from 'src/localCurrency/SelectLocalCurrency'
 import {
@@ -156,6 +157,11 @@ const commonScreens = (Navigator: typeof Stack) => {
         name={Screens.QRNavigator}
         component={QRNavigator}
         options={QRNavigator.navigationOptions as NativeStackNavigationOptions}
+      />
+      <Navigator.Screen
+        name={Screens.QRKolektivoNavigator}
+        component={QRKolektivoNavigator}
+        options={QRKolektivoNavigator.navigationOptions as NativeStackNavigationOptions}
       />
     </>
   )

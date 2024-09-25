@@ -229,6 +229,7 @@ export type StackParamList = {
   [Screens.Profile]: undefined
   [Screens.ProfileMenu]: undefined
   [Screens.QRNavigator]: NestedNavigatorParams<QRTabParamList> | undefined
+  [Screens.QRKolektivoNavigator]: NestedNavigatorParams<QRTabParamList> | undefined
   [Screens.ReclaimPaymentConfirmationScreen]: {
     reclaimPaymentInput: EscrowedPayment
     onCancel?: () => void
@@ -342,6 +343,17 @@ export type QRTabParamList = {
       }
     | undefined
   [Screens.QRScanner]:
+    | {
+        showSecureSendStyling?: true
+        onQRCodeDetected?: (qrCode: QrCode) => void
+      }
+    | undefined
+  [Screens.QRKolektivoCode]:
+    | {
+        showSecureSendStyling?: true
+      }
+    | undefined
+  [Screens.QRKolektivoScanner]:
     | {
         showSecureSendStyling?: true
         onQRCodeDetected?: (qrCode: QrCode) => void

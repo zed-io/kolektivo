@@ -21,8 +21,8 @@ export default function ActivityCheckInSheet({
   const { t } = useTranslation()
 
   const onCheckIn = () => {
-    navigate(Screens.QRNavigator, {
-      screen: Screens.QRScanner,
+    navigate(Screens.QRKolektivoNavigator, {
+      screen: Screens.QRKolektivoScanner,
     })
   }
 
