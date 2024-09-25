@@ -20,7 +20,6 @@ import Button, { BtnSizes, BtnTypes } from 'src/kolektivo/components/Buttons'
 import Directions from 'src/kolektivo/icons/Directions'
 import Person from 'src/kolektivo/icons/Person'
 import { HeaderTitleWithSubtitle, headerWithBackButton } from 'src/navigator/Headers'
-import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { StackParamList } from 'src/navigator/types'
 import { default as colors, default as Colors } from 'src/styles/colors'
@@ -86,9 +85,7 @@ export const ActivityDetailScreen = ({ route }: Props) => {
   }, [])
 
   const onSignUp = () => {
-    navigate(Screens.QRKolektivoNavigator, {
-      screen: Screens.QRKolektivoScanner,
-    })
+    checkInConfirmationSheetRef.current?.snapToIndex(0)
   }
 
   const onCheckIn = () => {
@@ -191,12 +188,12 @@ export const ActivityDetailScreen = ({ route }: Props) => {
             <ActivityListItem key={activity.id} {...activity} />
           ))}
         </ScrollView>
-        <ActivityCheckInSheet
-          forwardedRef={checkInConfirmationSheetRef}
-          activityDate={eventDate}
-          activityTitle={activity.title}
-        />
       </ScrollView>
+      <ActivityCheckInSheet
+        forwardedRef={checkInConfirmationSheetRef}
+        activityDate={eventDate}
+        activityTitle={activity.title}
+      />
     </SafeAreaView>
   )
 }

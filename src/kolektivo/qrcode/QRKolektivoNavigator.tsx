@@ -15,12 +15,13 @@ import { QrScreenEvents } from 'src/analytics/Events'
 import ValoraAnalytics from 'src/analytics/ValoraAnalytics'
 import QRKolektivoScanner from 'src/kolektivo/qrcode/QRKolektivoScanner'
 import { noHeader } from 'src/navigator/Headers'
+import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { QRTabParamList, StackParamList } from 'src/navigator/types'
 import QRCode from 'src/qrcode/QRCode'
 import QRTabBar from 'src/qrcode/QRTabBar'
 import { useDispatch } from 'src/redux/hooks'
-import { SVG, handleQRCodeDetected } from 'src/send/actions'
+import { SVG } from 'src/send/actions'
 import { QrCode } from 'src/send/types'
 import Logger from 'src/utils/Logger'
 import { ExtractProps } from 'src/utils/typescript'
@@ -52,7 +53,9 @@ export function QRCodePicker({ route, qrSvgRef, ...props }: QRCodeProps) {
 function AnimatedScannerScene({ route, position }: AnimatedScannerSceneProps) {
   const lastScannedQR = useRef('')
   const dispatch = useDispatch()
-  const defaultOnQRCodeDetected = (qrCode: QrCode) => dispatch(handleQRCodeDetected(qrCode))
+  const defaultOnQRCodeDetected = (qrCode: QrCode) => {
+    navigate(Screens.ActivityScreen)
+  }
   const { onQRCodeDetected: onQRCodeDetectedParam = defaultOnQRCodeDetected } = route.params || {}
   const isFocused = useIsFocused()
   const [wasFocused, setWasFocused] = useState(isFocused)
