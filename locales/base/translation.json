@@ -2528,5 +2528,18 @@
   },
   "myCommunity": {
     "title": "My Community"
+  },
+  "checkIn": {
+    "title": "Check In",
+    "success": "You have successfully checked in to the event",
+    "description": "Check in to the event to earn points",
+    "checkInButton": "Check In",
+    "checkOutButton": "Check Out",
+    "checkInSuccess": "Checked In",
+    "checkOutSuccess": "Checked Out",
+    "checkInError": "Check In Error",
+    "checkOutError": "Check Out Error",
+    "checkInErrorMessage": "Sorry, we were unable to check you in. Please try again or contact support.",
+    "checkOutErrorMessage": "Sorry, we were unable to check you out. Please try again or contact support."
   }
 }

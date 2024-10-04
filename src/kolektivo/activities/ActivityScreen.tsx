@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { RefreshControl, ScrollView, SectionList, StyleSheet, Text } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { NotificationVariant } from 'src/components/InLineNotification'
+import Toast from 'src/components/Toast'
 import { ActivityListItem } from 'src/kolektivo/activities/ActivityListItem'
 import { useDefaultActivities } from 'src/kolektivo/activities/hooks'
 import { Activity } from 'src/kolektivo/activities/utils'
@@ -53,6 +55,15 @@ const ActivityScreen = () => {
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollPosition } } }], {
           useNativeDriver: true,
         })}
+      />
+      <Toast
+        withBackdrop
+        variant={NotificationVariant.CheckedIn}
+        description={t('checkin.success')}
+        showToast={true}
+        ctaLabel={t('dismiss')}
+        title={t('checkIn.checkInSuccess')}
+        testID="KeylessBackupDeleteError"
       />
     </SafeAreaView>
   )

@@ -1,6 +1,7 @@
 import React from 'react'
 import { GestureResponderEvent, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native'
 import AttentionIcon from 'src/icons/Attention'
+import Checkmark from 'src/icons/Checkmark'
 import Warning from 'src/icons/Warning'
 import Colors from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
@@ -11,6 +12,7 @@ export enum NotificationVariant {
   Success,
   Warning,
   Error,
+  CheckedIn,
 }
 
 export interface InLineNotificationProps {
@@ -146,11 +148,16 @@ const variantColors: Record<NotificationVariant, CustomColors> = {
     primary: Colors.errorDark,
     secondary: Colors.errorLight,
   },
+  [NotificationVariant.CheckedIn]: {
+    primary: Colors.successDark,
+    secondary: Colors.successLight,
+  },
 }
 
 const variantIcons: Record<NotificationVariant, (args: any) => JSX.Element> = {
   [NotificationVariant.Info]: AttentionIcon,
   [NotificationVariant.Success]: AttentionIcon,
+  [NotificationVariant.CheckedIn]: (props) => <Checkmark {...props} />,
   [NotificationVariant.Warning]: Warning,
   [NotificationVariant.Error]: Warning,
 }
