@@ -14,6 +14,8 @@ import Touchable from 'src/components/Touchable'
 import Help from 'src/icons/navigator/Help'
 import { Invite } from 'src/icons/navigator/Invite'
 import Settings from 'src/icons/navigator/Settings'
+import ProfileAchievementSummary from 'src/kolektivo/account/ProfileAchievementSummary'
+import { BadgesHighlight } from 'src/kolektivo/activities/badges/BadgesHighlight'
 import { headerWithCloseButton } from 'src/navigator/Headers'
 import { navigate } from 'src/navigator/NavigationService'
 import RewardsPill from 'src/navigator/RewardsPill'
@@ -59,6 +61,8 @@ export default function ProfileMenu({ route }: Props) {
           </View>
         </View>
         <View style={styles.topBorder} />
+        <ProfileAchievementSummary />
+        <BadgesHighlight />
         <Touchable testID="ProfileMenu/Invite" onPress={() => navigate(Screens.Invite)}>
           <View style={styles.container}>
             <Invite color={Colors.gray3} />

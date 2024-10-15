@@ -4,6 +4,7 @@ export enum HomeActionName {
   Add = 'Add',
   Swap = 'Swap',
   Withdraw = 'Withdraw',
+  Scan = 'Scan',
 }
 
 export enum NotificationType {

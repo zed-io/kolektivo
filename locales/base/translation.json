@@ -1981,7 +1981,8 @@
     "request": "Request",
     "send": "Send",
     "swap": "Swap",
-    "withdraw": "Withdraw"
+    "withdraw": "Withdraw",
+    "scan": "Scan"
   },
   "nftGallery": {
     "title": "Collectibles",
@@ -2014,6 +2015,7 @@
     "bridge": "Bridged via {{bridge}}",
     "networkName": "{{networkName}} Network",
     "tabBar": {
+      "transactions": "Transactions",
       "tokens": "Tokens",
       "collectibles": "Collectibles",
       "dappPositions": "Dapp Positions"
@@ -2217,7 +2219,10 @@
   "map": "Map",
   "explore": "Explore",
   "activities": {
-    "more": "More Activities"
+    "more": "More Activities",
+    "requirements": "Requirements",
+    "rewards": "Rewards",
+    "relatedActivities": "Related Activities"
   },
   "nftCelebration": {
     "bottomSheet": {
@@ -2256,7 +2261,7 @@
       "title": "My Wallet"
     },
     "home": {
-      "tabName": "Home",
+      "tabName": "Kolektivo",
       "title": "Welcome"
     },
     "discover": {
@@ -2500,5 +2505,41 @@
       "earnWithdrawSubtitle": "Withdrew {{tokenSymbol}} from {{providerName}} Pool",
       "earnWithdrawDetails": "Amount Withdrawn"
     }
+  },
+  "communityActivityDetail": {
+    "signUp": "Sign Up",
+    "checkIn": "Check In",
+    "checkOut": "Check Out"
+  },
+  "communityActivityConfirmationSheet": {
+    "title": "Confirmation",
+    "description": "Do you want to take part in the {{activityTitle}} that is taking place on {{activityDate}}?"
+  },
+  "badge": {
+    "rank": ["Beginner", "Intermediate", "Advanced", "Expert"],
+    "myBadges": "My Badges",
+    "more": "View All"
+  },
+  "upcomingActivities": {
+    "title": "Upcoming Activities"
+  },
+  "spendPoints": {
+    "title": "Spend Points"
+  },
+  "myCommunity": {
+    "title": "My Community"
+  },
+  "checkIn": {
+    "title": "Check In",
+    "success": "You have successfully checked in to the event",
+    "description": "Check in to the event to earn points",
+    "checkInButton": "Check In",
+    "checkOutButton": "Check Out",
+    "checkInSuccess": "Checked In",
+    "checkOutSuccess": "Checked Out",
+    "checkInError": "Check In Error",
+    "checkOutError": "Check Out Error",
+    "checkInErrorMessage": "Sorry, we were unable to check you in. Please try again or contact support.",
+    "checkOutErrorMessage": "Sorry, we were unable to check you out. Please try again or contact support."
   }
 }

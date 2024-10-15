@@ -1,4 +1,8 @@
+import variables from 'src/styles/variables'
+
 export default {
-  borderRadius: 30 as number,
+  ...variables,
+  borderRadius: 15 as number,
   contentPadding: 16 as number,
+  borderwWidth: 1 as number,
 }

@@ -44,6 +44,7 @@ import { sortedTokensWithBalanceOrShowZeroBalanceSelector } from 'src/tokens/sel
 import { TokenBalance } from 'src/tokens/slice'
 import { AssetTabType } from 'src/tokens/types'
 import { getSupportedNetworkIdsForTokenBalances, getTokenAnalyticsProps } from 'src/tokens/utils'
+import TransactionFeed from 'src/transactions/feed/TransactionFeed'
 
 interface SectionData {
   appName?: string
@@ -245,13 +246,17 @@ export default function AssetList({
 
   const renderEmptyState = () => {
     switch (activeTab) {
+      case AssetTabType.Transactions:
+        return <TransactionFeed />
       case AssetTabType.Tokens:
       case AssetTabType.Positions:
         return null
       case AssetTabType.Collectibles:
-        if (nftsError) return <NftsLoadError testID="Assets/NftsLoadError" />
-        else if (nftsLoading) return null
-        else
+        if (nftsError) {
+          return <NftsLoadError testID="Assets/NftsLoadError" />
+        } else if (nftsLoading) {
+          return null
+        } else {
           return (
             <View
               testID="Assets/NoNfts"
@@ -260,6 +265,9 @@ export default function AssetList({
               <Text style={styles.noNftsText}>{t('nftGallery.noNfts')}</Text>
             </View>
           )
+        }
+      default:
+        return null
     }
   }
 

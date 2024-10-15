@@ -134,7 +134,7 @@ export const typeScale = StyleSheet.create({
   },
   bodyMedium: {
     fontFamily: Inter.Regular,
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 24,
   },
   bodySmall: {
