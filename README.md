@@ -22,3 +22,8 @@ Code owners can be found in [.github/CODEOWNERS](.github/CODEOWNERS).
 ## Contributing
 
 We welcome contributions in the form of Issues and PRs. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first!
+
+
+## Join our Community Chat!
+
+Join our community on [Telegram: Kolektivo Wallet Buidlers](https://t.me/+JdPqRy6S2lA2NzM1) for discussions, support, and collaboration.
