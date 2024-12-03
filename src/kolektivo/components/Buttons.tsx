@@ -15,6 +15,7 @@ const DEBOUNCE_OPTIONS = {
 export enum BtnTypes {
   PRIMARY = 'Primary',
   SECONDARY = 'Secondary',
+  CANCEL = 'Cancel',
   ONBOARDING_SECONDARY = 'OnboardingSecondary',
   INFORMATION = 'Information',
 }
@@ -180,6 +181,11 @@ function getColors(type: BtnTypes, disabled: boolean | undefined) {
     case BtnTypes.INFORMATION:
       textColor = colors.white
       backgroundColor = colors.primaryLight
+      opacity = disabled ? 0.5 : 1.0
+      break
+    case BtnTypes.CANCEL:
+      textColor = '#D46435'
+      backgroundColor = '#FEECEB'
       opacity = disabled ? 0.5 : 1.0
       break
   }

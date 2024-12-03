@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import i18n from 'src/i18n'
-import { Activity } from 'src/kolektivo/activities/utils'
+import { Activity, isActivityLive } from 'src/kolektivo/activities/utils'
 import variables from 'src/kolektivo/styles/variables'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
-import Colors from 'src/styles/colors'
+import { default as Colors, default as colors } from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
-import { getDatetimeDisplayString } from 'src/utils/time'
+import { formatDistanceToNow, getDatetimeDisplayString } from 'src/utils/time'
 
 type OwnProps = Activity & {
   fullWidth?: boolean
@@ -15,19 +16,23 @@ type OwnProps = Activity & {
 
 export const ActivityListItem = ({ fullWidth = false, ...rest }: OwnProps) => {
   const {
+    id,
     activityHost,
     startDate,
     endDate,
+    bannerPath,
     title,
     description,
     fullAddress,
     badgeContractAddress,
   } = rest
+  const { t } = useTranslation()
 
   const handlePress = () => {
     // @todo implement navigation to activity detail
     navigate(Screens.ActivityDetailScreen, {
       activity: {
+        id,
         activityHostId: activityHost.id,
         startDate,
         endDate,
@@ -36,20 +41,44 @@ export const ActivityListItem = ({ fullWidth = false, ...rest }: OwnProps) => {
         fullAddress,
         badgeContractAddress,
         activityHost,
+        bannerPath,
       } as Activity,
     })
   }
 
-  const dateTime = getDatetimeDisplayString(new Date().getTime(), i18n)
+  const dateTime = getDatetimeDisplayString(new Date(startDate).getTime(), i18n)
+
+  const isEventLive = useMemo(() => {
+    return isActivityLive(rest)
+  }, [])
+
+  const FloatingTime = useCallback(() => {
+    if (isEventLive) {
+      return (
+        <View style={styles.fab}>
+          <Text style={[styles.text, styles.small]}>{t('live')}</Text>
+        </View>
+      )
+    } else {
+      return (
+        <View style={styles.fab}>
+          <Text style={[styles.text, styles.small]}>{timeUntil}</Text>
+        </View>
+      )
+    }
+  }, [isEventLive])
+
+  const timeUntil = formatDistanceToNow(new Date(startDate), i18n)
 
   return (
     <Pressable style={[styles.container, fullWidth && styles.fullWidth]} onPress={handlePress}>
       <Image
         source={{
-          uri: 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          uri: bannerPath,
         }}
         style={styles.image}
       />
+      <FloatingTime />
       <View style={styles.content}>
         <Text style={[styles.text, styles.title]}>{title}</Text>
         <View style={[styles.details]}>
@@ -68,6 +97,7 @@ const styles = StyleSheet.create({
     borderRadius: variables.borderRadius,
     marginHorizontal: variables.contentPadding / 2,
     width: 300,
+    overflow: 'hidden',
   },
   fullWidth: {
     width: '100%',
@@ -80,16 +110,30 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     borderRadius: variables.borderRadius,
   },
+  fab: {
+    zIndex: 1,
+    position: 'absolute',
+    top: variables.contentPadding,
+    right: variables.contentPadding,
+    backgroundColor: colors.warningDark,
+    paddingHorizontal: variables.contentPadding / 2,
+    borderRadius: variables.borderRadius,
+  },
   content: {
     flex: 1,
     justifyContent: 'flex-end',
     padding: variables.contentPadding,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   text: {
     color: Colors.infoLight,
   },
   title: {
     ...typeScale.bodyMedium,
+    fontWeight: 'bold',
+  },
+  small: {
+    ...typeScale.bodyXSmall,
     fontWeight: 'bold',
   },
   details: {

@@ -9,6 +9,7 @@ export type Activity = {
     name: string
     walletAddress: string
   }
+  bannerPath: string
   title: string
   description: string
   startDate: string
@@ -27,6 +28,7 @@ type ActivityModel = {
     name: string
     wallet_address: string
   }
+  banner_path: string
   title: string
   description: string
   start_date: string
@@ -38,7 +40,10 @@ type ActivityModel = {
 
 export const getActivities = async (): Promise<Activity[]> => {
   // eslint-disable-next-line prefer-const
-  let { data, error } = await supabase.from('activities').select(`
+  let { data, error } = await supabase
+    .from('activities')
+    .select(
+      `
       id,
       created_at,
       activity_host_id,
@@ -47,6 +52,7 @@ export const getActivities = async (): Promise<Activity[]> => {
       start_date,
       end_date,
       full_address,
+      banner_path,
       badge_contract_address,
       requirements,
       activity_hosts (
@@ -55,13 +61,15 @@ export const getActivities = async (): Promise<Activity[]> => {
         name,
         wallet_address
       )
-    `)
+    `
+    )
+    .order('start_date', { ascending: true })
+
   if (error) {
     throw new Error(error.message)
   }
 
   const result: Activity[] = []
-
   if (!data) {
     return result
   }
@@ -99,6 +107,7 @@ const translateActivityFromDatabase = (dbActivity: ActivityModel): Activity => {
       name: dbActivity.activity_hosts.name,
       walletAddress: dbActivity.activity_hosts.wallet_address,
     },
+    bannerPath: dbActivity.banner_path,
     title: dbActivity.title,
     description: dbActivity.description,
     startDate: dbActivity.start_date,
@@ -107,4 +116,11 @@ const translateActivityFromDatabase = (dbActivity: ActivityModel): Activity => {
     badgeContractAddress: dbActivity.badge_contract_address,
     requirements: dbActivity.requirements,
   }
+}
+
+export const isActivityLive = (activity: Activity): boolean => {
+  const startDate = new Date(activity.startDate)
+  const endDate = new Date(activity.endDate)
+  const now = new Date()
+  return startDate <= now && now <= endDate
 }

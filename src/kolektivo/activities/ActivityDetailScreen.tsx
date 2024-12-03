@@ -14,7 +14,12 @@ import Pin from 'src/icons/Pin'
 import Stamp from 'src/icons/Stamp'
 import ActivityCheckInSheet from 'src/kolektivo/activities/ActivityCheckInConfirmation'
 import { ActivityListItem } from 'src/kolektivo/activities/ActivityListItem'
-import { useActivityEnrollment, useDefaultActivities } from 'src/kolektivo/activities/hooks'
+import {
+  useActivityEnrollment,
+  useDefaultActivities,
+  useSignUpAndCancelActivityEnrollment,
+} from 'src/kolektivo/activities/hooks'
+import { isActivityLive } from 'src/kolektivo/activities/utils'
 import AchievementListItem from 'src/kolektivo/components/AchievementListItem'
 import Button, { BtnSizes, BtnTypes } from 'src/kolektivo/components/Buttons'
 import Directions from 'src/kolektivo/icons/Directions'
@@ -25,7 +30,7 @@ import { StackParamList } from 'src/navigator/types'
 import { default as colors, default as Colors } from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import variables from 'src/styles/variables'
-import { formatFeedDate, formatFeedTime } from 'src/utils/time'
+import { formatDistanceToNow, formatFeedDate, formatFeedTime } from 'src/utils/time'
 
 type Props = NativeStackScreenProps<StackParamList, Screens.ActivityDetailScreen>
 
@@ -33,6 +38,9 @@ export const ActivityDetailScreen = ({ route }: Props) => {
   const { activity } = route.params
   const { t } = useTranslation()
   const activities = useDefaultActivities()
+  const { loading, isSignedUp, signUpForEvent, cancelEvent } = useSignUpAndCancelActivityEnrollment(
+    activity.id
+  )
   const sections = []
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onPressEarned = useCallback(() => {}, [])
@@ -43,6 +51,9 @@ export const ActivityDetailScreen = ({ route }: Props) => {
     data: activities,
   })
 
+  const isEventLive = useMemo(() => {
+    return isActivityLive(activity)
+  }, [])
   //@ts-ignore @todo Remove this unused reference
   const { enroll } = useActivityEnrollment()
 
@@ -56,45 +67,55 @@ export const ActivityDetailScreen = ({ route }: Props) => {
       return formatFeedTime(new Date().getTime(), i18n)
     }
   }, [])
+  const handleSheet = () => {
+    checkInConfirmationSheetRef.current?.snapToIndex(0)
+  }
+  const timeUntil = formatDistanceToNow(new Date(activity.startDate), i18n)
 
-  const activityActionText =
-    useMemo(() => {
-      // eslint-disable-next-line no-constant-condition
-      if (1) {
-        return t('communityActivityDetail.signUp')
-        // eslint-disable-next-line no-constant-condition
-      } else if (2) {
-        return t('communityActivityDetail.signUp')
-        // eslint-disable-next-line no-constant-condition
-      } else if (3) {
-        return t('communityActivityDetail.checkIn')
-      }
-    }, []) ?? ''
-
-  const onContinue = useCallback(() => {
-    // eslint-disable-next-line no-constant-condition
-    if (1) {
-      onSignUp()
-      // eslint-disable-next-line no-constant-condition
-    } else if (2) {
-      onCheckIn()
-      // eslint-disable-next-line no-constant-condition
-    } else if (3) {
-      onCheckOut()
+  const FloatingTime = useCallback(() => {
+    if (isEventLive) {
+      return (
+        <View style={styles.fab}>
+          <Text style={[styles.fabText]}>{t('live')}</Text>
+        </View>
+      )
+    } else {
+      return (
+        <View style={styles.fab}>
+          <Text style={[styles.fabText]}>{timeUntil}</Text>
+        </View>
+      )
     }
-  }, [])
+  }, [isEventLive])
 
-  const onSignUp = () => {
-    checkInConfirmationSheetRef.current?.snapToIndex(0)
-  }
+  const ActivityActionButton = useCallback(() => {
+    if (loading) {
+      return <View style={{ flexGrow: 1 }} />
+    }
 
-  const onCheckIn = () => {
-    checkInConfirmationSheetRef.current?.snapToIndex(0)
-  }
-
-  const onCheckOut = () => {
-    checkInConfirmationSheetRef.current?.snapToIndex(0)
-  }
+    if (isSignedUp) {
+      return (
+        <Button
+          text={t('cancel')}
+          onPress={handleSheet}
+          testID={`CommunityEvent/CheckIn/Cancel`}
+          size={BtnSizes.FULL}
+          type={BtnTypes.CANCEL}
+          style={{ flex: 1, marginRight: variables.contentPadding }}
+        />
+      )
+    } else {
+      return (
+        <Button
+          text={t('continue')}
+          onPress={handleSheet}
+          testID={`CommunityEvent/CheckIn/Continue`}
+          size={BtnSizes.FULL}
+          style={{ flex: 1, marginRight: variables.contentPadding }}
+        />
+      )
+    }
+  }, [isSignedUp, loading, cancelEvent, signUpForEvent, t])
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
@@ -102,11 +123,14 @@ export const ActivityDetailScreen = ({ route }: Props) => {
         <View style={[styles.hero]}>
           <Image
             source={{
-              uri: 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+              uri: activity.bannerPath,
             }}
             style={styles.image}
           />
-          <Text style={styles.heroTitle}>{activity.title}</Text>
+          <FloatingTime />
+          <View style={styles.heroBackdrop}>
+            <Text style={styles.heroTitle}>{activity.title}</Text>
+          </View>
         </View>
         <View style={[styles.main]}>
           <View
@@ -116,16 +140,11 @@ export const ActivityDetailScreen = ({ route }: Props) => {
               justifyContent: 'space-between',
             }}
           >
-            <Button
-              size={BtnSizes.FULL}
-              onPress={onContinue}
-              text={activityActionText}
-              style={{ flex: 1, marginRight: 8 }}
-            />
+            <ActivityActionButton />
             <Button
               size={BtnSizes.SMALL}
               type={BtnTypes.INFORMATION}
-              onPress={onContinue}
+              onPress={() => {}}
               icon={<Directions color={Colors.primary} />}
             />
           </View>
@@ -156,7 +175,6 @@ export const ActivityDetailScreen = ({ route }: Props) => {
             icon={<Person color={'#737373'} />}
           />
         </View>
-        <Text style={styles.sectionTitle}>{t('activities.requirements')}</Text>
         <Text style={styles.sectionTitle}>{t('activities.rewards')}</Text>
         <View style={styles.rewardsContainer}>
           <AchievementListItem
@@ -191,8 +209,12 @@ export const ActivityDetailScreen = ({ route }: Props) => {
       </ScrollView>
       <ActivityCheckInSheet
         forwardedRef={checkInConfirmationSheetRef}
-        activityDate={eventDate}
-        activityTitle={activity.title}
+        activity={activity}
+        isSignedUp={isSignedUp}
+        signUp={signUpForEvent}
+        cancel={cancelEvent}
+        checkIn={cancelEvent}
+        checkOut={cancelEvent}
       />
     </SafeAreaView>
   )
@@ -245,10 +267,27 @@ const styles = StyleSheet.create({
   },
   hero: {
     height: 200,
-    backgroundColor: 'red',
   },
   image: {
     flex: 1,
+  },
+  fab: {
+    zIndex: 1,
+    position: 'absolute',
+    top: variables.contentPadding,
+    right: variables.contentPadding,
+    backgroundColor: Colors.primary,
+    paddingHorizontal: variables.contentPadding / 2,
+    borderRadius: variables.borderRadius,
+  },
+  fabText: {
+    ...typeScale.bodyMedium,
+    fontWeight: 'bold',
+    color: Colors.white,
+  },
+  heroBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   heroTitle: {
     ...typeScale.titleSmall,
