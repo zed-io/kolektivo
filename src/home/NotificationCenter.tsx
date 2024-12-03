@@ -13,7 +13,6 @@ import SimpleMessagingCard from 'src/components/SimpleMessagingCard'
 import EscrowedPaymentListItem from 'src/escrow/EscrowedPaymentListItem'
 import { getReclaimableEscrowPayments } from 'src/escrow/reducer'
 import { CLEVERTAP_PRIORITY, INVITES_PRIORITY, useSimpleActions } from 'src/home/NotificationBox'
-import { cleverTapInboxMessagesSelector } from 'src/home/selectors'
 import { Notification, NotificationBannerCTATypes, NotificationType } from 'src/home/types'
 import ThumbsUpIllustration from 'src/icons/ThumbsUpIllustration'
 import { Screens } from 'src/navigator/Screens'
@@ -30,7 +29,8 @@ function useCleverTapNotifications() {
   const { t } = useTranslation()
   const dispatch = useDispatch()
 
-  const messages = useSelector(cleverTapInboxMessagesSelector)
+  // const messages = useSelector(cleverTapInboxMessagesSelector)
+  const messages: any[] = []
 
   return useMemo(() => {
     const notifications: Notification[] = []

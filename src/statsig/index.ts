@@ -54,11 +54,6 @@ export function getExperimentParams<T extends Record<string, StatsigParameter>>(
     }
     return getParams({ config: experiment, defaultValues })
   } catch (error) {
-    Logger.warn(
-      TAG,
-      `getExperimentParams: Error getting params for experiment: ${experimentName}`,
-      error
-    )
     return defaultValues
   }
 }
@@ -81,7 +76,6 @@ export function getDynamicConfigParams<T extends Record<string, StatsigParameter
     }
     return getParams({ config, defaultValues })
   } catch (error) {
-    Logger.warn(TAG, `Error getting params for dynamic config: ${configName}`, error)
     return defaultValues
   }
 }
@@ -90,7 +84,6 @@ export function getFeatureGate(featureGateName: StatsigFeatureGates) {
   try {
     return Statsig.checkGate(featureGateName)
   } catch (error) {
-    Logger.warn(TAG, `Error getting feature gate: ${featureGateName}`, error)
     return FeatureGates[featureGateName]
   }
 }
