@@ -10,7 +10,7 @@ import {
   signOutFromActivity,
 } from 'src/kolektivo/activities/service'
 import { ActivityDetail } from 'src/kolektivo/activities/types'
-import { Activity, getActivities } from 'src/kolektivo/activities/utils'
+import { ActivityModel, getActivities } from 'src/kolektivo/activities/utils'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import Logger from 'src/utils/Logger'
@@ -54,9 +54,14 @@ export const useAvailableActivities = () => {
     return activities
   }, [])
 
+  const completedActivities = useAsync(async () => {
+    return [] as ActivityModel[]
+  }, [])
+
   return {
     upcomingActivities: availableActivities,
     signedUpActivities: myActivities,
+    completedActivities,
   }
 }
 
