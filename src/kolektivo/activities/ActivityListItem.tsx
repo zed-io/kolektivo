@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import i18n from 'src/i18n'
-import { Activity, isActivityLive } from 'src/kolektivo/activities/utils'
+import { ActivityModel, isActivityLive } from 'src/kolektivo/activities/utils'
 import variables from 'src/kolektivo/styles/variables'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
@@ -10,43 +10,23 @@ import { default as Colors, default as colors } from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { formatDistanceToNow, getDatetimeDisplayString } from 'src/utils/time'
 
-type OwnProps = Activity & {
+type OwnProps = ActivityModel & {
   fullWidth?: boolean
 }
 
 export const ActivityListItem = ({ fullWidth = false, ...rest }: OwnProps) => {
-  const {
-    id,
-    activityHost,
-    startDate,
-    endDate,
-    bannerPath,
-    title,
-    description,
-    fullAddress,
-    badgeContractAddress,
-  } = rest
+  const activity = rest
+  const { activity_hosts: host, start_date, banner_path, title } = rest
   const { t } = useTranslation()
 
   const handlePress = () => {
     // @todo implement navigation to activity detail
     navigate(Screens.ActivityDetailScreen, {
-      activity: {
-        id,
-        activityHostId: activityHost.id,
-        startDate,
-        endDate,
-        title,
-        description,
-        fullAddress,
-        badgeContractAddress,
-        activityHost,
-        bannerPath,
-      } as Activity,
+      activity,
     })
   }
 
-  const dateTime = getDatetimeDisplayString(new Date(startDate).getTime(), i18n)
+  const dateTime = getDatetimeDisplayString(new Date(start_date).getTime(), i18n)
 
   const isEventLive = useMemo(() => {
     return isActivityLive(rest)
@@ -68,13 +48,13 @@ export const ActivityListItem = ({ fullWidth = false, ...rest }: OwnProps) => {
     }
   }, [isEventLive])
 
-  const timeUntil = formatDistanceToNow(new Date(startDate), i18n)
+  const timeUntil = formatDistanceToNow(new Date(start_date), i18n)
 
   return (
     <Pressable style={[styles.container, fullWidth && styles.fullWidth]} onPress={handlePress}>
       <Image
         source={{
-          uri: bannerPath,
+          uri: banner_path,
         }}
         style={styles.image}
       />
@@ -82,7 +62,7 @@ export const ActivityListItem = ({ fullWidth = false, ...rest }: OwnProps) => {
       <View style={styles.content}>
         <Text style={[styles.text, styles.title]}>{title}</Text>
         <View style={[styles.details]}>
-          <Text style={[styles.text, styles.host]}>{activityHost.name}</Text>
+          <Text style={[styles.text, styles.host]}>{host.name}</Text>
           <Text style={[styles.text, styles.separator]}>•</Text>
           <Text style={[styles.text, styles.date]}>{dateTime}</Text>
         </View>

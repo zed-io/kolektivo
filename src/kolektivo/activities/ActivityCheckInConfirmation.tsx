@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet, View } from 'react-native'
 import BottomSheet, { BottomSheetRefType } from 'src/components/BottomSheet'
 import Button, { BtnSizes } from 'src/components/Button'
-import { Activity } from 'src/kolektivo/activities/utils'
+import { ActivityModel } from 'src/kolektivo/activities/utils'
 import { Colors } from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
@@ -18,7 +18,7 @@ export default function ActivityCheckInSheet({
   checkOut,
 }: {
   forwardedRef: RefObject<BottomSheetRefType>
-  activity: Activity
+  activity: ActivityModel
   isSignedUp: boolean
   signUp: () => void
   cancel: () => void
@@ -55,7 +55,7 @@ export default function ActivityCheckInSheet({
       title={t('communityActivityConfirmationSheet.title')}
       description={t('communityActivityConfirmationSheet.description', {
         activityTitle: activity.title,
-        activityDate: activity.startDate,
+        activityDate: activity.start_date,
       })}
       testId={'CommunityEvent/CheckInSheet'}
       titleStyle={styles.title}

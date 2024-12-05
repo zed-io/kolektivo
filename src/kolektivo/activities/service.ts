@@ -1,5 +1,11 @@
 import { isEmpty } from 'lodash'
+import { ActivityModel } from 'src/kolektivo/activities/utils'
 import { supabase } from 'src/kolektivo/config/services'
+
+const ACTIVITY_BASE_FIELDS = `
+*,
+activity_hosts!inner(id, name, wallet_address)
+`
 
 /**
  * @description Get a specific activity by ID
@@ -19,16 +25,17 @@ export const getActivityById = async (_activityId: string): Promise<any> => {
  * i.e. Future activities and activities that are currently ongoing
  * @returns {} The list of activities
  */
-export const getUpcomingActivities = async (): Promise<any[]> => {
+export const getUpcomingActivities = async (walletAddress?: string): Promise<ActivityModel[]> => {
   const { data, error } = await supabase
     .from('activities')
-    .select()
+    .select(`${ACTIVITY_BASE_FIELDS}`)
     .gte('end_date', new Date().toISOString())
     .order('start_date', { ascending: true })
 
   if (error) {
     throw new Error(error.message)
   }
+
   return data
 }
 
@@ -61,7 +68,7 @@ export const getCommunityHosts = async (): Promise<any[]> => {
  * @param _hostId The ID of the host to retrieve activities for
  * @returns {} The list of activities
  */
-export const getActivitiesByHost = async (_hostId: string): Promise<any[]> => {
+export const getActivitiesByHost = async (_hostId: string): Promise<ActivityModel[]> => {
   const { data, error } = await supabase
     .from('activities')
     .select()
@@ -73,11 +80,18 @@ export const getActivitiesByHost = async (_hostId: string): Promise<any[]> => {
   return data
 }
 
-export const getRegisteredActivities = async (walletAddress: string): Promise<any[]> => {
+export const getRegisteredActivities = async (walletAddress: string): Promise<ActivityModel[]> => {
   const { data, error } = await supabase
-    .from('activity_registrations')
-    .select()
-    .eq('wallet_address', walletAddress)
+    .from('activities')
+    .select(
+      `
+      ${ACTIVITY_BASE_FIELDS},
+      activity_registrations!inner(wallet_address, status)
+    `
+    )
+    .eq('activity_registrations.wallet_address', walletAddress)
+    .eq('activity_registrations.status', 'active')
+
   if (error) {
     throw new Error(error.message)
   }
@@ -87,7 +101,7 @@ export const getRegisteredActivities = async (walletAddress: string): Promise<an
 export const getExistingRegistration = async (
   _activityId: string,
   walletAddress: string
-): Promise<any> => {
+): Promise<ActivityModel> => {
   const { data, error } = await supabase
     .from('activity_registrations')
     .select()

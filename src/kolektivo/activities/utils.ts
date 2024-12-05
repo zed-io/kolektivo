@@ -1,25 +1,6 @@
 import { supabase } from 'src/kolektivo/config/services'
 
-export type Activity = {
-  id: string
-  createdAt: string
-  activityHostId: string
-  activityHost: {
-    id: string
-    name: string
-    walletAddress: string
-  }
-  bannerPath: string
-  title: string
-  description: string
-  startDate: string
-  endDate: string
-  fullAddress: string
-  badgeContractAddress: string
-  requirements: string
-}
-
-type ActivityModel = {
+export type ActivityModel = {
   id: string
   created_at: string
   activity_host_id: string

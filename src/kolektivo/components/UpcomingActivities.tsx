@@ -2,14 +2,14 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { ActivityListItem } from 'src/kolektivo/activities/ActivityListItem'
-import { useDefaultActivities } from 'src/kolektivo/activities/hooks'
+import { useAvailableActivities } from 'src/kolektivo/activities/hooks'
 import variables from 'src/kolektivo/styles/variables'
 import colors from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
 
 const UpcomingActivities = () => {
-  const activities = useDefaultActivities()
+  const { upcomingActivities } = useAvailableActivities()
   const { t } = useTranslation()
 
   return (
@@ -25,9 +25,10 @@ const UpcomingActivities = () => {
         scrollEventThrottle={16}
       >
         <View style={{ padding: 5 }} />
-        {activities.map((activity) => (
-          <ActivityListItem key={activity.id} {...activity} />
-        ))}
+        {upcomingActivities.result &&
+          upcomingActivities.result.map((activity) => (
+            <ActivityListItem key={activity.id} {...activity} />
+          ))}
       </ScrollView>
     </View>
   )

@@ -16,7 +16,7 @@ import ActivityCheckInSheet from 'src/kolektivo/activities/ActivityCheckInConfir
 import { ActivityListItem } from 'src/kolektivo/activities/ActivityListItem'
 import {
   useActivityEnrollment,
-  useDefaultActivities,
+  useAvailableActivities,
   useSignUpAndCancelActivityEnrollment,
 } from 'src/kolektivo/activities/hooks'
 import { isActivityLive } from 'src/kolektivo/activities/utils'
@@ -37,19 +37,14 @@ type Props = NativeStackScreenProps<StackParamList, Screens.ActivityDetailScreen
 export const ActivityDetailScreen = ({ route }: Props) => {
   const { activity } = route.params
   const { t } = useTranslation()
-  const activities = useDefaultActivities()
+  const { upcomingActivities } = useAvailableActivities()
   const { loading, isSignedUp, signUpForEvent, cancelEvent } = useSignUpAndCancelActivityEnrollment(
     activity.id
   )
-  const sections = []
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onPressEarned = useCallback(() => {}, [])
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onPressStamps = useCallback(() => {}, [])
-
-  sections.push({
-    data: activities,
-  })
 
   const isEventLive = useMemo(() => {
     return isActivityLive(activity)
@@ -59,18 +54,14 @@ export const ActivityDetailScreen = ({ route }: Props) => {
 
   const checkInConfirmationSheetRef = React.useRef<BottomSheetRefType>(null)
 
-  const eventDate = formatFeedDate(new Date().getTime(), i18n)
+  const eventDate = formatFeedDate(new Date(activity.start_date).getTime(), i18n)
   const eventTime = useMemo(() => {
-    if (new Date().getTime()) {
-      return `${formatFeedTime(new Date().getTime(), i18n)} - ${formatFeedTime(new Date().getTime(), i18n)}`
-    } else {
-      return formatFeedTime(new Date().getTime(), i18n)
-    }
+    return `${formatFeedTime(new Date(activity.start_date).getTime(), i18n)} - ${formatFeedTime(new Date(activity.end_date).getTime(), i18n)}`
   }, [])
   const handleSheet = () => {
     checkInConfirmationSheetRef.current?.snapToIndex(0)
   }
-  const timeUntil = formatDistanceToNow(new Date(activity.startDate), i18n)
+  const timeUntil = formatDistanceToNow(new Date(activity.start_date), i18n)
 
   const FloatingTime = useCallback(() => {
     if (isEventLive) {
@@ -123,7 +114,7 @@ export const ActivityDetailScreen = ({ route }: Props) => {
         <View style={[styles.hero]}>
           <Image
             source={{
-              uri: activity.bannerPath,
+              uri: activity.banner_path,
             }}
             style={styles.image}
           />
@@ -150,7 +141,7 @@ export const ActivityDetailScreen = ({ route }: Props) => {
           </View>
           <ActivityDetailListItem
             category="Location"
-            content={activity.fullAddress}
+            content={activity.full_address}
             icon={<Pin color="#737373" />}
           />
           <ActivityDetailListItem
@@ -171,7 +162,7 @@ export const ActivityDetailScreen = ({ route }: Props) => {
           />
           <ActivityDetailListItem
             category="Host"
-            content={activity.activityHost.name}
+            content={activity.activity_hosts.name}
             icon={<Person color={'#737373'} />}
           />
         </View>
@@ -202,9 +193,10 @@ export const ActivityDetailScreen = ({ route }: Props) => {
           alwaysBounceHorizontal={true}
           scrollEventThrottle={16}
         >
-          {activities.map((activity) => (
-            <ActivityListItem key={activity.id} {...activity} />
-          ))}
+          {upcomingActivities.result &&
+            upcomingActivities.result.map((activity) => (
+              <ActivityListItem key={activity.id} {...activity} />
+            ))}
         </ScrollView>
       </ScrollView>
       <ActivityCheckInSheet
@@ -255,7 +247,7 @@ ActivityDetailScreen.navigationOptions = ({
 }: Props) => ({
   ...headerWithBackButton,
   headerTitle: () => (
-    <HeaderTitleWithSubtitle title={activity.title} subTitle={activity.activityHost.name} />
+    <HeaderTitleWithSubtitle title={activity.title} subTitle={activity.activity_hosts?.name} />
   ),
   gestureEnabled: false,
 })

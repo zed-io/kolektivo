@@ -55,8 +55,8 @@ export const useAvailableActivities = () => {
   }, [])
 
   return {
-    availableActivities,
-    myActivities,
+    upcomingActivities: availableActivities,
+    signedUpActivities: myActivities,
   }
 }
 
