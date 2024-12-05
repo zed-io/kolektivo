@@ -4,8 +4,8 @@ import { RefreshControl, ScrollView, SectionList, StyleSheet, Text } from 'react
 import Animated from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ActivityListItem } from 'src/kolektivo/activities/ActivityListItem'
-import { useDefaultActivities } from 'src/kolektivo/activities/hooks'
-import { Activity } from 'src/kolektivo/activities/utils'
+import { useAvailableActivities } from 'src/kolektivo/activities/hooks'
+import { ActivityModel } from 'src/kolektivo/activities/utils'
 import { typeScale } from 'src/styles/fonts'
 import variables from 'src/styles/variables'
 
@@ -14,17 +14,15 @@ const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const ActivityScreen = () => {
   const { t } = useTranslation()
   const scrollPosition = useRef(new Animated.Value(0)).current
-  const activities = useDefaultActivities()
+  const { signedUpActivities, upcomingActivities } = useAvailableActivities()
+
+  // @ts-ignore
   const sections = []
-  const others = []
 
-  sections.push({
-    data: activities,
-  })
-
-  others.push({
-    data: activities,
-  })
+  upcomingActivities.result &&
+    sections.push({
+      data: upcomingActivities.result,
+    })
 
   return (
     <SafeAreaView testID="ActivityHome" style={styles.container} edges={[]}>
@@ -37,16 +35,17 @@ const ActivityScreen = () => {
         alwaysBounceHorizontal={true}
         scrollEventThrottle={16}
       >
-        {activities.map((activity) => (
-          <ActivityListItem key={activity.id} {...activity} />
-        ))}
+        {signedUpActivities.result &&
+          signedUpActivities.result?.map((activity) => (
+            <ActivityListItem key={activity.id} {...activity} />
+          ))}
       </ScrollView>
       <Text style={styles.header}>{t('activities.more')}</Text>
       <AnimatedSectionList
         style={styles.verticalList}
         sections={sections}
         keyExtractor={(item) => (item as any).id}
-        renderItem={({ item }) => <ActivityListItem {...(item as Activity)} fullWidth />}
+        renderItem={({ item }) => <ActivityListItem {...(item as ActivityModel)} fullWidth />}
         refreshControl={<RefreshControl refreshing={false} tintColor={'transparent'} />}
         onEndReachedThreshold={0.1}
         scrollEventThrottle={16}
