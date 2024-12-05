@@ -2542,5 +2542,7 @@
     "checkInErrorMessage": "Sorry, we were unable to check you in. Please try again or contact support.",
     "checkOutErrorMessage": "Sorry, we were unable to check you out. Please try again or contact support."
   },
-  "live": "Now"
+  "live": "Now",
+  "signedUp": "Signed Up",
+  "completed": "Completed"
 }
