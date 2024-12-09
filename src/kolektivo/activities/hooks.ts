@@ -42,17 +42,22 @@ export const useActivityEnrollment = () => {
 
 export const useAvailableActivities = () => {
   const walletAddress = useSelector(currentAccountSelector)
+  const [loading, setLoading] = useState(false)
 
   const availableActivities = useAsync(async () => {
+    setLoading(true)
     const activities = await getUpcomingActivities()
+    setLoading(false)
     return activities
   }, [])
 
   const myActivities = useAsync(async () => {
+    setLoading(true)
     if (!walletAddress) {
       return []
     }
     const activities = await getRegisteredActivities(walletAddress)
+    setLoading(false)
     return activities
   }, [])
 
@@ -61,9 +66,11 @@ export const useAvailableActivities = () => {
   }, [])
 
   return {
+    loading,
     upcomingActivities: availableActivities,
     signedUpActivities: myActivities,
     completedActivities,
+    refresh: myActivities.execute,
   }
 }
 
