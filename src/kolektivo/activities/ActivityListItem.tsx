@@ -53,9 +53,11 @@ export const ActivityListItem = ({ fullWidth = false, ...rest }: OwnProps) => {
   return (
     <Pressable style={[styles.container, fullWidth && styles.fullWidth]} onPress={handlePress}>
       <Image
-        source={{
-          uri: banner_path,
-        }}
+        source={
+          {
+            // uri: banner_path,
+          }
+        }
         style={styles.image}
       />
       <FloatingTime />

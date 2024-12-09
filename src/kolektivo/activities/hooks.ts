@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useAsync } from 'react-async-hook'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -11,34 +11,9 @@ import {
   signInToActivity,
   signOutFromActivity,
 } from 'src/kolektivo/activities/service'
-import { ActivityDetail } from 'src/kolektivo/activities/types'
-import { ActivityModel, getActivities } from 'src/kolektivo/activities/utils'
-import { navigate } from 'src/navigator/NavigationService'
-import { Screens } from 'src/navigator/Screens'
+import { ActivityModel } from 'src/kolektivo/activities/utils'
 import Logger from 'src/utils/Logger'
 import { currentAccountSelector } from 'src/web3/selectors'
-
-export const useDefaultActivities = () => {
-  const activities: ActivityDetail[] = []
-
-  const dbActivities = useAsync(getActivities, [])
-
-  return useMemo(() => {
-    if (dbActivities.result) {
-      return dbActivities.result
-    } else {
-      return [] as Activity[]
-    }
-  }, [activities, dbActivities, dbActivities.result])
-}
-
-export const useActivityEnrollment = () => {
-  const enroll = (activity: Activity) => {
-    navigate(Screens.QRNavigator, { screen: Screens.QRCode })
-  }
-
-  return { enroll }
-}
 
 export const useAvailableActivities = () => {
   const walletAddress = useSelector(currentAccountSelector)
@@ -133,14 +108,12 @@ export const useCheckInAndCheckOutOfActivity = (activityId: string) => {
   const checkIn = useCallback(async () => {
     setLoading(true)
     await checkInToActivity(activityId, walletAddress!)
-    dispatch(activityStatusUpdate({ id: activityId } as ActivityModel, 'active'))
     setCheckedIn(true)
     setLoading(false)
   }, [])
 
   const checkOut = useCallback(() => {
     setLoading(true)
-    dispatch(activityStatusUpdate({ id: activityId } as ActivityModel, 'complete'))
     setLoading(false)
   }, [])
 
