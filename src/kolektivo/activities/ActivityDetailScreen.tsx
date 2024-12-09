@@ -13,10 +13,12 @@ import KolCurrency from 'src/icons/KolCurrency'
 import Pin from 'src/icons/Pin'
 import Stamp from 'src/icons/Stamp'
 import ActivityCheckInSheet from 'src/kolektivo/activities/ActivityCheckInConfirmation'
+import ActivityCheckOutSheet from 'src/kolektivo/activities/ActivityCheckOut'
 import { ActivityListItem } from 'src/kolektivo/activities/ActivityListItem'
 import {
   useActivityEnrollment,
   useAvailableActivities,
+  useCheckInAndCheckOutOfActivity,
   useSignUpAndCancelActivityEnrollment,
 } from 'src/kolektivo/activities/hooks'
 import { isActivityLive } from 'src/kolektivo/activities/utils'
@@ -41,6 +43,14 @@ export const ActivityDetailScreen = ({ route }: Props) => {
   const { loading, isSignedUp, signUpForEvent, cancelEvent } = useSignUpAndCancelActivityEnrollment(
     activity.id
   )
+
+  const {
+    checkIn,
+    checkOut,
+    checkedIn,
+    loading: checkInLoading,
+  } = useCheckInAndCheckOutOfActivity(activity.id)
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onPressEarned = useCallback(() => {}, [])
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -53,15 +63,26 @@ export const ActivityDetailScreen = ({ route }: Props) => {
   const { enroll } = useActivityEnrollment()
 
   const checkInConfirmationSheetRef = React.useRef<BottomSheetRefType>(null)
+  const checkOutConfirmationSheetRef = React.useRef<BottomSheetRefType>(null)
 
   const eventDate = formatFeedDate(new Date(activity.start_date).getTime(), i18n)
   const eventTime = useMemo(() => {
     return `${formatFeedTime(new Date(activity.start_date).getTime(), i18n)} - ${formatFeedTime(new Date(activity.end_date).getTime(), i18n)}`
   }, [])
-  const handleSheet = () => {
+
+  const handleCheckInSheet = () => {
     checkInConfirmationSheetRef.current?.snapToIndex(0)
   }
+
+  const handleCheckOutSheet = () => {
+    checkOutConfirmationSheetRef.current?.snapToIndex(0)
+  }
+
   const timeUntil = formatDistanceToNow(new Date(activity.start_date), i18n)
+
+  const checkInReady = useMemo(() => {
+    return new Date(activity.start_date) <= new Date() && new Date(activity.end_date) > new Date()
+  }, [])
 
   const FloatingTime = useCallback(() => {
     if (isEventLive) {
@@ -80,15 +101,33 @@ export const ActivityDetailScreen = ({ route }: Props) => {
   }, [isEventLive])
 
   const ActivityActionButton = useCallback(() => {
-    if (loading) {
-      return <View style={{ flexGrow: 1 }} />
-    }
-
     if (isSignedUp) {
+      if (checkedIn) {
+        return (
+          <Button
+            text={t('checkOut.title')}
+            onPress={handleCheckOutSheet}
+            testID={`CommunityEvent/CheckIn/CheckOut`}
+            size={BtnSizes.FULL}
+            style={{ flex: 1, marginRight: variables.contentPadding }}
+          />
+        )
+      }
+      if (checkInReady) {
+        return (
+          <Button
+            text={t('checkIn.title')}
+            onPress={handleCheckInSheet}
+            testID={`CommunityEvent/CheckIn/CheckIn`}
+            size={BtnSizes.FULL}
+            style={{ flex: 1, marginRight: variables.contentPadding }}
+          />
+        )
+      }
       return (
         <Button
           text={t('cancel')}
-          onPress={handleSheet}
+          onPress={handleCheckInSheet}
           testID={`CommunityEvent/CheckIn/Cancel`}
           size={BtnSizes.FULL}
           type={BtnTypes.CANCEL}
@@ -98,15 +137,15 @@ export const ActivityDetailScreen = ({ route }: Props) => {
     } else {
       return (
         <Button
-          text={t('continue')}
-          onPress={handleSheet}
+          text={t('signUp')}
+          onPress={handleCheckInSheet}
           testID={`CommunityEvent/CheckIn/Continue`}
           size={BtnSizes.FULL}
           style={{ flex: 1, marginRight: variables.contentPadding }}
         />
       )
     }
-  }, [isSignedUp, loading, cancelEvent, signUpForEvent, t])
+  }, [isSignedUp, cancelEvent, signUpForEvent, t, checkInReady, checkedIn])
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
@@ -203,10 +242,17 @@ export const ActivityDetailScreen = ({ route }: Props) => {
         forwardedRef={checkInConfirmationSheetRef}
         activity={activity}
         isSignedUp={isSignedUp}
+        checkInReady={checkInReady}
+        isCheckedIn={checkedIn}
         signUp={signUpForEvent}
         cancel={cancelEvent}
-        checkIn={cancelEvent}
+        checkIn={checkIn}
         checkOut={cancelEvent}
+      />
+      <ActivityCheckOutSheet
+        forwardedRef={checkOutConfirmationSheetRef}
+        activity={activity}
+        checkOut={checkOut}
       />
     </SafeAreaView>
   )

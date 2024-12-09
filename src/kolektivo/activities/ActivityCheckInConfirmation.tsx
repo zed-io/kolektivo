@@ -1,17 +1,21 @@
-import React, { RefObject, useCallback } from 'react'
+import React, { RefObject, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, View } from 'react-native'
 import BottomSheet, { BottomSheetRefType } from 'src/components/BottomSheet'
 import Button, { BtnSizes } from 'src/components/Button'
+import i18n from 'src/i18n'
 import { ActivityModel } from 'src/kolektivo/activities/utils'
 import { Colors } from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
+import { formatFeedDate, formatFeedTime } from 'src/utils/time'
 
 export default function ActivityCheckInSheet({
   forwardedRef,
   activity,
   isSignedUp,
+  isCheckedIn,
+  checkInReady,
   signUp,
   cancel,
   checkIn,
@@ -20,6 +24,8 @@ export default function ActivityCheckInSheet({
   forwardedRef: RefObject<BottomSheetRefType>
   activity: ActivityModel
   isSignedUp: boolean
+  isCheckedIn: boolean
+  checkInReady: boolean
   signUp: () => void
   cancel: () => void
   checkIn: () => void
@@ -28,7 +34,18 @@ export default function ActivityCheckInSheet({
   const { t } = useTranslation()
 
   const ActivityActionButton = useCallback(() => {
+    forwardedRef.current?.close()
     if (isSignedUp) {
+      if (checkInReady) {
+        return (
+          <Button
+            text={t('checkIn.title')}
+            onPress={checkIn}
+            testID={`CommunityEvent/CheckIn/CheckIn`}
+            size={BtnSizes.FULL}
+          />
+        )
+      }
       return (
         <Button
           text={t('cancel')}
@@ -40,24 +57,47 @@ export default function ActivityCheckInSheet({
     } else {
       return (
         <Button
-          text={t('continue')}
+          text={t('signUp')}
           onPress={signUp}
           testID={`CommunityEvent/CheckIn/Continue`}
           size={BtnSizes.FULL}
         />
       )
     }
-  }, [t, isSignedUp, signUp, cancel])
+  }, [t, isSignedUp, signUp, cancel, checkInReady, isCheckedIn])
+
+  const { title, description, testId } = useMemo(() => {
+    if (isSignedUp) {
+      if (checkInReady) {
+        return {
+          title: 'communityActivitySheet.checkIn.title',
+          description: 'communityActivitySheet.checkIn.description',
+          testId: 'CommunityEvent/CheckInSheet',
+        }
+      }
+      return {
+        title: 'communityActivitySheet.cancel.title',
+        description: 'communityActivitySheet.cancel.description',
+        testId: 'CommunityEvent/CancelSheet',
+      }
+    } else {
+      return {
+        title: 'communityActivitySheet.signUp.title',
+        description: 'communityActivitySheet.signUp.description',
+        testId: 'CommunityEvent/SignUpSheet',
+      }
+    }
+  }, [isSignedUp, checkInReady])
 
   return (
     <BottomSheet
       forwardedRef={forwardedRef}
-      title={t('communityActivityConfirmationSheet.title')}
-      description={t('communityActivityConfirmationSheet.description', {
+      title={t(title)}
+      description={t(description, {
         activityTitle: activity.title,
-        activityDate: activity.start_date,
+        activityDate: `${formatFeedDate(new Date(activity.start_date).getTime(), i18n)} ${formatFeedTime(new Date(activity.start_date).getTime(), i18n)}`,
       })}
-      testId={'CommunityEvent/CheckInSheet'}
+      testId={testId}
       titleStyle={styles.title}
     >
       <View style={styles.actionsContainer}>

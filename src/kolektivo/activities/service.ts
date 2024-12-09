@@ -179,10 +179,29 @@ export const checkInToActivity = async (
   _activityId: string,
   walletAddress: string
 ): Promise<any> => {
-  const { data, error } = await supabase.from('activity_registrations').insert({
+  const { data, error } = await supabase.from('proof_of_attendance').insert({
+    check_in: new Date().toISOString(),
     activity_id: _activityId,
     wallet_address: walletAddress,
+    state: 'in_progress',
   })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+  return data
+}
+
+export const getExistingCheckIn = async (
+  _activityId: string,
+  walletAddress: string
+): Promise<any> => {
+  const { data, error } = await supabase
+    .from('proof_of_attendance')
+    .select()
+    .eq('activity_id', _activityId)
+    .eq('wallet_address', walletAddress)
+    .eq('state', 'in_progress')
   if (error) {
     throw new Error(error.message)
   }

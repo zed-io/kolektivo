@@ -2222,7 +2222,9 @@
     "more": "More Activities",
     "requirements": "Requirements",
     "rewards": "Rewards",
-    "relatedActivities": "Related Activities"
+    "relatedActivities": "Related Activities",
+    "noCompleted": "No completed activities",
+    "noSignedUp": "No upcoming activities"
   },
   "nftCelebration": {
     "bottomSheet": {
@@ -2511,9 +2513,19 @@
     "checkIn": "Check In",
     "checkOut": "Check Out"
   },
-  "communityActivityConfirmationSheet": {
-    "title": "Confirmation",
-    "description": "Do you want to take part in the {{activityTitle}} that is taking place on {{activityDate}}?"
+  "communityActivitySheet": {
+    "checkIn": {
+      "title": "Check In",
+      "description": "Check in to the {{activityTitle}} that is taking place on {{activityDate}}?"
+    },
+    "signUp": {
+      "title": "Sign Up",
+      "description": "Do you want to take part in the {{activityTitle}} that is taking place on {{activityDate}}?"
+    },
+    "cancel": {
+      "title": "Cancel",
+      "description": "Are you sure you want to cancel your participation in this event?"
+    }
   },
   "badge": {
     "rank": ["Beginner", "Intermediate", "Advanced", "Expert"],
@@ -2542,7 +2554,16 @@
     "checkInErrorMessage": "Sorry, we were unable to check you in. Please try again or contact support.",
     "checkOutErrorMessage": "Sorry, we were unable to check you out. Please try again or contact support."
   },
+  "checkOut": {
+    "title": "Check Out",
+    "description": "Check out of the event to earn points",
+    "checkOutButton": "Check Out",
+    "checkOutSuccess": "Checked Out",
+    "checkOutError": "Check Out Error",
+    "checkOutErrorMessage": "Sorry, we were unable to check you out. Please try again or contact support."
+  },
   "live": "Now",
+  "signUp": "Sign Up",
   "signedUp": "Signed Up",
   "completed": "Completed"
 }

@@ -1,8 +1,10 @@
 import { isEmpty } from 'lodash'
 import { useCallback, useMemo, useState } from 'react'
 import { useAsync } from 'react-async-hook'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
+  checkInToActivity,
+  getExistingCheckIn,
   getExistingRegistration,
   getRegisteredActivities,
   getUpcomingActivities,
@@ -104,5 +106,42 @@ export const useSignUpAndCancelActivityEnrollment = (activityId: string) => {
     isSignedUp: signedUp,
     signUpForEvent,
     cancelEvent,
+  }
+}
+
+export const useCheckInAndCheckOutOfActivity = (activityId: string) => {
+  const dispatch = useDispatch()
+  const walletAddress = useSelector(currentAccountSelector)
+  const [checkedIn, setCheckedIn] = useState(false)
+  const [completed, setCompleted] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  useAsync(async () => {
+    setLoading(true)
+    const result = await getExistingCheckIn(activityId, walletAddress!)
+    setCheckedIn(!isEmpty(result))
+    setLoading(false)
+  }, [])
+
+  const checkIn = useCallback(async () => {
+    setLoading(true)
+    await checkInToActivity(activityId, walletAddress!)
+    dispatch(activityStatusUpdate({ id: activityId } as ActivityModel, 'active'))
+    setCheckedIn(true)
+    setLoading(false)
+  }, [])
+
+  const checkOut = useCallback(() => {
+    setLoading(true)
+    dispatch(activityStatusUpdate({ id: activityId } as ActivityModel, 'complete'))
+    setLoading(false)
+  }, [])
+
+  return {
+    loading,
+    checkedIn,
+    completed,
+    checkIn,
+    checkOut,
   }
 }

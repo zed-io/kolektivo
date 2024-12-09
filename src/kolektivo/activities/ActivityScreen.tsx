@@ -1,12 +1,14 @@
+import { isEmpty } from 'lodash'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { RefreshControl, ScrollView, SectionList, StyleSheet, Text } from 'react-native'
+import { RefreshControl, ScrollView, SectionList, StyleSheet, Text, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ActivityCategorySwitcher } from 'src/kolektivo/activities/ActivityCategorySwitcher'
 import { ActivityListItem } from 'src/kolektivo/activities/ActivityListItem'
 import { useAvailableActivities } from 'src/kolektivo/activities/hooks'
 import { ActivityModel } from 'src/kolektivo/activities/utils'
+import Colors from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import variables from 'src/styles/variables'
 
@@ -40,10 +42,15 @@ const ActivityScreen = () => {
           alwaysBounceHorizontal={true}
           scrollEventThrottle={16}
         >
-          {signedUpActivities.result &&
+          {!isEmpty(signedUpActivities.result) &&
             signedUpActivities.result?.map((activity) => (
               <ActivityListItem key={activity.id} {...activity} />
             ))}
+          {isEmpty(signedUpActivities.result) && (
+            <View style={styles.categorizedActivities}>
+              <Text style={styles.emptyListText}>{t('activities.noSignedUp')}</Text>
+            </View>
+          )}
         </ScrollView>
       )}
       {viewingCategory === 'completed' && (
@@ -56,10 +63,15 @@ const ActivityScreen = () => {
           alwaysBounceHorizontal={true}
           scrollEventThrottle={16}
         >
-          {completedActivities.result &&
+          {!isEmpty(completedActivities.result) &&
             completedActivities.result?.map((activity) => (
               <ActivityListItem key={activity.id} {...activity} />
             ))}
+          {isEmpty(completedActivities.result) && (
+            <View style={styles.categorizedActivities}>
+              <Text style={styles.emptyListText}>{t('activities.noCompleted')}</Text>
+            </View>
+          )}
         </ScrollView>
       )}
       <Text style={styles.header}>{t('activities.more')}</Text>
@@ -94,6 +106,15 @@ const styles = StyleSheet.create({
     ...typeScale.bodyLarge,
     paddingHorizontal: variables.contentPadding,
     marginVertical: variables.contentPadding,
+  },
+  categorizedActivities: {
+    minWidth: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyListText: {
+    ...typeScale.labelSemiBoldMedium,
+    color: Colors.gray3,
   },
   verticalList: {
     flex: 1,
