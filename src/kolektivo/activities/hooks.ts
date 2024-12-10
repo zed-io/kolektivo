@@ -10,6 +10,7 @@ import {
   getUpcomingActivities,
   signInToActivity,
   signOutFromActivity,
+  uploadPhotoProofOfAttendance,
 } from 'src/kolektivo/activities/service'
 import { ActivityModel } from 'src/kolektivo/activities/utils'
 import Logger from 'src/utils/Logger'
@@ -40,12 +41,17 @@ export const useAvailableActivities = () => {
     return [] as ActivityModel[]
   }, [])
 
+  const refresh = useCallback(async () => {
+    await myActivities.execute()
+    await availableActivities.execute()
+  }, [myActivities, availableActivities])
+
   return {
     loading,
     upcomingActivities: availableActivities,
     signedUpActivities: myActivities,
     completedActivities,
-    refresh: myActivities.execute,
+    refresh: refresh,
   }
 }
 
@@ -97,6 +103,7 @@ export const useCheckInAndCheckOutOfActivity = (activityId: string) => {
   const [checkedIn, setCheckedIn] = useState(false)
   const [completed, setCompleted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [answer, setAnswer] = useState<string>('')
 
   useAsync(async () => {
     setLoading(true)
@@ -117,11 +124,25 @@ export const useCheckInAndCheckOutOfActivity = (activityId: string) => {
     setLoading(false)
   }, [])
 
+  const onChangeAnswer = useCallback((answer: string) => {
+    setAnswer(answer)
+  }, [])
+
+  const onTakeSelfie = useCallback(async (uri: string) => {
+    setLoading(true)
+    const result = await fetch(uri)
+    const blob = await result.blob()
+    await uploadPhotoProofOfAttendance(activityId, walletAddress!, blob)
+    setLoading(false)
+  }, [])
+
   return {
     loading,
     checkedIn,
     completed,
     checkIn,
     checkOut,
+    onChangeAnswer,
+    onTakeSelfie,
   }
 }

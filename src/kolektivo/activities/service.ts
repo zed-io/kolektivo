@@ -91,6 +91,7 @@ export const getRegisteredActivities = async (walletAddress: string): Promise<Ac
     )
     .eq('activity_registrations.wallet_address', walletAddress)
     .eq('activity_registrations.status', 'active')
+    .order('start_date', { ascending: true })
 
   if (error) {
     throw new Error(error.message)
@@ -179,7 +180,7 @@ export const checkInToActivity = async (
   _activityId: string,
   walletAddress: string
 ): Promise<any> => {
-  const { data, error } = await supabase.from('proof_of_attendance').insert({
+  const { data, error } = await supabase.from('attendance_requests').insert({
     check_in: new Date().toISOString(),
     activity_id: _activityId,
     wallet_address: walletAddress,
@@ -197,7 +198,7 @@ export const getExistingCheckIn = async (
   walletAddress: string
 ): Promise<any> => {
   const { data, error } = await supabase
-    .from('proof_of_attendance')
+    .from('attendance_requests')
     .select()
     .eq('activity_id', _activityId)
     .eq('wallet_address', walletAddress)
@@ -215,4 +216,20 @@ export const getExistingCheckIn = async (
  */
 export const checkOutFromActivity = async (_activityId: string): Promise<any> => {
   return {} as any
+}
+
+export const uploadPhotoProofOfAttendance = async (
+  _activityId: string,
+  _walletAddress: string,
+  _blob: Blob
+): Promise<any> => {
+  const { data, error } = await supabase.storage
+    .from('kolektivo-resources')
+    .upload(`activities/attendanceProofs/${_activityId}/${_walletAddress}.jpg`, _blob, {
+      upsert: true,
+    })
+  if (error) {
+    throw new Error(error.message)
+  }
+  return data
 }

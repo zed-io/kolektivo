@@ -16,7 +16,6 @@ import ActivityCheckInSheet from 'src/kolektivo/activities/ActivityCheckInConfir
 import ActivityCheckOutSheet from 'src/kolektivo/activities/ActivityCheckOut'
 import { ActivityListItem } from 'src/kolektivo/activities/ActivityListItem'
 import {
-  useActivityEnrollment,
   useAvailableActivities,
   useCheckInAndCheckOutOfActivity,
   useSignUpAndCancelActivityEnrollment,
@@ -48,6 +47,8 @@ export const ActivityDetailScreen = ({ route }: Props) => {
     checkIn,
     checkOut,
     checkedIn,
+    onChangeAnswer,
+    onTakeSelfie,
     loading: checkInLoading,
   } = useCheckInAndCheckOutOfActivity(activity.id)
 
@@ -59,8 +60,6 @@ export const ActivityDetailScreen = ({ route }: Props) => {
   const isEventLive = useMemo(() => {
     return isActivityLive(activity)
   }, [])
-  //@ts-ignore @todo Remove this unused reference
-  const { enroll } = useActivityEnrollment()
 
   const checkInConfirmationSheetRef = React.useRef<BottomSheetRefType>(null)
   const checkOutConfirmationSheetRef = React.useRef<BottomSheetRefType>(null)
@@ -253,6 +252,8 @@ export const ActivityDetailScreen = ({ route }: Props) => {
         forwardedRef={checkOutConfirmationSheetRef}
         activity={activity}
         checkOut={checkOut}
+        onChangeAnswer={onChangeAnswer}
+        onTakeSelfie={onTakeSelfie}
       />
     </SafeAreaView>
   )

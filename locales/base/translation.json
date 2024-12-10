@@ -2560,7 +2560,10 @@
     "checkOutButton": "Check Out",
     "checkOutSuccess": "Checked Out",
     "checkOutError": "Check Out Error",
-    "checkOutErrorMessage": "Sorry, we were unable to check you out. Please try again or contact support."
+    "checkOutErrorMessage": "Sorry, we were unable to check you out. Please try again or contact support.",
+    "question": "What did you learn today at {{activityTitle}}?",
+    "questionDescription": "Your answer will help us improve the event for future attendees.",
+    "answerPlaceholder": "Enter your answer here"
   },
   "live": "Now",
   "signUp": "Sign Up",
