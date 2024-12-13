@@ -9,6 +9,8 @@ export type ActivityModel = {
     name: string
     wallet_address: string
   }
+  stamp: string
+  points: number
   banner_path: string
   title: string
   description: string

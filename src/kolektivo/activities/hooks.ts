@@ -4,15 +4,18 @@ import { useAsync } from 'react-async-hook'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   checkInToActivity,
+  checkOutFromActivity,
+  getCompletedActivities,
   getExistingCheckIn,
   getExistingRegistration,
   getRegisteredActivities,
   getUpcomingActivities,
+  hasCheckedOut,
+  isActivityCompleted,
   signInToActivity,
   signOutFromActivity,
   uploadPhotoProofOfAttendance,
 } from 'src/kolektivo/activities/service'
-import { ActivityModel } from 'src/kolektivo/activities/utils'
 import Logger from 'src/utils/Logger'
 import { currentAccountSelector } from 'src/web3/selectors'
 
@@ -38,7 +41,11 @@ export const useAvailableActivities = () => {
   }, [])
 
   const completedActivities = useAsync(async () => {
-    return [] as ActivityModel[]
+    if (!walletAddress) {
+      return []
+    }
+    const activities = await getCompletedActivities(walletAddress)
+    return activities
   }, [])
 
   const refresh = useCallback(async () => {
@@ -103,7 +110,16 @@ export const useCheckInAndCheckOutOfActivity = (activityId: string) => {
   const [checkedIn, setCheckedIn] = useState(false)
   const [completed, setCompleted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [image, setImage] = useState<string | null>(null)
   const [answer, setAnswer] = useState<string>('')
+
+  const isCheckedOut = useAsync(async () => {
+    return await hasCheckedOut(activityId, walletAddress!)
+  }, [])
+
+  const isEventCompleted = useAsync(async () => {
+    return await isActivityCompleted(activityId)
+  }, [])
 
   useAsync(async () => {
     setLoading(true)
@@ -119,10 +135,17 @@ export const useCheckInAndCheckOutOfActivity = (activityId: string) => {
     setLoading(false)
   }, [])
 
-  const checkOut = useCallback(() => {
+  const checkOut = useCallback(async () => {
     setLoading(true)
+    await checkOutFromActivity(activityId, walletAddress!, {
+      notes: answer,
+      check_out: new Date().toISOString(),
+      state: 'submitted',
+    })
+    await isCheckedOut.execute()
+    await isEventCompleted.execute()
     setLoading(false)
-  }, [])
+  }, [answer, image])
 
   const onChangeAnswer = useCallback((answer: string) => {
     setAnswer(answer)
@@ -130,9 +153,9 @@ export const useCheckInAndCheckOutOfActivity = (activityId: string) => {
 
   const onTakeSelfie = useCallback(async (uri: string) => {
     setLoading(true)
-    const result = await fetch(uri)
-    const blob = await result.blob()
-    await uploadPhotoProofOfAttendance(activityId, walletAddress!, blob)
+    setCompleted(false)
+    await uploadPhotoProofOfAttendance(activityId, walletAddress!, uri)
+    setCompleted(true)
     setLoading(false)
   }, [])
 
@@ -144,5 +167,7 @@ export const useCheckInAndCheckOutOfActivity = (activityId: string) => {
     checkOut,
     onChangeAnswer,
     onTakeSelfie,
+    isCheckedOut,
+    isEventCompleted,
   }
 }

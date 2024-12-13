@@ -36,7 +36,9 @@ function Profile({ navigation, route }: Props) {
   const { t } = useTranslation()
   const [newName, setNewName] = useState(useSelector(nameSelector) ?? '')
   const picturePath = useSelector(pictureSelector)
+  console.log('picturePath', picturePath)
   const [newPictureUri, setNewPictureUri] = useState(picturePath || null)
+  console.log('newPictureUri', newPictureUri)
   const exampleName = useMemo(() => generateRandomUsername(), [])
 
   const dispatch = useDispatch()

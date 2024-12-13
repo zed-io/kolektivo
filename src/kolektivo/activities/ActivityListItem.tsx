@@ -49,15 +49,12 @@ export const ActivityListItem = ({ fullWidth = false, ...rest }: OwnProps) => {
   }, [isEventLive])
 
   const timeUntil = formatDistanceToNow(new Date(start_date), i18n)
-
   return (
     <Pressable style={[styles.container, fullWidth && styles.fullWidth]} onPress={handlePress}>
       <Image
-        source={
-          {
-            // uri: banner_path,
-          }
-        }
+        source={{
+          uri: banner_path,
+        }}
         style={styles.image}
       />
       <FloatingTime />

@@ -39,18 +39,28 @@ export const ActivityDetailScreen = ({ route }: Props) => {
   const { activity } = route.params
   const { t } = useTranslation()
   const { upcomingActivities } = useAvailableActivities()
-  const { loading, isSignedUp, signUpForEvent, cancelEvent } = useSignUpAndCancelActivityEnrollment(
-    activity.id
-  )
+  const {
+    isSignedUp,
+    signUpForEvent,
+    cancelEvent,
+    loading: loadingPhase1,
+  } = useSignUpAndCancelActivityEnrollment(activity.id)
 
   const {
     checkIn,
     checkOut,
     checkedIn,
+    completed,
     onChangeAnswer,
     onTakeSelfie,
-    loading: checkInLoading,
+    loading: loadingPhase2,
+    isCheckedOut,
+    isEventCompleted,
   } = useCheckInAndCheckOutOfActivity(activity.id)
+
+  const loading = useMemo(() => {
+    return loadingPhase1 || loadingPhase2
+  }, [loadingPhase1, loadingPhase2])
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onPressEarned = useCallback(() => {}, [])
@@ -99,7 +109,23 @@ export const ActivityDetailScreen = ({ route }: Props) => {
     }
   }, [isEventLive])
 
+  const isNotActionable = useMemo(() => {
+    return isSignedUp && (isCheckedOut.result || isEventCompleted.result)
+  }, [isSignedUp, isCheckedOut.result, isEventCompleted.result])
+
   const ActivityActionButton = useCallback(() => {
+    if (isNotActionable) {
+      return (
+        <Button
+          text={t('checkOut.activityCompleted')}
+          onPress={handleCheckOutSheet}
+          testID={`CommunityEvent/CheckIn/CheckOut`}
+          size={BtnSizes.FULL}
+          disabled
+          style={{ flex: 1, marginRight: variables.contentPadding }}
+        />
+      )
+    }
     if (isSignedUp) {
       if (checkedIn) {
         return (
@@ -144,7 +170,7 @@ export const ActivityDetailScreen = ({ route }: Props) => {
         />
       )
     }
-  }, [isSignedUp, cancelEvent, signUpForEvent, t, checkInReady, checkedIn])
+  }, [isSignedUp, isNotActionable, cancelEvent, signUpForEvent, t, checkInReady, checkedIn])
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
@@ -208,14 +234,14 @@ export const ActivityDetailScreen = ({ route }: Props) => {
         <View style={styles.rewardsContainer}>
           <AchievementListItem
             icon={<KolCurrency size={22} />}
-            title={'Points'}
-            subtitle={'25.00'}
+            title={t('point')}
+            subtitle={`${activity.points}`}
             onPress={onPressEarned}
             borderColor={Colors.gray2}
           />
           <AchievementListItem
             icon={<Stamp size={22} />}
-            title={'Permaculture Stamp'}
+            title={t('stampTitle', { stamp: activity.stamp })}
             subtitle={'1'}
             onPress={onPressStamps}
             borderColor={Colors.gray2}
@@ -253,7 +279,9 @@ export const ActivityDetailScreen = ({ route }: Props) => {
         activity={activity}
         checkOut={checkOut}
         onChangeAnswer={onChangeAnswer}
-        onTakeSelfie={onTakeSelfie}
+        onImageSelected={onTakeSelfie}
+        loading={loading}
+        completed={completed}
       />
     </SafeAreaView>
   )

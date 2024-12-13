@@ -2563,10 +2563,18 @@
     "checkOutErrorMessage": "Sorry, we were unable to check you out. Please try again or contact support.",
     "question": "What did you learn today at {{activityTitle}}?",
     "questionDescription": "Your answer will help us improve the event for future attendees.",
-    "answerPlaceholder": "Enter your answer here"
+    "answerPlaceholder": "Enter your answer here",
+    "selfie": "Take a selfie",
+    "selfieDescription": "Take a selfie to confirm your attendance at {{activityTitle}}",
+    "selfieError": "Unable to take a selfie. Please try again or contact support.",
+    "selectImage": "Upload a Photo",
+    "useCamera": "Use Camera",
+    "activityCompleted": "Event Completed"
   },
   "live": "Now",
   "signUp": "Sign Up",
   "signedUp": "Signed Up",
-  "completed": "Completed"
+  "completed": "Completed",
+  "point": "Points",
+  "stampTitle": "{{stamp}} Stamp"
 }

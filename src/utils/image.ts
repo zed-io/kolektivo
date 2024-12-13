@@ -31,6 +31,14 @@ export const saveImageDataUrlToFile = async (
   return fileName
 }
 
+export const saveProofOfAttendancePicture = async (dataUrl: string): Promise<string> => {
+  console.log('Started saving proof of attendance picture')
+  return saveImageDataUrlToFile(
+    dataUrl,
+    `file://${RNFS.DocumentDirectoryPath}/attendance-proof-${Date.now()}`
+  )
+}
+
 export const saveProfilePicture = async (dataUrl: string): Promise<string> => {
   return saveImageDataUrlToFile(
     dataUrl,

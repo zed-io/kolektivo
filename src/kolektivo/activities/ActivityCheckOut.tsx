@@ -1,31 +1,39 @@
-import React, { RefObject, useCallback, useMemo, useState } from 'react'
+import React, { Fragment, RefObject, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { RNCamera } from 'react-native-camera'
+import { Image, Keyboard, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import ImagePicker from 'react-native-image-crop-picker'
 import BottomSheet, { BottomSheetRefType } from 'src/components/BottomSheet'
 import Button, { BtnSizes } from 'src/components/Button'
 import TextInput from 'src/components/TextInput'
 import i18n from 'src/i18n'
 import { CameraIcon } from 'src/icons/Camera'
+import ImageTree from 'src/icons/ImageTree'
 import { ActivityModel } from 'src/kolektivo/activities/utils'
 import { Colors } from 'src/styles/colors'
 import { typeScale } from 'src/styles/fonts'
 import { Spacing } from 'src/styles/styles'
 import variables from 'src/styles/variables'
+import { ensureError } from 'src/utils/ensureError'
+import { getDataURL, saveProofOfAttendancePicture } from 'src/utils/image'
+import Logger from 'src/utils/Logger'
 import { formatFeedDate, formatFeedTime } from 'src/utils/time'
 
 export default function ActivityCheckOutSheet({
   forwardedRef,
   activity,
+  loading,
   checkOut,
   onChangeAnswer,
-  onTakeSelfie,
+  onImageSelected,
+  completed,
 }: {
   forwardedRef: RefObject<BottomSheetRefType>
   activity: ActivityModel
+  loading: boolean
   checkOut: () => void
   onChangeAnswer: (answer: string) => void
-  onTakeSelfie: (uri: string) => void
+  onImageSelected: (uri: string) => void
+  completed: boolean
 }) {
   const { t } = useTranslation()
   const [step, setStep] = useState<number>(0)
@@ -41,14 +49,58 @@ export default function ActivityCheckOutSheet({
       case 1:
         return <ActivityCheckOutQuestion onChangeAnswer={handleChangeAnswer} />
       case 2:
-        return <ActivityCheckOutSelfie onTakeSelfie={onTakeSelfie} />
+        return <ActivityCheckOutSelfie onImageSelected={onImageSelected} loading={loading} />
       default:
         return null
     }
   }, [step])
 
   const nextStep = useCallback(() => {
-    setStep((step) => step + 1)
+    if (step === 2) {
+      forwardedRef.current?.close()
+      checkOut()
+    } else {
+      setStep((step) => step + 1)
+    }
+  }, [step])
+
+  const isDisabled = useMemo(() => {
+    if (step === 0) {
+      return false
+    }
+    if (step === 1) {
+      return answer === ''
+    }
+    if (step === 2) {
+      return loading || !completed
+    }
+    return false
+  }, [step, answer, loading, completed])
+
+  useEffect(() => {
+    if (step === 1) {
+      forwardedRef.current?.snapToIndex(1)
+    }
+    if (step === 2) {
+      forwardedRef.current?.snapToIndex(2)
+    }
+  }, [step])
+
+  // @note If keyboard is open, open the bottom sheet more
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      forwardedRef.current?.snapToIndex(3)
+    })
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      if (step !== 2) {
+        forwardedRef.current?.snapToIndex(1)
+      }
+    })
+
+    return () => {
+      showSubscription.remove()
+      hideSubscription.remove()
+    }
   }, [step])
 
   const ActivityActionButton = useCallback(() => {
@@ -56,12 +108,12 @@ export default function ActivityCheckOutSheet({
       <Button
         text={t('checkOut.title')}
         onPress={nextStep}
-        disabled={step !== 0 && answer === ''}
+        disabled={isDisabled}
         testID={`CommunityEvent/CheckIn/CheckOut`}
         size={BtnSizes.FULL}
       />
     )
-  }, [t])
+  }, [t, isDisabled])
 
   const { title, description, testId } = useMemo(() => {
     switch (step) {
@@ -77,6 +129,12 @@ export default function ActivityCheckOutSheet({
           description: 'checkOut.questionDescription',
           testId: 'CommunityEvent/CheckOutSheet/Question',
         }
+      case 2:
+        return {
+          title: 'checkOut.selfie',
+          description: 'checkOut.selfieDescription',
+          testId: 'CommunityEvent/CheckOutSheet/Selfie',
+        }
       default:
         return {
           title: '',
@@ -89,11 +147,15 @@ export default function ActivityCheckOutSheet({
   return (
     <BottomSheet
       forwardedRef={forwardedRef}
+      snapPoints={['33%', '50%', '85%', '95%']}
       title={t(title, { activityTitle: activity.title })}
       description={t(description, {
         activityTitle: activity.title,
         activityDate: `${formatFeedDate(new Date(activity.start_date).getTime(), i18n)} ${formatFeedTime(new Date(activity.start_date).getTime(), i18n)}`,
       })}
+      onClose={() => {
+        setStep(0)
+      }}
       testId={'CommunityEvent/CheckInSheet'}
       titleStyle={styles.title}
     >
@@ -130,53 +192,80 @@ const ActivityCheckOutQuestion = ({ onChangeAnswer }: ActivityCheckOutQuestionPr
 }
 
 type ActivityCheckOutSelfieProps = {
-  onTakeSelfie: (uri: string) => void
+  onImageSelected: (uri: string) => void
+  loading: boolean
 }
 
-const ActivityCheckOutSelfie = ({ onTakeSelfie }: ActivityCheckOutSelfieProps) => {
+const ActivityCheckOutSelfie = ({ onImageSelected, loading }: ActivityCheckOutSelfieProps) => {
   const { t } = useTranslation()
-  const [camera, setCamera] = useState<RNCamera | null>(null)
+  const [image, setImage] = useState<string | null>(null)
 
-  const takePicture = async () => {
-    if (camera && !__DEV__) {
-      try {
-        const options = {
-          quality: 0.5,
-          base64: false,
-          pauseAfterCapture: true,
-          orientation: 'portrait',
-        }
-        const data = await camera.takePictureAsync(options)
-        onTakeSelfie(data.uri)
-      } catch (error) {
-        console.error('Error taking picture:', error)
+  const saveImage = async (dataUrl: string) => {
+    const path = await saveProofOfAttendancePicture(dataUrl)
+    onImageSelected(path)
+    setImage(path)
+  }
+
+  const pickPhoto = async (pickerFunction: typeof ImagePicker.openPicker) => {
+    try {
+      const image = await pickerFunction({
+        width: 1000,
+        height: 1000,
+        cropping: true,
+        includeBase64: true,
+        cropperChooseText: t('choose') ?? undefined,
+        cropperCancelText: t('cancel') ?? undefined,
+      })
+      if (image) {
+        // @ts-ignore
+        const dataUrl = getDataURL(image.mime, image.data)
+        await saveImage(dataUrl)
       }
-    } else {
-      onTakeSelfie(
-        'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-      )
+    } catch (err) {
+      const error = ensureError(err)
+      const MISSING_PERMISSION_ERR_MSG = 'Required permission missing'
+      const USER_CANCELLED_ERR_MSG = 'User cancelled image selection'
+      if (
+        error.message.includes(USER_CANCELLED_ERR_MSG) ||
+        error.message.includes(MISSING_PERMISSION_ERR_MSG)
+      ) {
+        Logger.info('PictureInput', error.message)
+        return
+      }
+      Logger.error('PictureInput', 'Error while fetching image from picker', error)
     }
   }
 
+  const selectFromGallery = async () => {
+    await pickPhoto(ImagePicker.openPicker)
+  }
+
+  const takePhoto = async () => {
+    await pickPhoto(ImagePicker.openCamera)
+  }
+
   return (
-    <View style={styles.cameraContainer}>
-      <RNCamera
-        ref={(ref) => setCamera(ref)}
-        style={styles.camera}
-        type={RNCamera.Constants.Type.front}
-        androidCameraPermissionOptions={{
-          title: t('camera.permissionTitle'),
-          message: t('camera.permissionMessage'),
-          buttonPositive: t('camera.ok'),
-          buttonNegative: t('camera.cancel'),
-        }}
-      >
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={takePicture} style={styles.captureButton}>
-            <CameraIcon size={24} />
-          </TouchableOpacity>
-        </View>
-      </RNCamera>
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.selectImageBox} onPress={selectFromGallery}>
+        {!!image && <Image source={{ uri: image }} style={styles.image} />}
+        {!image && (
+          <Fragment>
+            <ImageTree />
+            <Text style={styles.selectImageText}>{t('checkOut.selectImage')}</Text>
+          </Fragment>
+        )}
+      </TouchableOpacity>
+
+      <View style={styles.dividerContainer}>
+        <View style={styles.divider} />
+        <Text style={styles.dividerText}>{t('or')}</Text>
+        <View style={styles.divider} />
+      </View>
+
+      <TouchableOpacity style={styles.cameraButton} onPress={takePhoto}>
+        <CameraIcon />
+        <Text style={styles.cameraButtonText}>{t('checkOut.useCamera')}</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -192,28 +281,62 @@ const styles = StyleSheet.create({
     ...typeScale.titleSmall,
     color: Colors.black,
   },
-  cameraContainer: {
-    height: 400,
-    width: '100%',
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  camera: {
+  container: {
     flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'flex-end',
-    marginBottom: 20,
-  },
-  captureButton: {
-    backgroundColor: '#EAF6F6',
     padding: Spacing.Regular16,
+    backgroundColor: Colors.white,
+  },
+  image: {
+    height: '100%',
+    width: '100%',
+  },
+  selectImageBox: {
+    width: '100%',
+    height: 200,
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderColor: Colors.primary,
     borderRadius: variables.borderRadius,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  selectImageText: {
+    ...typeScale.labelMedium,
+    color: Colors.gray4,
+    marginTop: Spacing.Small12,
+  },
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    marginVertical: Spacing.Thick24,
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: Colors.gray2,
+  },
+  dividerText: {
+    ...typeScale.labelMedium,
+    color: Colors.gray4,
+    marginHorizontal: Spacing.Regular16,
+  },
+  cameraButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.Small12,
+    padding: Spacing.Regular16,
+    borderWidth: 1,
+    borderColor: Colors.gray2,
+    borderRadius: variables.borderRadius,
+    width: '100%',
+  },
+  cameraButtonText: {
+    ...typeScale.labelLarge,
+    color: Colors.black,
   },
 })
